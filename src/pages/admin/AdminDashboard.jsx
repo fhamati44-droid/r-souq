@@ -417,8 +417,12 @@ function SellersPage() {
   const [sellers, setSellers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [confirmDelete, setConfirmDelete] = useState(null);
+  const [editWallet, setEditWallet] = useState(null);
+  const [newBalance, setNewBalance] = useState('');
+  const [processing, setProcessing] = useState(false);
 
-  useEffect(() => {
+  const loadSellers = () => {
     Promise.all([
       base44.entities.SellerKYC.list('-created_date', 200),
       base44.entities.Store.list('-created_date', 200),
@@ -432,7 +436,46 @@ function SellersPage() {
       setSellers(merged);
       setLoading(false);
     });
-  }, []);
+  };
+
+  useEffect(() => { loadSellers(); }, []);
+
+  // Delete seller: removes KYC, store, wallet, products, transactions
+  const deleteSeller = async (seller) => {
+    setProcessing(true);
+    const email = seller.owner_email;
+    // Delete KYC
+    await base44.entities.SellerKYC.delete(seller.id);
+    // Delete store and its products
+    if (seller.store) {
+      const products = await base44.entities.Product.filter({ store_id: seller.store.id });
+      await Promise.all(products.map(p => base44.entities.Product.delete(p.id)));
+      await base44.entities.Store.delete(seller.store.id);
+    }
+    // Delete wallet and transactions
+    if (seller.wallet) {
+      const txs = await base44.entities.WalletTransaction.filter({ owner_email: email });
+      await Promise.all(txs.map(t => base44.entities.WalletTransaction.delete(t.id)));
+      await base44.entities.SellerWallet.delete(seller.wallet.id);
+    }
+    setSellers(prev => prev.filter(s => s.id !== seller.id));
+    setConfirmDelete(null);
+    setProcessing(false);
+    toast.success('✅ تم حذف البائع وجميع بياناته');
+  };
+
+  // Edit wallet balance directly
+  const saveWalletBalance = async () => {
+    if (!editWallet || newBalance === '') return;
+    setProcessing(true);
+    const amount = parseFloat(newBalance);
+    await base44.entities.SellerWallet.update(editWallet.wallet.id, { balance: amount });
+    setSellers(prev => prev.map(s => s.id === editWallet.id ? { ...s, wallet: { ...s.wallet, balance: amount } } : s));
+    setEditWallet(null);
+    setNewBalance('');
+    setProcessing(false);
+    toast.success('✅ تم تحديث الرصيد');
+  };
 
   const filtered = sellers.filter(s =>
     !search || s.full_name?.toLowerCase().includes(search.toLowerCase()) || s.owner_email?.includes(search)
@@ -448,7 +491,7 @@ function SellersPage() {
         </div>
       </div>
       {loading ? <LoadingSpinner /> : (
-        <div className="grid gap-4">
+        <div className="grid gap-3">
           {filtered.map(seller => (
             <div key={seller.id} className="bg-white rounded-2xl border border-slate-100 p-5 flex items-center gap-4">
               <div className="w-12 h-12 rounded-full bg-violet-100 flex items-center justify-center font-bold text-violet-600 text-lg shrink-0">
@@ -462,12 +505,73 @@ function SellersPage() {
                 <p className="text-xs text-muted-foreground">{seller.owner_email}</p>
                 <div className="flex items-center gap-3 mt-1.5 flex-wrap">
                   {seller.store && <span className="text-xs bg-slate-100 px-2 py-0.5 rounded-full">🏪 {seller.store.store_name}</span>}
-                  {seller.wallet && <span className="text-xs bg-green-50 text-green-700 px-2 py-0.5 rounded-full">💰 {seller.wallet.balance?.toFixed(0)} ر.س</span>}
+                  {seller.wallet && (
+                    <button
+                      onClick={() => { setEditWallet(seller); setNewBalance(seller.wallet.balance?.toString() || '0'); }}
+                      className="text-xs bg-green-50 text-green-700 px-2 py-0.5 rounded-full hover:bg-green-100 transition"
+                    >
+                      💰 {seller.wallet.balance?.toFixed(0)} ر.س ✏️
+                    </button>
+                  )}
                   <span className="text-xs text-muted-foreground">🪪 {seller.national_id}</span>
                 </div>
               </div>
+              <button
+                onClick={() => setConfirmDelete(seller)}
+                className="text-xs px-3 py-1.5 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 font-semibold transition shrink-0"
+              >
+                🗑 حذف
+              </button>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Confirm Delete Modal */}
+      {confirmDelete && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setConfirmDelete(null)}>
+          <div className="bg-white rounded-2xl w-full max-w-sm shadow-2xl p-6" onClick={e => e.stopPropagation()}>
+            <div className="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <XCircle className="w-7 h-7 text-red-600" />
+            </div>
+            <h3 className="font-bold text-lg text-center mb-2">تأكيد حذف البائع</h3>
+            <p className="text-sm text-muted-foreground text-center mb-1">سيتم حذف جميع بيانات البائع:</p>
+            <p className="font-bold text-center text-sm mb-1">{confirmDelete.full_name}</p>
+            <p className="text-xs text-muted-foreground text-center mb-4">{confirmDelete.owner_email}</p>
+            <div className="bg-red-50 rounded-xl p-3 text-xs text-red-700 mb-5 space-y-1">
+              <p>⚠️ سيتم حذف: بيانات KYC، المتجر، المنتجات، المحفظة، المعاملات</p>
+              <p className="font-bold">هذا الإجراء لا يمكن التراجع عنه!</p>
+            </div>
+            <div className="flex gap-3">
+              <Button variant="outline" className="flex-1 rounded-xl" onClick={() => setConfirmDelete(null)}>إلغاء</Button>
+              <Button variant="destructive" className="flex-1 rounded-xl gap-1" disabled={processing} onClick={() => deleteSeller(confirmDelete)}>
+                {processing ? 'جاري الحذف...' : <><XCircle className="w-4 h-4" /> تأكيد الحذف</>}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Wallet Balance Modal */}
+      {editWallet && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setEditWallet(null)}>
+          <div className="bg-white rounded-2xl w-full max-w-sm shadow-2xl p-6" onClick={e => e.stopPropagation()}>
+            <h3 className="font-bold text-lg mb-1">تعديل رصيد المحفظة</h3>
+            <p className="text-sm text-muted-foreground mb-4">{editWallet.full_name} — {editWallet.owner_email}</p>
+            <label className="text-sm font-semibold block mb-2">الرصيد الجديد (ر.س)</label>
+            <input
+              type="number"
+              value={newBalance}
+              onChange={e => setNewBalance(e.target.value)}
+              className="w-full h-12 px-4 rounded-xl border-2 border-violet-300 text-lg font-bold text-center focus:outline-none focus:ring-2 focus:ring-violet-400 mb-4"
+            />
+            <div className="flex gap-3">
+              <Button variant="outline" className="flex-1 rounded-xl" onClick={() => setEditWallet(null)}>إلغاء</Button>
+              <Button className="flex-1 rounded-xl bg-violet-600" disabled={processing} onClick={saveWalletBalance}>
+                {processing ? 'جاري الحفظ...' : 'حفظ الرصيد'}
+              </Button>
+            </div>
+          </div>
         </div>
       )}
     </div>
