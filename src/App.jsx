@@ -12,6 +12,9 @@ import { Toaster as SonnerToaster } from 'sonner';
 // Landing
 import Landing from './pages/Landing';
 
+// Admin
+import AdminDashboard from './pages/admin/AdminDashboard';
+
 // Seller pages
 import SellerRegister from './pages/seller/Register';
 import SellerDashboard from './pages/seller/Dashboard';
@@ -49,6 +52,9 @@ const AuthenticatedApp = () => {
     <Routes>
       {/* Landing page */}
       <Route path="/" element={<Landing />} />
+
+      {/* Admin routes */}
+      <Route path="/admin/*" element={<AdminDashboard />} />
 
       {/* Seller routes */}
       <Route path="/seller/register" element={<SellerRegister />} />
