@@ -1,0 +1,93 @@
+{
+  "name": "Store",
+  "type": "object",
+  "properties": {
+    "owner_email": {
+      "type": "string"
+    },
+    "owner_name": {
+      "type": "string"
+    },
+    "store_name": {
+      "type": "string"
+    },
+    "store_description": {
+      "type": "string"
+    },
+    "store_logo": {
+      "type": "string"
+    },
+    "store_banner": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "clothing",
+        "electronics",
+        "home",
+        "sports",
+        "beauty",
+        "books",
+        "toys",
+        "food",
+        "general"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending_payment",
+        "active",
+        "suspended"
+      ],
+      "default": "pending_payment"
+    },
+    "subscription_plan": {
+      "type": "string",
+      "enum": [
+        "basic",
+        "pro",
+        "premium"
+      ],
+      "default": "basic"
+    },
+    "subscription_expires": {
+      "type": "string",
+      "format": "date"
+    },
+    "is_featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "featured_until": {
+      "type": "string",
+      "format": "date"
+    },
+    "campaign_budget": {
+      "type": "number",
+      "default": 0
+    },
+    "rating": {
+      "type": "number",
+      "default": 0
+    },
+    "total_sales": {
+      "type": "number",
+      "default": 0
+    },
+    "phone": {
+      "type": "string"
+    },
+    "whatsapp": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "store_name",
+    "owner_email"
+  ]
+}

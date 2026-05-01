@@ -2,39 +2,28 @@
   "name": "Product",
   "type": "object",
   "properties": {
+    "store_id": {
+      "type": "string"
+    },
+    "store_name": {
+      "type": "string"
+    },
+    "owner_email": {
+      "type": "string"
+    },
     "name": {
-      "type": "object",
-      "description": "Product name in multiple languages",
-      "properties": {
-        "ar": {
-          "type": "string"
-        },
-        "en": {
-          "type": "string"
-        },
-        "de": {
-          "type": "string"
-        }
-      }
+      "type": "string"
     },
     "description": {
-      "type": "object",
-      "properties": {
-        "ar": {
-          "type": "string"
-        },
-        "en": {
-          "type": "string"
-        },
-        "de": {
-          "type": "string"
-        }
-      }
+      "type": "string"
     },
     "price": {
       "type": "number"
     },
     "original_price": {
+      "type": "number"
+    },
+    "cost_price": {
       "type": "number"
     },
     "category": {
@@ -47,11 +36,9 @@
         "beauty",
         "books",
         "toys",
-        "food"
+        "food",
+        "general"
       ]
-    },
-    "subcategory": {
-      "type": "string"
     },
     "images": {
       "type": "array",
@@ -71,15 +58,11 @@
       "type": "number",
       "default": 0
     },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
     "is_featured": {
-      "type": "boolean",
-      "default": false
-    },
-    "is_new": {
-      "type": "boolean",
-      "default": false
-    },
-    "is_on_sale": {
       "type": "boolean",
       "default": false
     },
@@ -94,6 +77,8 @@
     }
   },
   "required": [
-    "price"
+    "name",
+    "price",
+    "store_id"
   ]
 }

@@ -9,23 +9,30 @@ import { LanguageProvider } from '@/lib/LanguageContext';
 import { CartProvider } from '@/lib/CartContext';
 import { Toaster as SonnerToaster } from 'sonner';
 
-// Pages
-import Home from './pages/Home';
-import Products from './pages/Products';
-import ProductDetail from './pages/ProductDetail';
+// Landing
+import Landing from './pages/Landing';
+
+// Seller pages
+import SellerRegister from './pages/seller/Register';
+import SellerDashboard from './pages/seller/Dashboard';
+import ProductForm from './pages/seller/ProductForm';
+
+// Shop pages (shopper)
+import ShopHome from './pages/shop/ShopHome';
+import StoresList from './pages/shop/StoresList';
+import StoreDetail from './pages/shop/StoreDetail';
+import ShopProductDetail from './pages/shop/ProductDetail';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import Orders from './pages/Orders';
-import Categories from './pages/Categories';
-import ShopLayout from './components/shop/ShopLayout';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
 
   if (isLoadingPublicSettings || isLoadingAuth) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
+      <div className="fixed inset-0 flex items-center justify-center bg-white">
+        <div className="w-8 h-8 border-4 border-violet-200 border-t-violet-600 rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -41,15 +48,24 @@ const AuthenticatedApp = () => {
 
   return (
     <Routes>
-      <Route element={<ShopLayout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/products/:id" element={<ProductDetail />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/orders" element={<Orders />} />
-        <Route path="/categories" element={<Categories />} />
-      </Route>
+      {/* Landing page */}
+      <Route path="/" element={<Landing />} />
+
+      {/* Seller routes */}
+      <Route path="/seller/register" element={<SellerRegister />} />
+      <Route path="/seller/dashboard" element={<SellerDashboard />} />
+      <Route path="/seller/products/new" element={<ProductForm />} />
+      <Route path="/seller/products/edit/:id" element={<ProductForm />} />
+
+      {/* Shopper routes */}
+      <Route path="/shop" element={<ShopHome />} />
+      <Route path="/shop/stores" element={<StoresList />} />
+      <Route path="/shop/store/:id" element={<StoreDetail />} />
+      <Route path="/shop/product/:id" element={<ShopProductDetail />} />
+      <Route path="/cart" element={<Cart />} />
+      <Route path="/checkout" element={<Checkout />} />
+      <Route path="/orders" element={<Orders />} />
+
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

@@ -1,0 +1,47 @@
+{
+  "name": "StoreSubscription",
+  "type": "object",
+  "properties": {
+    "store_id": {
+      "type": "string"
+    },
+    "owner_email": {
+      "type": "string"
+    },
+    "plan": {
+      "type": "string",
+      "enum": [
+        "basic",
+        "pro",
+        "premium"
+      ]
+    },
+    "amount_paid": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "paid",
+        "expired"
+      ],
+      "default": "pending"
+    },
+    "valid_from": {
+      "type": "string",
+      "format": "date"
+    },
+    "valid_until": {
+      "type": "string",
+      "format": "date"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "plan",
+    "amount_paid"
+  ]
+}
