@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { Store, CheckCircle, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import CryptoPayment from '@/components/seller/CryptoPayment';
 
 const plans = [
   { id: 'basic', name: 'أساسي', price: 49, maxProducts: 50, color: 'from-slate-500 to-slate-700', features: ['50 منتج', 'صفحة متجر', 'دعم بريد'] },
@@ -27,8 +28,7 @@ export default function SellerRegister() {
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
   const plan = plans.find(p => p.id === selectedPlan);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleCryptoConfirm = async ({ crypto, cryptoAmount, txHash }) => {
     if (!form.store_name) { toast.error('أدخل اسم المتجر'); return; }
     setLoading(true);
     const user = await base44.auth.me();
@@ -46,6 +46,28 @@ export default function SellerRegister() {
       is_featured: selectedPlan === 'premium',
       rating: 0,
       total_sales: 0,
+    });
+
+    // Create wallet with initial balance
+    await base44.entities.SellerWallet.create({
+      owner_email: user.email,
+      store_id: store.id,
+      balance: 0,
+      total_deposited: 0,
+      total_spent: plan.price,
+    });
+
+    // Record subscription transaction
+    await base44.entities.WalletTransaction.create({
+      owner_email: user.email,
+      store_id: store.id,
+      type: 'subscription',
+      amount: plan.price,
+      description: `اشتراك باقة ${plan.name}`,
+      crypto_currency: crypto.name,
+      crypto_amount: cryptoAmount,
+      tx_hash: txHash,
+      status: 'confirmed',
     });
 
     await base44.entities.StoreSubscription.create({
@@ -164,43 +186,25 @@ export default function SellerRegister() {
           </motion.div>
         )}
 
-        {/* Step 3: Payment */}
+        {/* Step 3: Crypto Payment */}
         {step === 3 && (
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
             <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100">
-              <h2 className="font-bold text-xl mb-6">تفاصيل الدفع</h2>
-              <div className="bg-violet-50 rounded-xl p-5 mb-6 border border-violet-200">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <p className="font-bold text-lg">{plan.name}</p>
-                    <p className="text-sm text-muted-foreground">{form.store_name}</p>
-                  </div>
-                  <p className="text-2xl font-extrabold text-violet-600">{plan.price} ر.س</p>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center">
+                  <span className="text-white text-lg">₿</span>
                 </div>
-              </div>
-              <div className="space-y-4">
                 <div>
-                  <Label>رقم البطاقة</Label>
-                  <Input className="mt-1 rounded-xl" placeholder="1234 5678 9012 3456" />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label>تاريخ الانتهاء</Label>
-                    <Input className="mt-1 rounded-xl" placeholder="MM/YY" />
-                  </div>
-                  <div>
-                    <Label>CVV</Label>
-                    <Input className="mt-1 rounded-xl" placeholder="123" />
-                  </div>
+                  <h2 className="font-bold text-xl">الدفع بالعملات الرقمية</h2>
+                  <p className="text-sm text-muted-foreground">ادفع رسوم الاشتراك لفتح متجرك</p>
                 </div>
               </div>
-              <div className="flex gap-3 mt-8">
-                <Button variant="outline" onClick={() => setStep(2)} className="rounded-full flex-1">رجوع</Button>
-                <Button onClick={handleSubmit} disabled={loading} className="rounded-full flex-1 bg-gradient-to-r from-violet-600 to-indigo-600 font-bold text-base">
-                  {loading ? 'جاري الدفع...' : `ادفع ${plan.price} ر.س وافتح المتجر 🎉`}
-                </Button>
-              </div>
-              <p className="text-center text-xs text-muted-foreground mt-4">🔒 الدفع آمن ومشفر بالكامل</p>
+              <CryptoPayment
+                amountSAR={plan.price}
+                onConfirm={handleCryptoConfirm}
+                onCancel={() => setStep(2)}
+                loading={loading}
+              />
             </div>
           </motion.div>
         )}

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { Store, Package, ShoppingBag, TrendingUp, Plus, Zap, Settings, AlertCircle, Warehouse, Star } from 'lucide-react';
+import { Store, Package, ShoppingBag, TrendingUp, Plus, Zap, Settings, AlertCircle, Warehouse, Star, Wallet } from 'lucide-react';
+import CryptoPayment from '@/components/seller/CryptoPayment';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
@@ -12,6 +13,7 @@ export default function SellerDashboard() {
   const [store, setStore] = useState(null);
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [wallet, setWallet] = useState(null);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState('warehouse');
 
@@ -22,12 +24,14 @@ export default function SellerDashboard() {
       if (stores.length === 0) { navigate('/seller/register'); return; }
       const myStore = stores[0];
       setStore(myStore);
-      const [prods, ords] = await Promise.all([
+      const [prods, ords, wallets] = await Promise.all([
         base44.entities.Product.filter({ store_id: myStore.id }, '-created_date'),
         base44.entities.Order.list('-created_date', 50),
+        base44.entities.SellerWallet.filter({ owner_email: user.email }),
       ]);
       setProducts(prods);
       setOrders(ords.filter(o => o.items?.some(i => prods.find(p => p.id === i.product_id))));
+      setWallet(wallets[0] || null);
       setLoading(false);
     };
     load();
@@ -51,6 +55,7 @@ export default function SellerDashboard() {
     { id: 'warehouse', label: 'مخزن المنتجات', icon: Warehouse },
     { id: 'products', label: 'منتجاتي', icon: Package },
     { id: 'orders', label: 'الطلبات', icon: ShoppingBag },
+    { id: 'wallet', label: 'المحفظة', icon: Wallet },
     { id: 'campaign', label: 'الإعلانات', icon: Zap },
     { id: 'settings', label: 'الإعدادات', icon: Settings },
   ];
@@ -117,7 +122,11 @@ export default function SellerDashboard() {
 
         {/* Tab Content */}
         {tab === 'warehouse' && (
-          <WarehousePage store={store} onBack={() => setTab('products')} />
+          <WarehousePage store={store} wallet={wallet} onWalletUpdate={setWallet} onBack={() => setTab('products')} />
+        )}
+
+        {tab === 'wallet' && (
+          <WalletTab store={store} wallet={wallet} onWalletUpdate={setWallet} />
         )}
 
         {tab === 'products' && (
@@ -305,6 +314,146 @@ function CampaignTab({ store, onUpdate }) {
             </Button>
           </div>
         ))}
+      </div>
+    </div>
+  );
+}
+
+function WalletTab({ store, wallet, onWalletUpdate }) {
+  const [showDeposit, setShowDeposit] = useState(false);
+  const [depositAmount, setDepositAmount] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [transactions, setTransactions] = useState([]);
+
+  useEffect(() => {
+    if (store) {
+      base44.entities.WalletTransaction.filter({ owner_email: store.owner_email }, '-created_date', 20).then(setTransactions);
+    }
+  }, [store]);
+
+  const handleDeposit = async ({ crypto, cryptoAmount, txHash }) => {
+    setLoading(true);
+    const amount = parseFloat(depositAmount);
+    const user = await base44.auth.me();
+
+    const tx = await base44.entities.WalletTransaction.create({
+      owner_email: store.owner_email,
+      store_id: store.id,
+      type: 'deposit',
+      amount,
+      description: `شحن رصيد`,
+      crypto_currency: crypto.name,
+      crypto_amount: cryptoAmount,
+      tx_hash: txHash,
+      status: 'confirmed',
+    });
+
+    const currentBalance = wallet?.balance || 0;
+    const currentDeposited = wallet?.total_deposited || 0;
+    if (wallet?.id) {
+      const updated = await base44.entities.SellerWallet.update(wallet.id, {
+        balance: currentBalance + amount,
+        total_deposited: currentDeposited + amount,
+      });
+      onWalletUpdate({ ...wallet, balance: currentBalance + amount, total_deposited: currentDeposited + amount });
+    } else {
+      const w = await base44.entities.SellerWallet.create({
+        owner_email: store.owner_email,
+        store_id: store.id,
+        balance: amount,
+        total_deposited: amount,
+        total_spent: 0,
+      });
+      onWalletUpdate(w);
+    }
+
+    const updated = await base44.entities.WalletTransaction.filter({ owner_email: store.owner_email }, '-created_date', 20);
+    setTransactions(updated);
+    setShowDeposit(false);
+    setDepositAmount('');
+    toast.success(`✅ تم إضافة ${amount} ر.س لرصيدك`);
+    setLoading(false);
+  };
+
+  const typeLabels = { deposit: 'شحن رصيد', subscription: 'اشتراك', product_add: 'إضافة منتج', campaign: 'حملة إعلانية' };
+  const typeColors = { deposit: 'text-green-600', subscription: 'text-red-500', product_add: 'text-red-500', campaign: 'text-red-500' };
+
+  return (
+    <div className="space-y-5" dir="rtl">
+      {/* Balance Card */}
+      <div className="bg-gradient-to-br from-violet-600 to-indigo-700 rounded-2xl p-6 text-white">
+        <p className="text-sm opacity-80 mb-1">رصيدك الحالي</p>
+        <p className="text-4xl font-extrabold">{(wallet?.balance || 0).toFixed(2)} <span className="text-xl opacity-70">ر.س</span></p>
+        <div className="flex items-center gap-4 mt-4 text-sm opacity-80">
+          <span>إجمالي الشحن: {(wallet?.total_deposited || 0).toFixed(2)} ر.س</span>
+          <span>المصروف: {(wallet?.total_spent || 0).toFixed(2)} ر.س</span>
+        </div>
+        <button
+          onClick={() => setShowDeposit(true)}
+          className="mt-4 bg-white text-violet-700 font-bold px-5 py-2 rounded-full text-sm hover:bg-white/90 transition"
+        >
+          + شحن رصيد بالعملات الرقمية
+        </button>
+      </div>
+
+      {/* Deposit Modal */}
+      {showDeposit && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowDeposit(false)}>
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <h3 className="font-bold text-lg mb-4" dir="rtl">شحن الرصيد</h3>
+            {!depositAmount ? (
+              <div dir="rtl" className="space-y-3">
+                <label className="text-sm font-semibold block">المبلغ المراد شحنه (ر.س)</label>
+                <div className="grid grid-cols-3 gap-2">
+                  {[100, 250, 500, 1000, 2000, 5000].map(a => (
+                    <button key={a} onClick={() => setDepositAmount(a.toString())} className="py-3 rounded-xl border-2 border-slate-200 hover:border-violet-400 font-bold text-sm transition">
+                      {a} ر.س
+                    </button>
+                  ))}
+                </div>
+                <div className="flex gap-2">
+                  <input type="number" placeholder="مبلغ مخصص..." className="flex-1 h-10 px-3 rounded-xl border border-slate-200 text-sm" onKeyDown={e => { if (e.key === 'Enter' && e.target.value) setDepositAmount(e.target.value); }} />
+                  <Button variant="outline" className="rounded-xl" onClick={() => { const i = document.querySelector('input[type=number]'); if (i?.value) setDepositAmount(i.value); }}>تأكيد</Button>
+                </div>
+                <Button variant="outline" className="w-full rounded-xl" onClick={() => setShowDeposit(false)}>إلغاء</Button>
+              </div>
+            ) : (
+              <div>
+                <CryptoPayment
+                  amountSAR={parseFloat(depositAmount)}
+                  onConfirm={handleDeposit}
+                  onCancel={() => setDepositAmount('')}
+                  loading={loading}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Transactions */}
+      <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
+        <div className="px-5 py-4 border-b border-slate-100">
+          <h3 className="font-bold">سجل المعاملات</h3>
+        </div>
+        {transactions.length === 0 ? (
+          <div className="p-10 text-center text-muted-foreground text-sm">لا توجد معاملات بعد</div>
+        ) : (
+          <div className="divide-y divide-slate-100">
+            {transactions.map(tx => (
+              <div key={tx.id} className="px-5 py-3 flex items-center justify-between">
+                <div>
+                  <p className="font-semibold text-sm">{typeLabels[tx.type] || tx.type}</p>
+                  <p className="text-xs text-muted-foreground">{tx.description}</p>
+                  {tx.crypto_currency && <p className="text-xs text-muted-foreground font-mono">{tx.crypto_amount} {tx.crypto_currency}</p>}
+                </div>
+                <p className={`font-extrabold ${tx.type === 'deposit' ? 'text-green-600' : 'text-red-500'}`}>
+                  {tx.type === 'deposit' ? '+' : '-'}{tx.amount} ر.س
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

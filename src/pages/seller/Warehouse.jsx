@@ -20,7 +20,7 @@ const CATS = [
   { id: 'general', label: 'عام', emoji: '🏪' },
 ];
 
-export default function Warehouse({ store, onBack }) {
+export default function Warehouse({ store, wallet, onWalletUpdate, onBack }) {
   const [warehouseItems, setWarehouseItems] = useState([]);
   const [myProducts, setMyProducts] = useState([]);
   const [search, setSearch] = useState('');
@@ -65,6 +65,12 @@ export default function Warehouse({ store, onBack }) {
       toast.error('أدخل سعر البيع');
       return;
     }
+    const currentBalance = wallet?.balance || 0;
+    if (currentBalance < LISTING_FEE) {
+      toast.error(`رصيدك غير كافٍ! تحتاج ${LISTING_FEE} ر.س لإضافة منتج. اشحن رصيدك من تبويب "المحفظة"`);
+      setEditingItem(null);
+      return;
+    }
     setAddingId(editingItem.id);
     await base44.entities.Product.create({
       name: editingItem.name,
@@ -81,12 +87,33 @@ export default function Warehouse({ store, onBack }) {
       owner_email: store.owner_email,
       warehouse_product_id: editingItem.id,
     });
+
+    // Deduct balance
+    const newBalance = currentBalance - LISTING_FEE;
+    if (wallet?.id) {
+      await base44.entities.SellerWallet.update(wallet.id, {
+        balance: newBalance,
+        total_spent: (wallet.total_spent || 0) + LISTING_FEE,
+      });
+      onWalletUpdate({ ...wallet, balance: newBalance, total_spent: (wallet.total_spent || 0) + LISTING_FEE });
+    }
+    await base44.entities.WalletTransaction.create({
+      owner_email: store.owner_email,
+      store_id: store.id,
+      type: 'product_add',
+      amount: LISTING_FEE,
+      description: `إضافة منتج: ${editingItem.name}`,
+      status: 'confirmed',
+    });
+
     const updated = await base44.entities.Product.filter({ store_id: store.id });
     setMyProducts(updated);
     setEditingItem(null);
     setAddingId(null);
-    toast.success(`✅ تم إضافة "${editingItem.name}" لمتجرك`);
+    toast.success(`✅ تم إضافة "${editingItem.name}" لمتجرك (خُصم ${LISTING_FEE} ر.س)`);
   };
+
+  const LISTING_FEE = 10;
 
   if (loading) return (
     <div className="flex items-center justify-center py-20">
@@ -97,13 +124,18 @@ export default function Warehouse({ store, onBack }) {
   return (
     <div dir="rtl">
       {/* Header */}
-      <div className="flex items-center gap-3 mb-5">
-        <div className="w-10 h-10 bg-violet-100 rounded-xl flex items-center justify-center">
-          <Package className="w-5 h-5 text-violet-600" />
+      <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-violet-100 rounded-xl flex items-center justify-center">
+            <Package className="w-5 h-5 text-violet-600" />
+          </div>
+          <div>
+            <h2 className="font-extrabold text-xl">مخزن المنتجات</h2>
+            <p className="text-sm text-muted-foreground">رسوم إضافة منتج: {LISTING_FEE} ر.س</p>
+          </div>
         </div>
-        <div>
-          <h2 className="font-extrabold text-xl">مخزن المنتجات</h2>
-          <p className="text-sm text-muted-foreground">اختر منتجاً وحدد سعرك</p>
+        <div className={`px-4 py-2 rounded-xl text-sm font-bold ${(wallet?.balance || 0) >= LISTING_FEE ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600'}`}>
+          💰 {(wallet?.balance || 0).toFixed(0)} ر.س
         </div>
       </div>
 

@@ -1,0 +1,50 @@
+{
+  "name": "WalletTransaction",
+  "type": "object",
+  "properties": {
+    "owner_email": {
+      "type": "string"
+    },
+    "store_id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "deposit",
+        "subscription",
+        "product_add",
+        "campaign"
+      ]
+    },
+    "amount": {
+      "type": "number"
+    },
+    "description": {
+      "type": "string"
+    },
+    "crypto_currency": {
+      "type": "string"
+    },
+    "crypto_amount": {
+      "type": "string"
+    },
+    "tx_hash": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "confirmed",
+        "failed"
+      ],
+      "default": "pending"
+    }
+  },
+  "required": [
+    "owner_email",
+    "type",
+    "amount"
+  ]
+}
