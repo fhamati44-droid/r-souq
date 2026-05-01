@@ -7,8 +7,17 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import WarehousePage from './Warehouse';
+import KYCGate from '@/components/seller/KYCGate';
 
 export default function SellerDashboard() {
+  return (
+    <KYCGate>
+      <SellerDashboardContent />
+    </KYCGate>
+  );
+}
+
+function SellerDashboardContent() {
   const navigate = useNavigate();
   const [store, setStore] = useState(null);
   const [products, setProducts] = useState([]);

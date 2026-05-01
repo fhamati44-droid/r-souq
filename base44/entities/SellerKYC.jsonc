@@ -1,0 +1,51 @@
+{
+  "name": "SellerKYC",
+  "type": "object",
+  "properties": {
+    "owner_email": {
+      "type": "string"
+    },
+    "full_name": {
+      "type": "string"
+    },
+    "national_id": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "country": {
+      "type": "string"
+    },
+    "id_front_url": {
+      "type": "string"
+    },
+    "id_back_url": {
+      "type": "string"
+    },
+    "selfie_url": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending"
+    },
+    "rejection_reason": {
+      "type": "string"
+    },
+    "submitted_at": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "owner_email",
+    "full_name",
+    "national_id",
+    "phone"
+  ]
+}
