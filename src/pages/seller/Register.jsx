@@ -131,9 +131,9 @@ export default function SellerRegister() {
                       </li>
                     ))}
                   </ul>
-                  <div className={`mt-5 w-full py-2.5 rounded-full text-sm font-bold text-center transition-all ${selectedPlan === p.id ? 'bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-md' : 'bg-slate-100 text-slate-600'}`}>
+                  <button onClick={(e) => { e.stopPropagation(); setSelectedPlan(p.id); setStep(2); }} className={`mt-5 w-full py-2.5 rounded-full text-sm font-bold text-center transition-all ${selectedPlan === p.id ? 'bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
                     ابدأ الآن
-                  </div>
+                  </button>
                   {selectedPlan === p.id && <div className="absolute top-3 left-3 w-5 h-5 bg-violet-600 rounded-full flex items-center justify-center"><CheckCircle className="w-3 h-3 text-white" /></div>}
                 </button>
               ))}
