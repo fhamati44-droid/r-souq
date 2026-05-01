@@ -12,8 +12,8 @@ const CRYPTOS = [
     network: 'Tron',
     icon: '💵',
     color: 'from-green-500 to-emerald-600',
-    address: 'TQn9Y2khEsLJW1ChVWFMSMeRDow5KcbLSE',
-    rate: 3.75, // 1 USDT = 3.75 SAR
+    address: 'TVUV9Ei5ezfokskSL5t32HSL8b6WnkqSxU',
+    rate: 3.75,
   },
   {
     id: 'BTC',
@@ -22,8 +22,8 @@ const CRYPTOS = [
     network: 'Bitcoin',
     icon: '₿',
     color: 'from-orange-500 to-amber-600',
-    address: 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh',
-    rate: 375000, // 1 BTC = 375,000 SAR
+    address: 'bc1qf9et7tux748qvl9z5ryfc6r7l4sn3srvas433l',
+    rate: 375000,
   },
   {
     id: 'ETH',
@@ -32,18 +32,8 @@ const CRYPTOS = [
     network: 'ERC20',
     icon: '⟠',
     color: 'from-blue-500 to-indigo-600',
-    address: '0x71C7656EC7ab88b098defB751B7401B5f6d8976F',
-    rate: 12000, // 1 ETH = 12,000 SAR
-  },
-  {
-    id: 'USDT_BEP20',
-    name: 'USDT (BEP20)',
-    symbol: 'USDT',
-    network: 'BNB Chain',
-    icon: '🟡',
-    color: 'from-yellow-500 to-amber-500',
-    address: '0x71C7656EC7ab88b098defB751B7401B5f6d8976F',
-    rate: 3.75,
+    address: '0xc378d3193976a15e95debd88ac8fa08186876046',
+    rate: 12000,
   },
 ];
 
