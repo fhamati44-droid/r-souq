@@ -13,6 +13,7 @@ import { motion } from 'framer-motion';
 
 const NAV = [
   { path: '/admin', label: 'الرئيسية', icon: LayoutDashboard, exact: true },
+  { path: '/admin/payments', label: 'المدفوعات المعلقة', icon: DollarSign },
   { path: '/admin/kyc', label: 'طلبات KYC', icon: ShieldCheck },
   { path: '/admin/stores', label: 'المتاجر', icon: Store },
   { path: '/admin/sellers', label: 'البائعون', icon: Users },
@@ -98,6 +99,7 @@ export default function AdminDashboard() {
         <main className="p-4 sm:p-6">
           <Routes>
             <Route path="/" element={<OverviewPage />} />
+            <Route path="/payments" element={<PendingPaymentsPage />} />
             <Route path="/kyc" element={<KYCPage />} />
             <Route path="/stores" element={<StoresPage />} />
             <Route path="/sellers" element={<SellersPage />} />
@@ -116,6 +118,7 @@ function OverviewPage() {
   const [stats, setStats] = useState(null);
   const [recentOrders, setRecentOrders] = useState([]);
   const [pendingKyc, setPendingKyc] = useState(0);
+  const [pendingPayments, setPendingPayments] = useState(0);
 
   useEffect(() => {
     Promise.all([
@@ -123,7 +126,8 @@ function OverviewPage() {
       base44.entities.Order.list('-created_date', 100),
       base44.entities.Product.list('-created_date', 200),
       base44.entities.SellerKYC.filter({ status: 'pending' }),
-    ]).then(([stores, orders, products, kycs]) => {
+      base44.entities.WalletTransaction.filter({ status: 'pending' }),
+    ]).then(([stores, orders, products, kycs, pendingTxs]) => {
       const revenue = orders.reduce((s, o) => s + (o.total_amount || 0), 0);
       setStats({
         stores: stores.length,
@@ -135,6 +139,7 @@ function OverviewPage() {
       });
       setRecentOrders(orders.slice(0, 8));
       setPendingKyc(kycs.length);
+      setPendingPayments(pendingTxs.length);
     });
   }, []);
 
@@ -147,16 +152,27 @@ function OverviewPage() {
         <p className="text-sm text-muted-foreground mt-1">مرحباً! إليك ملخص المنصة</p>
       </div>
 
-      {/* KYC Alert */}
-      {pendingKyc > 0 && (
-        <Link to="/admin/kyc">
-          <div className="bg-amber-50 border border-amber-300 rounded-2xl p-4 flex items-center gap-3 hover:bg-amber-100 transition cursor-pointer">
-            <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />
-            <p className="text-sm font-semibold text-amber-800">يوجد {pendingKyc} طلب KYC بانتظار المراجعة</p>
-            <ChevronRight className="w-4 h-4 text-amber-600 mr-auto" />
-          </div>
-        </Link>
-      )}
+      {/* Alerts */}
+      <div className="space-y-2">
+        {pendingPayments > 0 && (
+          <Link to="/admin/payments">
+            <div className="bg-red-50 border border-red-300 rounded-2xl p-4 flex items-center gap-3 hover:bg-red-100 transition cursor-pointer">
+              <DollarSign className="w-5 h-5 text-red-600 shrink-0" />
+              <p className="text-sm font-semibold text-red-800">يوجد {pendingPayments} دفعة معلقة تحتاج موافقة</p>
+              <ChevronRight className="w-4 h-4 text-red-600 mr-auto" />
+            </div>
+          </Link>
+        )}
+        {pendingKyc > 0 && (
+          <Link to="/admin/kyc">
+            <div className="bg-amber-50 border border-amber-300 rounded-2xl p-4 flex items-center gap-3 hover:bg-amber-100 transition cursor-pointer">
+              <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />
+              <p className="text-sm font-semibold text-amber-800">يوجد {pendingKyc} طلب KYC بانتظار المراجعة</p>
+              <ChevronRight className="w-4 h-4 text-amber-600 mr-auto" />
+            </div>
+          </Link>
+        )}
+      </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -665,6 +681,129 @@ function WarehouseMgmtPage() {
               </div>
             ))}
           </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Pending Payments Page ─────────────────────────────────────────────────────
+function PendingPaymentsPage() {
+  const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [processing, setProcessing] = useState(null);
+
+  useEffect(() => {
+    base44.entities.WalletTransaction.filter({ status: 'pending' }, '-created_date', 100).then(data => {
+      setTransactions(data);
+      setLoading(false);
+    });
+  }, []);
+
+  const confirmPayment = async (tx) => {
+    setProcessing(tx.id);
+    if (tx.type === 'subscription') {
+      // Activate the store
+      const stores = await base44.entities.Store.filter({ owner_email: tx.owner_email, status: 'pending_payment' });
+      if (stores.length > 0) {
+        const store = stores[0];
+        const isPremium = store.subscription_plan === 'premium';
+        await base44.entities.Store.update(store.id, {
+          status: 'active',
+          is_featured: isPremium,
+        });
+        // Update subscription to paid
+        const subs = await base44.entities.StoreSubscription.filter({ store_id: store.id, status: 'pending' });
+        if (subs.length > 0) {
+          await base44.entities.StoreSubscription.update(subs[0].id, { status: 'paid' });
+        }
+      }
+    } else if (tx.type === 'deposit') {
+      // Add balance to wallet
+      const wallets = await base44.entities.SellerWallet.filter({ owner_email: tx.owner_email });
+      if (wallets.length > 0) {
+        const wallet = wallets[0];
+        await base44.entities.SellerWallet.update(wallet.id, {
+          balance: (wallet.balance || 0) + tx.amount,
+          total_deposited: (wallet.total_deposited || 0) + tx.amount,
+        });
+      }
+    }
+    await base44.entities.WalletTransaction.update(tx.id, { status: 'confirmed', description: tx.description?.replace(' - في انتظار التحقق', '') });
+    setTransactions(prev => prev.filter(t => t.id !== tx.id));
+    toast.success(`✅ تم تأكيد الدفع وتفعيل ${tx.type === 'subscription' ? 'المتجر' : 'الرصيد'}`);
+    setProcessing(null);
+  };
+
+  const rejectPayment = async (tx) => {
+    setProcessing(tx.id);
+    await base44.entities.WalletTransaction.update(tx.id, { status: 'failed' });
+    setTransactions(prev => prev.filter(t => t.id !== tx.id));
+    toast.success('تم رفض المعاملة');
+    setProcessing(null);
+  };
+
+  const typeLabels = { subscription: 'اشتراك متجر', deposit: 'شحن رصيد', product_add: 'إضافة منتج', campaign: 'حملة إعلانية' };
+
+  return (
+    <div className="space-y-5">
+      <div>
+        <h1 className="text-2xl font-extrabold text-slate-800">المدفوعات المعلقة</h1>
+        <p className="text-sm text-muted-foreground mt-1">راجع TX Hash وتأكد من الدفع قبل الموافقة</p>
+      </div>
+
+      {loading ? <LoadingSpinner /> : transactions.length === 0 ? (
+        <div className="bg-white rounded-2xl p-16 text-center border border-slate-100">
+          <CheckCircle className="w-12 h-12 text-green-400 mx-auto mb-3" />
+          <p className="text-muted-foreground font-semibold">لا توجد مدفوعات معلقة</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {transactions.map(tx => (
+            <div key={tx.id} className="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm">
+              <div className="flex items-start justify-between gap-4 flex-wrap">
+                <div className="flex-1 min-w-0 space-y-2">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-bold text-sm">{tx.owner_email}</span>
+                    <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-semibold">{typeLabels[tx.type] || tx.type}</span>
+                    <span className="text-xs bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full font-bold">{tx.amount} ر.س</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">{tx.description}</p>
+                  <div className="bg-slate-50 rounded-xl p-3 space-y-1">
+                    <div className="flex items-center gap-2 text-xs">
+                      <span className="text-muted-foreground">العملة:</span>
+                      <span className="font-bold">{tx.crypto_currency}</span>
+                      <span className="text-muted-foreground">المبلغ:</span>
+                      <span className="font-bold font-mono">{tx.crypto_amount}</span>
+                    </div>
+                    <div className="flex items-start gap-2 text-xs">
+                      <span className="text-muted-foreground shrink-0">TX Hash:</span>
+                      <span className="font-mono text-violet-700 break-all">{tx.tx_hash}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-2 shrink-0">
+                  <Button
+                    size="sm"
+                    className="rounded-xl bg-green-600 hover:bg-green-700 gap-1 text-xs"
+                    disabled={processing === tx.id}
+                    onClick={() => confirmPayment(tx)}
+                  >
+                    <CheckCircle className="w-3.5 h-3.5" /> تأكيد
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    className="rounded-xl gap-1 text-xs"
+                    disabled={processing === tx.id}
+                    onClick={() => rejectPayment(tx)}
+                  >
+                    <XCircle className="w-3.5 h-3.5" /> رفض
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </div>

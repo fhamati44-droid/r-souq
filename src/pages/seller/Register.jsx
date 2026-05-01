@@ -36,38 +36,39 @@ export default function SellerRegister() {
     const expires = new Date(today);
     expires.setMonth(expires.getMonth() + 1);
 
+    // Create store with pending_payment status - will be activated by admin after payment verification
     const store = await base44.entities.Store.create({
       ...form,
       owner_email: user.email,
       owner_name: user.full_name,
-      status: 'active',
+      status: 'pending_payment',
       subscription_plan: selectedPlan,
       subscription_expires: expires.toISOString().split('T')[0],
-      is_featured: selectedPlan === 'premium',
+      is_featured: false,
       rating: 0,
       total_sales: 0,
     });
 
-    // Create wallet with initial balance
+    // Create wallet
     await base44.entities.SellerWallet.create({
       owner_email: user.email,
       store_id: store.id,
       balance: 0,
       total_deposited: 0,
-      total_spent: plan.price,
+      total_spent: 0,
     });
 
-    // Record subscription transaction
+    // Record subscription transaction as pending - admin must confirm
     await base44.entities.WalletTransaction.create({
       owner_email: user.email,
       store_id: store.id,
       type: 'subscription',
       amount: plan.price,
-      description: `اشتراك باقة ${plan.name}`,
+      description: `اشتراك باقة ${plan.name} - في انتظار التحقق`,
       crypto_currency: crypto.name,
       crypto_amount: cryptoAmount,
       tx_hash: txHash,
-      status: 'confirmed',
+      status: 'pending',
     });
 
     await base44.entities.StoreSubscription.create({
@@ -75,12 +76,13 @@ export default function SellerRegister() {
       owner_email: user.email,
       plan: selectedPlan,
       amount_paid: plan.price,
-      status: 'paid',
+      status: 'pending',
       valid_from: today.toISOString().split('T')[0],
       valid_until: expires.toISOString().split('T')[0],
+      notes: `TX Hash: ${txHash} | ${crypto.name}: ${cryptoAmount}`,
     });
 
-    toast.success('تم إنشاء متجرك بنجاح! 🎉');
+    toast.success('✅ تم إرسال طلبك! سيتم تفعيل متجرك بعد التحقق من الدفع');
     navigate('/seller/dashboard');
     setLoading(false);
   };

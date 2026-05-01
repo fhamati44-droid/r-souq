@@ -345,42 +345,24 @@ function WalletTab({ store, wallet, onWalletUpdate }) {
     const amount = parseFloat(depositAmount);
     const user = await base44.auth.me();
 
-    const tx = await base44.entities.WalletTransaction.create({
+    // Create transaction as pending - admin must verify before balance is added
+    await base44.entities.WalletTransaction.create({
       owner_email: store.owner_email,
       store_id: store.id,
       type: 'deposit',
       amount,
-      description: `شحن رصيد`,
+      description: `شحن رصيد - في انتظار التحقق`,
       crypto_currency: crypto.name,
       crypto_amount: cryptoAmount,
       tx_hash: txHash,
-      status: 'confirmed',
+      status: 'pending',
     });
-
-    const currentBalance = wallet?.balance || 0;
-    const currentDeposited = wallet?.total_deposited || 0;
-    if (wallet?.id) {
-      const updated = await base44.entities.SellerWallet.update(wallet.id, {
-        balance: currentBalance + amount,
-        total_deposited: currentDeposited + amount,
-      });
-      onWalletUpdate({ ...wallet, balance: currentBalance + amount, total_deposited: currentDeposited + amount });
-    } else {
-      const w = await base44.entities.SellerWallet.create({
-        owner_email: store.owner_email,
-        store_id: store.id,
-        balance: amount,
-        total_deposited: amount,
-        total_spent: 0,
-      });
-      onWalletUpdate(w);
-    }
 
     const updated = await base44.entities.WalletTransaction.filter({ owner_email: store.owner_email }, '-created_date', 20);
     setTransactions(updated);
     setShowDeposit(false);
     setDepositAmount('');
-    toast.success(`✅ تم إضافة ${amount} ر.س لرصيدك`);
+    toast.success(`⏳ تم إرسال طلب الشحن! سيتم إضافة ${amount} ر.س لرصيدك بعد التحقق من الدفع`);
     setLoading(false);
   };
 
