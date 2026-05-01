@@ -59,9 +59,7 @@ export default function Landing() {
             <Link to="/seller/dashboard">
               <Button variant="outline" className="rounded-full text-sm">دخول البائع</Button>
             </Link>
-            <Link to="/admin">
-              <Button variant="ghost" className="rounded-full text-xs text-slate-400">⚙️ أدمن</Button>
-            </Link>
+
           </div>
         </div>
       </nav>
