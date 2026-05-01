@@ -1,0 +1,49 @@
+{
+  "name": "WarehouseProduct",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "clothing",
+        "electronics",
+        "home",
+        "sports",
+        "beauty",
+        "books",
+        "toys",
+        "food",
+        "general"
+      ]
+    },
+    "images": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "suggested_price": {
+      "type": "number"
+    },
+    "cost_price": {
+      "type": "number"
+    },
+    "brand": {
+      "type": "string"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "name",
+    "category"
+  ]
+}

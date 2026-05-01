@@ -15,7 +15,6 @@ import Landing from './pages/Landing';
 // Seller pages
 import SellerRegister from './pages/seller/Register';
 import SellerDashboard from './pages/seller/Dashboard';
-import ProductForm from './pages/seller/ProductForm';
 
 // Shop pages (shopper)
 import ShopHome from './pages/shop/ShopHome';
@@ -54,8 +53,6 @@ const AuthenticatedApp = () => {
       {/* Seller routes */}
       <Route path="/seller/register" element={<SellerRegister />} />
       <Route path="/seller/dashboard" element={<SellerDashboard />} />
-      <Route path="/seller/products/new" element={<ProductForm />} />
-      <Route path="/seller/products/edit/:id" element={<ProductForm />} />
 
       {/* Shopper routes */}
       <Route path="/shop" element={<ShopHome />} />
