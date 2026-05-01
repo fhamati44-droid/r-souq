@@ -45,13 +45,13 @@ export default function Landing() {
               سوق بلس
             </span>
           </div>
-          <div className="flex items-center gap-3">
-            <Link to="/shop">
+          <div className="flex items-center gap-2">
+            <Link to="/shop" className="hidden sm:block">
               <Button variant="ghost" className="rounded-full gap-2">
                 <ShoppingBag className="w-4 h-4" /> تسوق الآن
               </Button>
             </Link>
-            <Link to="/seller/register">
+            <Link to="/seller/register" className="hidden sm:block">
               <Button className="rounded-full gap-2 bg-gradient-to-r from-violet-600 to-indigo-600 hover:opacity-90">
                 <Store className="w-4 h-4" /> افتح متجرك
               </Button>
