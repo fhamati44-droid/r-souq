@@ -16,7 +16,9 @@ const CAT_LABELS = {
   motorcycle: 'دراجات', lighting: 'إضاءة',
 };
 
+const USD_TO_SAR = 3.75;
 const SHIPPING_COST = 15; // ر.س شحن ثابت
+const PROFIT_MARGIN = 1.3; // هامش ربح 30%
 
 export default function WarehousePage({ store, wallet, onWalletUpdate }) {
   const [products, setProducts] = useState([]);
@@ -70,7 +72,8 @@ export default function WarehousePage({ store, wallet, onWalletUpdate }) {
     setAdding(product.id);
     try {
       const user = await base44.auth.me();
-      const totalPrice = parseFloat((product.price + SHIPPING_COST).toFixed(2));
+      const costSAR = parseFloat((product.price * USD_TO_SAR).toFixed(2));
+      const totalPrice = parseFloat((costSAR * PROFIT_MARGIN + SHIPPING_COST).toFixed(2));
 
       await base44.entities.Product.create({
         warehouse_product_id: `dj_${product.id}`,
@@ -83,7 +86,7 @@ export default function WarehousePage({ store, wallet, onWalletUpdate }) {
         images: product.images || [product.thumbnail],
         price: totalPrice,
         original_price: totalPrice,
-        cost_price: product.price,
+        cost_price: costSAR,
         brand: product.brand || '',
         stock: product.stock || 100,
         rating: product.rating || 0,
@@ -107,7 +110,7 @@ export default function WarehousePage({ store, wallet, onWalletUpdate }) {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h2 className="font-extrabold text-lg">مخزن المنتجات</h2>
-          <p className="text-sm text-muted-foreground">اختر المنتجات وأضفها لمتجرك — السعر شامل الشحن ({SHIPPING_COST} ر.س)</p>
+          <p className="text-sm text-muted-foreground">الأسعار بالريال السعودي — شامل الشحن ({SHIPPING_COST} ر.س) وهامش ربح 30%</p>
         </div>
         <div className="bg-violet-50 text-violet-700 text-sm font-semibold px-3 py-1.5 rounded-xl border border-violet-200">
           {total} منتج متاح
@@ -152,7 +155,7 @@ export default function WarehousePage({ store, wallet, onWalletUpdate }) {
           {products.map((product, i) => {
             const productKey = `dj_${product.id}`;
             const alreadyAdded = myProductIds.has(productKey);
-            const totalPrice = (product.price + SHIPPING_COST).toFixed(2);
+            const totalPrice = ((product.price * USD_TO_SAR) * PROFIT_MARGIN + SHIPPING_COST).toFixed(2);
 
             return (
               <motion.div
@@ -180,15 +183,15 @@ export default function WarehousePage({ store, wallet, onWalletUpdate }) {
 
                   <div className="space-y-0.5">
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      <span>سعر المنتج</span>
-                      <span>${product.price}</span>
+                      <span>التكلفة</span>
+                      <span>{(product.price * USD_TO_SAR).toFixed(0)} ر.س</span>
                     </div>
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      <span>الشحن</span>
-                      <span>{SHIPPING_COST} ر.س</span>
+                      <span>شحن + ربح</span>
+                      <span>+{(product.price * USD_TO_SAR * (PROFIT_MARGIN - 1) + SHIPPING_COST).toFixed(0)} ر.س</span>
                     </div>
                     <div className="flex items-center justify-between text-xs font-bold text-violet-700 border-t border-slate-100 pt-1">
-                      <span>الإجمالي</span>
+                      <span>سعر البيع</span>
                       <span>{totalPrice} ر.س</span>
                     </div>
                   </div>
