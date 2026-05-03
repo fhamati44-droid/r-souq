@@ -96,7 +96,7 @@ export default function Checkout() {
         {step === 2 && (
           <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} className="bg-white rounded-2xl border border-slate-100 p-6 space-y-4">
             <h2 className="font-bold text-lg">طريقة الدفع</h2>
-            {[{id:'credit_card',label:'💳 بطاقة فيزا / ماستركارد'},{id:'cash_on_delivery',label:'💵 الدفع عند الاستلام'}].map(pm => (
+            {[{id:'credit_card',label:'💳 بطاقة فيزا / ماستركارد'}].map(pm => (
               <label key={pm.id} className={`flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition ${form.payment_method === pm.id ? 'border-violet-500 bg-violet-50' : 'border-slate-200'}`}>
                 <input type="radio" name="payment" value={pm.id} checked={form.payment_method === pm.id} onChange={() => set('payment_method', pm.id)} className="accent-violet-600" />
                 <span className="font-medium">{pm.label}</span>
