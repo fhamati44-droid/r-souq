@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { base44 } from '@/api/base44Client';
 import { Store, ShoppingBag, Star, Zap, TrendingUp, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -53,9 +54,10 @@ export default function Landing() {
                 <Store className="w-4 h-4" /> افتح متجرك
               </Button>
             </Link>
-            <Link to="/seller/dashboard">
-              <Button variant="outline" className="rounded-full text-sm border-white/40 text-white hover:bg-white/20">دخول البائع</Button>
-            </Link>
+            <button
+              onClick={() => base44.auth.redirectToLogin('/seller/dashboard')}
+              className="rounded-full text-sm border border-white/40 text-white hover:bg-white/20 px-4 py-2 transition"
+            >دخول البائع</button>
           </div>
         </div>
       </nav>
