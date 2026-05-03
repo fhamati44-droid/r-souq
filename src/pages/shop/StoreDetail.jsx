@@ -12,7 +12,7 @@ export default function StoreDetail() {
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
-  const { addItem } = useCart();
+  const { addToCart } = useCart();
 
   useEffect(() => {
     Promise.all([
@@ -28,7 +28,7 @@ export default function StoreDetail() {
   const filtered = products.filter(p => !search || p.name?.toLowerCase().includes(search.toLowerCase()));
 
   const handleAddToCart = (product) => {
-    addItem({ product_id: product.id, product_name: product.name, product_image: product.images?.[0], price: product.price, quantity: 1 });
+    addToCart(product, 1);
     toast.success('تمت الإضافة للسلة');
   };
 
