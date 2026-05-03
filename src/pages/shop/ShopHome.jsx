@@ -74,7 +74,7 @@ export default function ShopHome() {
 
   useEffect(() => {
     Promise.all([
-      base44.entities.Store.filter({ status: 'active', is_featured: true }, '-created_date', 6),
+      base44.entities.Store.filter({ status: 'active' }, '-created_date', 6),
       base44.entities.Product.filter({ is_active: true }, '-created_date', 12),
     ]).then(([stores, prods]) => {
       setFeaturedStores(stores);
@@ -138,10 +138,9 @@ export default function ShopHome() {
         </section>
 
         {/* Featured Stores */}
-        {featuredStores.length > 0 && (
-          <section>
+        <section>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-extrabold text-lg flex items-center gap-2"><Zap className="w-5 h-5 text-amber-500" /> متاجر مميزة</h2>
+              <h2 className="font-extrabold text-lg flex items-center gap-2"><Store className="w-5 h-5 text-violet-500" /> أبرز المتاجر</h2>
               <Link to="/shop/stores" className="text-sm text-violet-600 hover:underline">عرض الكل</Link>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -168,7 +167,6 @@ export default function ShopHome() {
               ))}
             </div>
           </section>
-        )}
 
         {/* Latest Products */}
         <section>
