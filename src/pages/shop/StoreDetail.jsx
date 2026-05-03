@@ -110,7 +110,7 @@ export default function StoreDetail() {
                   </Link>
                   <div className="p-3">
                     <Link to={`/shop/product/${product.id}`}>
-                      <p className="font-semibold text-sm truncate">{product.name}</p>
+                      <p className="font-semibold text-sm truncate">{typeof product.name === 'object' ? (product.name?.ar || product.name?.en || '') : product.name}</p>
                     </Link>
                     <div className="flex items-center justify-between mt-2">
                       <p className="text-violet-600 font-extrabold text-sm">{product.price} ر.س</p>

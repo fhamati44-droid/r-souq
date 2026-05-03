@@ -195,7 +195,7 @@ export default function ShopHome() {
                       className="w-full h-36 object-cover"
                     />
                     <div className="p-3">
-                      <p className="font-semibold text-sm truncate">{product.name}</p>
+                      <p className="font-semibold text-sm truncate">{typeof product.name === 'object' ? (product.name?.ar || product.name?.en || '') : product.name}</p>
                       <p className="text-violet-600 font-extrabold text-sm mt-1">{product.price} ر.س</p>
                     </div>
                   </Link>

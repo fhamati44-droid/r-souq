@@ -56,7 +56,7 @@ export default function ProductDetail() {
         <Link to={product.store_id ? `/shop/store/${product.store_id}` : '/shop'} className="p-1.5 rounded-lg hover:bg-slate-100 transition">
           <ArrowRight className="w-5 h-5 text-slate-600" />
         </Link>
-        <span className="font-semibold flex-1 truncate">{product.name}</span>
+        <span className="font-semibold flex-1 truncate">{typeof product.name === 'object' ? (product.name?.ar || product.name?.en || '') : product.name}</span>
         <Link to="/cart" className="p-2 rounded-full hover:bg-slate-100 transition">
           <ShoppingBag className="w-5 h-5 text-slate-600" />
         </Link>
@@ -89,7 +89,7 @@ export default function ProductDetail() {
           {/* Info */}
           <div className="space-y-4">
             <div>
-              <h1 className="text-2xl font-extrabold">{product.name}</h1>
+              <h1 className="text-2xl font-extrabold">{typeof product.name === 'object' ? (product.name?.ar || product.name?.en || '') : product.name}</h1>
               {product.brand && <p className="text-sm text-muted-foreground mt-1">{product.brand}</p>}
               {product.rating > 0 && (
                 <div className="flex items-center gap-1 mt-2">
