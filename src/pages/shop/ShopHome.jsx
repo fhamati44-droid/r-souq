@@ -1,8 +1,59 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { ShoppingBag, Store, Star, TrendingUp, Zap } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { ShoppingBag, Store, Star, TrendingUp, Zap, CheckCircle } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const PURCHASE_NOTIFICATIONS = [
+  { name: 'أحمد من الرياض', product: 'سماعات لاسلكية', time: 'منذ دقيقتين' },
+  { name: 'سارة من جدة', product: 'عطر روز', time: 'منذ 3 دقائق' },
+  { name: 'محمد من الدمام', product: 'ساعة ذكية', time: 'منذ 5 دقائق' },
+  { name: 'فاطمة من مكة', product: 'حقيبة يد', time: 'منذ دقيقة' },
+  { name: 'خالد من المدينة', product: 'جهاز لابتوب', time: 'للتو' },
+  { name: 'نورة من الطائف', product: 'كريم بشرة', time: 'منذ 4 دقائق' },
+];
+
+function PurchaseNotification() {
+  const [visible, setVisible] = useState(false);
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const show = () => {
+      setIndex(i => (i + 1) % PURCHASE_NOTIFICATIONS.length);
+      setVisible(true);
+      setTimeout(() => setVisible(false), 4000);
+    };
+    const timer = setInterval(show, 7000);
+    const initial = setTimeout(show, 2000);
+    return () => { clearInterval(timer); clearTimeout(initial); };
+  }, []);
+
+  const notif = PURCHASE_NOTIFICATIONS[index];
+
+  return (
+    <div className="fixed bottom-5 right-5 z-50">
+      <AnimatePresence>
+        {visible && (
+          <motion.div
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 100 }}
+            className="bg-white rounded-2xl shadow-xl border border-slate-200 px-4 py-3 flex items-center gap-3 max-w-xs"
+          >
+            <div className="w-9 h-9 rounded-full bg-green-100 flex items-center justify-center shrink-0">
+              <CheckCircle className="w-5 h-5 text-green-600" />
+            </div>
+            <div>
+              <p className="text-xs font-bold text-slate-800">{notif.name} اشترى للتو</p>
+              <p className="text-xs text-violet-600 font-semibold">{notif.product}</p>
+              <p className="text-xs text-slate-400">{notif.time}</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
 
 const CATEGORIES = [
   { id: 'clothing', label: 'ملابس', emoji: '👕' },
@@ -33,7 +84,7 @@ export default function ShopHome() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-50" dir="rtl">
+    <><div className="min-h-screen bg-slate-50" dir="rtl">
       {/* Navbar */}
       <nav className="bg-white border-b border-slate-200 px-4 sm:px-6 h-14 flex items-center justify-between sticky top-0 z-30">
         <div className="flex items-center gap-2">
@@ -55,7 +106,12 @@ export default function ShopHome() {
       <div className="bg-gradient-to-br from-violet-600 to-indigo-700 text-white py-16 px-4 text-center">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <h1 className="text-3xl sm:text-4xl font-extrabold mb-3">تسوّق من أفضل المتاجر</h1>
-          <p className="text-white/80 mb-6">آلاف المنتجات بأفضل الأسعار</p>
+          <p className="text-white/80 mb-3">آلاف المنتجات بأفضل الأسعار</p>
+          <div className="flex items-center justify-center gap-2 mb-6">
+            <span className="bg-white/20 backdrop-blur text-white text-sm font-bold px-4 py-1.5 rounded-full flex items-center gap-1.5">
+              <Store className="w-4 h-4" /> 100+ متجر نشط
+            </span>
+          </div>
           <Link to="/shop/stores">
             <button className="bg-white text-violet-700 font-bold px-8 py-3 rounded-full hover:bg-white/90 transition">
               تصفح المتاجر
@@ -145,5 +201,7 @@ export default function ShopHome() {
         </section>
       </div>
     </div>
+    <PurchaseNotification />
+    </>
   );
 }
