@@ -208,7 +208,7 @@ function ProductRow({ product, onToggle, onRemove, onUpdatePrice }) {
         className="w-12 h-12 rounded-xl object-cover shrink-0"
       />
       <div className="flex-1 min-w-0">
-        <p className="font-semibold text-sm truncate">{product.name}</p>
+        <p className="font-semibold text-sm truncate">{typeof product.name === 'object' ? (product.name?.ar || product.name?.en || '') : product.name}</p>
         <p className="text-xs text-muted-foreground">مخزون: {product.stock}</p>
       </div>
       <div className="flex items-center gap-2 shrink-0">

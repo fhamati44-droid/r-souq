@@ -620,7 +620,7 @@ function ProductsPage() {
               <div key={p.id} className="px-5 py-3 flex items-center gap-3">
                 <img src={p.images?.[0] || 'https://images.unsplash.com/photo-1560393464-5c69a73c5770?w=60&h=60&fit=crop'} alt="" className="w-12 h-12 rounded-xl object-cover shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-sm truncate">{p.name}</p>
+                  <p className="font-semibold text-sm truncate">{typeof p.name === 'object' ? (p.name?.ar || p.name?.en || '') : p.name}</p>
                   <p className="text-xs text-muted-foreground">{p.store_name} | {p.price} ر.س</p>
                 </div>
                 <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${p.is_active ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500'}`}>{p.is_active ? 'نشط' : 'مخفي'}</span>
@@ -776,7 +776,7 @@ function WarehouseMgmtPage() {
               <div key={item.id} className="px-5 py-3 flex items-center gap-3">
                 <img src={item.images?.[0] || 'https://images.unsplash.com/photo-1560393464-5c69a73c5770?w=60&h=60&fit=crop'} alt="" className="w-12 h-12 rounded-xl object-cover shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-sm truncate">{item.name}</p>
+                  <p className="font-semibold text-sm truncate">{typeof item.name === 'object' ? (item.name?.ar || item.name?.en || '') : item.name}</p>
                   <p className="text-xs text-muted-foreground">التكلفة: {item.cost_price} ر.س | المقترح: {item.suggested_price} ر.س | {item.category}</p>
                 </div>
                 <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${item.is_active ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500'}`}>{item.is_active ? 'نشط' : 'مخفي'}</span>
