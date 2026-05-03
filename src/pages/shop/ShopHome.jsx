@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { ShoppingBag, Store, Star, TrendingUp, Zap, CheckCircle } from 'lucide-react';
+import { useCart } from '@/lib/CartContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const PURCHASE_NOTIFICATIONS = [
@@ -71,6 +72,7 @@ export default function ShopHome() {
   const [featuredStores, setFeaturedStores] = useState([]);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { cartCount } = useCart();
 
   useEffect(() => {
     Promise.all([
@@ -97,6 +99,11 @@ export default function ShopHome() {
           <Link to="/shop/stores" className="text-sm text-slate-600 hover:text-violet-600 font-medium">المتاجر</Link>
           <Link to="/cart" className="relative p-2 rounded-full hover:bg-slate-100 transition">
             <ShoppingBag className="w-5 h-5 text-slate-600" />
+            {cartCount > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-violet-600 text-white text-xs rounded-full flex items-center justify-center font-bold leading-none">
+                {cartCount > 9 ? '9+' : cartCount}
+              </span>
+            )}
           </Link>
           <Link to="/" className="text-xs bg-slate-100 text-slate-600 px-3 py-1.5 rounded-full hover:bg-slate-200 transition">الرئيسية</Link>
         </div>
