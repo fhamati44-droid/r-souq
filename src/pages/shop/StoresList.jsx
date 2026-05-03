@@ -59,7 +59,7 @@ export default function StoresList() {
       </nav>
 
       <div className="max-w-5xl mx-auto px-4 py-6 space-y-5">
-        <h1 className="text-xl font-extrabold">المتاجر ({filtered.length})</h1>
+        <h1 className="text-xl font-extrabold">المتاجر (100+)</h1>
 
         {/* Category Filter */}
         <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
