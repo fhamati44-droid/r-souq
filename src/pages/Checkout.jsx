@@ -177,7 +177,7 @@ export default function Checkout() {
               {items.map(item => (
                 <div key={item.product_id} className="flex items-center gap-3">
                   <img src={item.product_image || 'https://images.unsplash.com/photo-1560393464-5c69a73c5770?w=60&h=60&fit=crop'} alt="" className="w-12 h-12 rounded-xl object-cover" />
-                  <div className="flex-1"><p className="text-sm font-semibold">{item.product_name}</p><p className="text-xs text-muted-foreground">x{item.quantity}</p></div>
+                  <div className="flex-1"><p className="text-sm font-semibold">{typeof item.product_name === 'object' ? (item.product_name?.ar || item.product_name?.en || '') : item.product_name}</p><p className="text-xs text-muted-foreground">x{item.quantity}</p></div>
                   <p className="font-bold text-sm">{(item.price * item.quantity).toFixed(2)} ر.س</p>
                 </div>
               ))}
