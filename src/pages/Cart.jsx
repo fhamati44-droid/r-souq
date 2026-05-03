@@ -46,7 +46,7 @@ export default function Cart() {
                     className="w-16 h-16 rounded-xl object-cover shrink-0"
                   />
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold truncate">{item.product_name}</p>
+                    <p className="font-semibold truncate">{typeof item.product_name === 'object' ? (item.product_name?.ar || item.product_name?.en || '') : item.product_name}</p>
                     <p className="text-violet-600 font-extrabold text-sm mt-0.5">{item.price} ر.س</p>
                   </div>
                   <div className="flex items-center gap-2">
