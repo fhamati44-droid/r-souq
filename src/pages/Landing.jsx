@@ -39,10 +39,8 @@ export default function Landing() {
       <nav className="sticky top-0 z-50 backdrop-blur shadow-md" style={{ background: '#6a1b9a', borderBottom: '2px solid #9c27b0' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
           <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center">
-              <Store className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-xl font-extrabold text-white">سوق بلس</span>
+            <span className="text-3xl">🚚</span>
+            <span className="text-xl font-extrabold text-white">R souq</span>
           </div>
           <div className="flex items-center gap-2">
             <Link to="/shop" className="hidden sm:block">
