@@ -68,7 +68,7 @@ function KYCForm({ onSubmitted }) {
       return;
     }
     if (!idFront || !idBack || !selfie) {
-      toast.error('يرجى رفع صور الهوية والسيلفي');
+      toast.error('يرجى رفع صور الهوية والأوراق الثبوتية');
       return;
     }
     setLoading(true);
@@ -181,8 +181,8 @@ function KYCForm({ onSubmitted }) {
               onChange={setIdBack}
             />
             <FileUploadBox
-              label="صورة سيلفي مع الهوية"
-              icon="🤳"
+              label="أوراق ثبوتية"
+              icon="📄"
               file={selfie}
               onChange={setSelfie}
             />
