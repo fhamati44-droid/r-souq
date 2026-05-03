@@ -14,7 +14,7 @@ export default function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
   const [activeImg, setActiveImg] = useState(0);
-  const { addItem } = useCart();
+  const { addToCart } = useCart();
 
   useEffect(() => {
     Promise.all([
@@ -28,7 +28,7 @@ export default function ProductDetail() {
   }, [id]);
 
   const handleAddToCart = () => {
-    addItem({ product_id: product.id, product_name: product.name, product_image: product.images?.[0], price: product.price, quantity });
+    addToCart(product, quantity);
     toast.success(`تمت إضافة ${quantity} قطعة للسلة`);
   };
 
