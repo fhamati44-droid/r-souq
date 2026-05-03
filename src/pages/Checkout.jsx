@@ -20,9 +20,11 @@ export default function Checkout() {
     shipping_address: '',
     shipping_city: '',
     shipping_country: 'السعودية',
-    payment_method: 'cash_on_delivery',
+    payment_method: 'credit_card',
     notes: '',
   });
+  const [card, setCard] = useState({ number: '', name: '', expiry: '', cvv: '' });
+  const setCard_ = (k, v) => setCard(c => ({ ...c, [k]: v }));
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
   const placeOrder = async () => {
@@ -94,16 +96,76 @@ export default function Checkout() {
         {step === 2 && (
           <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} className="bg-white rounded-2xl border border-slate-100 p-6 space-y-4">
             <h2 className="font-bold text-lg">طريقة الدفع</h2>
-            {[{id:'cash_on_delivery',label:'الدفع عند الاستلام'},{id:'credit_card',label:'بطاقة ائتمانية'},{id:'paypal',label:'باي بال'}].map(pm => (
+            {[{id:'credit_card',label:'💳 بطاقة فيزا / ماستركارد'},{id:'cash_on_delivery',label:'💵 الدفع عند الاستلام'}].map(pm => (
               <label key={pm.id} className={`flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition ${form.payment_method === pm.id ? 'border-violet-500 bg-violet-50' : 'border-slate-200'}`}>
                 <input type="radio" name="payment" value={pm.id} checked={form.payment_method === pm.id} onChange={() => set('payment_method', pm.id)} className="accent-violet-600" />
                 <span className="font-medium">{pm.label}</span>
               </label>
             ))}
-            <textarea className="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm resize-none h-20" placeholder="ملاحظات الطلب (اختياري)" value={form.notes} onChange={e => set('notes', e.target.value)} />
+
+            {form.payment_method === 'credit_card' && (
+              <div className="bg-slate-50 rounded-2xl p-4 space-y-3 border border-slate-200">
+                <div className="flex items-center justify-between mb-1">
+                  <p className="text-sm font-bold text-slate-700">بيانات البطاقة</p>
+                  <div className="flex gap-1">
+                    <span className="bg-blue-600 text-white text-xs px-2 py-0.5 rounded font-bold">VISA</span>
+                    <span className="bg-red-500 text-white text-xs px-2 py-0.5 rounded font-bold">MC</span>
+                  </div>
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-600">رقم البطاقة</label>
+                  <input
+                    className="w-full mt-1 h-10 px-3 rounded-xl border border-slate-200 text-sm font-mono tracking-widest focus:outline-none focus:ring-2 focus:ring-violet-300"
+                    placeholder="0000 0000 0000 0000"
+                    maxLength={19}
+                    value={card.number}
+                    onChange={e => {
+                      const v = e.target.value.replace(/\D/g, '').slice(0,16);
+                      setCard_('number', v.replace(/(.{4})/g, '$1 ').trim());
+                    }}
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-600">اسم حامل البطاقة</label>
+                  <input className="w-full mt-1 h-10 px-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet-300" placeholder="الاسم كما هو على البطاقة" value={card.name} onChange={e => setCard_('name', e.target.value)} />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs font-medium text-slate-600">تاريخ الانتهاء</label>
+                    <input
+                      className="w-full mt-1 h-10 px-3 rounded-xl border border-slate-200 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-violet-300"
+                      placeholder="MM/YY"
+                      maxLength={5}
+                      value={card.expiry}
+                      onChange={e => {
+                        let v = e.target.value.replace(/\D/g,'').slice(0,4);
+                        if (v.length >= 3) v = v.slice(0,2) + '/' + v.slice(2);
+                        setCard_('expiry', v);
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-slate-600">CVV</label>
+                    <input className="w-full mt-1 h-10 px-3 rounded-xl border border-slate-200 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-violet-300" placeholder="***" maxLength={3} value={card.cvv} onChange={e => setCard_('cvv', e.target.value.replace(/\D/g,'').slice(0,3))} />
+                  </div>
+                </div>
+                <p className="text-xs text-slate-400 text-center">🔒 بيانات مشفرة وآمنة</p>
+              </div>
+            )}
+
+            <textarea className="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm resize-none h-16" placeholder="ملاحظات الطلب (اختياري)" value={form.notes} onChange={e => set('notes', e.target.value)} />
             <div className="flex gap-3">
               <Button variant="outline" onClick={() => setStep(1)} className="flex-1 rounded-full">رجوع</Button>
-              <Button onClick={() => setStep(3)} className="flex-1 rounded-full bg-violet-600 font-bold">التالي</Button>
+              <Button
+                onClick={() => {
+                  if (form.payment_method === 'credit_card' && (!card.number || !card.name || !card.expiry || !card.cvv)) {
+                    toast.error('يرجى تعبئة بيانات البطاقة كاملة');
+                    return;
+                  }
+                  setStep(3);
+                }}
+                className="flex-1 rounded-full bg-violet-600 font-bold"
+              >التالي</Button>
             </div>
           </motion.div>
         )}
