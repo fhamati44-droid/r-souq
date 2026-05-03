@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 
 export default function Checkout() {
-  const { items, total, clearCart } = useCart();
+  const { cartItems: items, cartTotal: total, clearCart } = useCart();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
