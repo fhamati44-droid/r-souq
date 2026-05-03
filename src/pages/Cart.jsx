@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Cart() {
-  const { items, removeItem, updateQuantity, total, clearCart } = useCart();
+  const { cartItems: items, removeFromCart: removeItem, updateQuantity, cartTotal: total, clearCart } = useCart();
   const navigate = useNavigate();
 
   return (
