@@ -180,7 +180,7 @@ export default function Landing() {
             <TrendingUp className="w-8 h-8" style={{ color: '#7b2d8b' }} />
           </div>
           <h2 className="text-2xl font-extrabold mb-3">روّج متجرك بحملة إعلانية</h2>
-          <p className="text-muted-foreground mb-6">ادفع رسوم الحملة واحصل على إبراز مميز في الصفحة الرئيسية وأعلى نتائج البحث</p>
+          <p className="text-muted-foreground mb-6">افتح متجرك، أضف منتجاتك، وابدأ البيع لملايين المتسوقين — كل هذا في مكان واحد!</p>
           <Link to="/seller/dashboard">
             <Button className="rounded-full font-bold px-8 gap-2" style={{ background: '#7b2d8b' }}>
               <Zap className="w-4 h-4" /> ابدأ حملتك الآن
