@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Store, ShoppingBag, Star, Zap, TrendingUp, CheckCircle } from 'lucide-react';
+import { Store, ShoppingBag, Star, Zap, TrendingUp, CheckCircle, LogIn, LogOut, User } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import HeroSlider from '@/components/landing/HeroSlider';
@@ -34,6 +35,19 @@ const plans = [
 ];
 
 export default function Landing() {
+  const [user, setUser] = useState(null);
+  const [authChecked, setAuthChecked] = useState(false);
+
+  useEffect(() => {
+    base44.auth.isAuthenticated().then(async (authed) => {
+      if (authed) {
+        const me = await base44.auth.me();
+        setUser(me);
+      }
+      setAuthChecked(true);
+    });
+  }, []);
+
   return (
     <div className="min-h-screen bg-white" dir="rtl">
       {/* Navbar */}
@@ -54,13 +68,51 @@ export default function Landing() {
                 <Store className="w-4 h-4" /> افتح متجرك
               </Button>
             </Link>
-            <button
-              onClick={() => base44.auth.redirectToLogin('/seller/dashboard')}
-              className="rounded-full text-sm border border-white/40 text-white hover:bg-white/20 px-4 py-2 transition"
-            >دخول البائع</button>
+            {authChecked && (
+              user ? (
+                <div className="flex items-center gap-2">
+                  <Link to="/seller/dashboard">
+                    <button className="rounded-full text-sm border border-white/40 text-white hover:bg-white/20 px-4 py-2 transition flex items-center gap-1.5">
+                      <User className="w-3.5 h-3.5" /> {user.full_name?.split(' ')[0] || 'لوحتي'}
+                    </button>
+                  </Link>
+                  <button
+                    onClick={() => base44.auth.logout('/')}
+                    className="rounded-full text-sm border border-white/40 text-white hover:bg-white/20 px-3 py-2 transition"
+                    title="خروج"
+                  ><LogOut className="w-3.5 h-3.5" /></button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => base44.auth.redirectToLogin('/seller/dashboard')}
+                  className="rounded-full text-sm border border-white/40 text-white hover:bg-white/20 px-4 py-2 transition flex items-center gap-1.5"
+                ><LogIn className="w-3.5 h-3.5" /> دخول البائع</button>
+              )
+            )}
           </div>
         </div>
       </nav>
+
+      {/* Auth Status Bar */}
+      {authChecked && !user && (
+        <div className="bg-amber-50 border-b border-amber-200 py-2 px-4 text-center text-sm text-amber-800 flex items-center justify-center gap-3">
+          <span>⚡ سجّل دخولك أولاً للبدء كبائع أو لتتبع طلباتك</span>
+          <button
+            onClick={() => base44.auth.redirectToLogin('/')}
+            className="bg-amber-600 text-white px-4 py-1 rounded-full text-xs font-bold hover:bg-amber-700 transition"
+          >تسجيل الدخول</button>
+        </div>
+      )}
+      {authChecked && user && (
+        <div className="py-2 px-4 text-center text-sm flex items-center justify-center gap-3" style={{ background: '#f3e5f5', borderBottom: '1px solid #ce93d8' }}>
+          <span style={{ color: '#6a1b9a' }}>👋 أهلاً <strong>{user.full_name}</strong> — أنت مسجل الدخول</span>
+          <Link to="/seller/dashboard">
+            <button className="text-white px-4 py-1 rounded-full text-xs font-bold transition" style={{ background: '#7b2d8b' }}>
+              لوحة البائع
+            </button>
+          </Link>
+        </div>
+      )}
 
       {/* Hero Slider */}
       <HeroSlider />
@@ -69,12 +121,21 @@ export default function Landing() {
       <div style={{ background: '#7b2d8b' }} className="py-5">
         <div className="max-w-5xl mx-auto px-4 flex flex-wrap items-center justify-center gap-4">
           <p className="text-white font-bold text-lg">🚀 افتح متجرك الإلكتروني في دقائق</p>
-          <div className="flex gap-3">
-            <Link to="/seller/register">
-              <Button size="sm" className="rounded-full bg-white font-bold gap-1" style={{ color: '#7b2d8b' }}>
-                <Store className="w-4 h-4" /> ابدأ كبائع
-              </Button>
-            </Link>
+          <div className="flex gap-3 flex-wrap justify-center">
+            {user ? (
+              <Link to="/seller/register">
+                <Button size="sm" className="rounded-full bg-white font-bold gap-1" style={{ color: '#7b2d8b' }}>
+                  <Store className="w-4 h-4" /> ابدأ كبائع
+                </Button>
+              </Link>
+            ) : (
+              <button
+                onClick={() => base44.auth.redirectToLogin('/seller/register')}
+                className="rounded-full bg-white font-bold gap-1 px-4 py-2 text-sm flex items-center" style={{ color: '#7b2d8b' }}
+              >
+                <Store className="w-4 h-4 mr-1" /> ابدأ كبائع
+              </button>
+            )}
             <Link to="/shop">
               <Button size="sm" variant="outline" className="rounded-full border-white/50 text-white hover:bg-white/10 gap-1">
                 <ShoppingBag className="w-4 h-4" /> تسوق الآن
