@@ -5,15 +5,15 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 const slides = [
   {
     id: 1,
-    title: 'تسوق بكل سهولة',
-    subtitle: 'آلاف المنتجات بأسعار منافسة',
-    image: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/82eb3c53f_fPFsET2AgQI7TVZIlgRlv5MizZyNlsn2PkNVK2WB.png',
+    title: 'شغلك أونلاين؟',
+    subtitle: 'خلّيه يحقق لك دخل إضافي',
+    image: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/f9c3929aa_WhatsAppImage2026-05-05at110058AM1.jpg',
   },
   {
     id: 2,
-    title: 'توصيل سريع لبابك',
-    subtitle: 'اطلب الآن واستلم في أسرع وقت',
-    image: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/00d829a5c_exJIj1WB1xXKzBHfeLblKpBDpOJccRStFXLEi0d3.png',
+    title: 'شغلك الأونلاين؟',
+    subtitle: 'خلّيه يشتغل لحاله',
+    image: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/e5e45b606_WhatsAppImage2026-05-05at110058AM.jpg',
   },
 ];
 
