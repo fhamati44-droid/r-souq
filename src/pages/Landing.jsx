@@ -21,26 +21,26 @@ const features = [
 ];
 
 const PARTNERS = [
-  { name: 'Alibaba', logo: 'https://logo.clearbit.com/alibaba.com' },
-  { name: 'DHgate', logo: 'https://logo.clearbit.com/dhgate.com' },
-  { name: 'Taobao', logo: 'https://logo.clearbit.com/taobao.com' },
-  { name: 'Tmall', logo: 'https://logo.clearbit.com/tmall.com' },
-  { name: 'Temu', logo: 'https://logo.clearbit.com/temu.com' },
-  { name: 'Wish', logo: 'https://logo.clearbit.com/wish.com' },
-  { name: 'Banggood', logo: 'https://logo.clearbit.com/banggood.com' },
-  { name: 'LightInTheBox', logo: 'https://logo.clearbit.com/lightinthebox.com' },
-  { name: 'Joom', logo: 'https://logo.clearbit.com/joom.com' },
-  { name: 'Gearbest', logo: 'https://logo.clearbit.com/gearbest.com' },
-  { name: 'Tomtop', logo: 'https://logo.clearbit.com/tomtop.com' },
-  { name: 'Geekbuying', logo: 'https://logo.clearbit.com/geekbuying.com' },
-  { name: 'Shein', logo: 'https://logo.clearbit.com/shein.com' },
-  { name: 'CJ Dropshipping', logo: 'https://logo.clearbit.com/cjdropshipping.com' },
-  { name: 'Doba', logo: 'https://logo.clearbit.com/doba.com' },
-  { name: 'Spocket', logo: 'https://logo.clearbit.com/spocket.co' },
-  { name: 'Trendyol', logo: 'https://logo.clearbit.com/trendyol.com' },
-  { name: 'Hepsiburada', logo: 'https://logo.clearbit.com/hepsiburada.com' },
-  { name: 'n11', logo: 'https://logo.clearbit.com/n11.com' },
-  { name: 'Turkishexporter', logo: 'https://logo.clearbit.com/turkishexporter.net' },
+  { name: 'Alibaba', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/ec3c62eb0_download.jpg' },
+  { name: 'DHgate', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/683ccf2ef_download1.jpg' },
+  { name: 'Taobao', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/455f7deef_download2.jpg' },
+  { name: 'Tmall', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/5c2af63ab_download3.jpg' },
+  { name: 'Temu', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/53838fc7a_download4.jpg' },
+  { name: 'Wish', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/7c9335087_download5.jpg' },
+  { name: 'Banggood', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/488fcee5f_download6.png' },
+  { name: 'LightInTheBox', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/cdd0e32b5_download7.png' },
+  { name: 'Joom', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/0a7acff19_download8.png' },
+  { name: 'Gearbest', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/1b06b8f15_download9.png' },
+  { name: 'Tomtop', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/a8a833ee7_download10.png' },
+  { name: 'Geekbuying', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/f2fc9bc96_download11.png' },
+  { name: 'Shein', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/ce6e89e22_download12.png' },
+  { name: 'CJ Dropshipping', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/735ff015c_download13.png' },
+  { name: 'Doba', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/185884d1a_download14.png' },
+  { name: 'Spocket', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/1b8476f5a_download15.png' },
+  { name: 'Trendyol', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/1a57716fe_download5.png' },
+  { name: 'Hepsiburada', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/688514d54_download4.png' },
+  { name: 'n11', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/b751a774d_download3.png' },
+  { name: 'Turkishexporter', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/546a65601_download2.png' },
 ];
 
 const stats = [
@@ -176,9 +176,8 @@ export default function Landing() {
         <div className="relative">
           <div className="flex animate-marquee whitespace-nowrap gap-8">
             {[...PARTNERS, ...PARTNERS].map((p, i) => (
-              <div key={i} className="inline-flex items-center gap-3 px-5 py-3 rounded-2xl border border-slate-200 bg-white shrink-0 hover:border-violet-300 hover:shadow-md transition-all">
-                <img src={p.logo} alt={p.name} className="w-8 h-8 object-contain rounded" onError={e => { e.target.style.display='none'; }} />
-                <span className="font-bold text-sm text-slate-700">{p.name}</span>
+              <div key={i} className="inline-flex items-center justify-center px-4 py-3 rounded-2xl border border-slate-200 bg-white shrink-0 hover:border-violet-300 hover:shadow-md transition-all">
+                <img src={p.logo} alt={p.name} className="h-12 w-auto max-w-[120px] object-contain" />
               </div>
             ))}
           </div>
