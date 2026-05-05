@@ -15,12 +15,16 @@ export default function StoreDetail() {
   const { addToCart } = useCart();
 
   useEffect(() => {
+    if (!id || id === ':id') return;
     Promise.all([
-      base44.entities.Store.filter({ id }),
+      base44.entities.Store.get(id),
       base44.entities.Product.filter({ store_id: id, is_active: true }, '-created_date'),
-    ]).then(([stores, prods]) => {
-      setStore(stores[0] || null);
+    ]).then(([store, prods]) => {
+      setStore(store || null);
       setProducts(prods);
+      setLoading(false);
+    }).catch(() => {
+      setStore(null);
       setLoading(false);
     });
   }, [id]);
