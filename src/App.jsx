@@ -11,6 +11,7 @@ import { Toaster as SonnerToaster } from 'sonner';
 
 // Landing
 import Landing from './pages/Landing';
+import ContactUs from './pages/ContactUs';
 
 // Admin
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -69,6 +70,7 @@ const AuthenticatedApp = () => {
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/orders" element={<Orders />} />
 
+      <Route path="/contact" element={<ContactUs />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

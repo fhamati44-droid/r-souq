@@ -60,7 +60,7 @@ export default function Landing() {
             <a href="#pricing" className="hover:text-purple-700 transition">الأسعار</a>
             <Link to="/shop" className="hover:text-purple-700 transition">المتاجر</Link>
             <a href="#" className="hover:text-purple-700 transition">من نحن</a>
-            <a href="#" className="hover:text-purple-700 transition">تواصل معنا</a>
+            <Link to="/contact" className="hover:text-purple-700 transition">تواصل معنا</Link>
           </div>
 
           {/* CTA */}
