@@ -42,7 +42,7 @@ export default function ContactUs() {
           <div>
             <h3 className="font-bold text-slate-800 mb-4">الشروط والسياسات</h3>
             <ul className="space-y-2">
-              <li><a href="#" className="text-blue-600 hover:underline">شروط الاستخدام</a></li>
+              <li><a href="/terms" className="text-blue-600 hover:underline">شروط الاستخدام</a></li>
               <li><a href="#" className="text-blue-600 hover:underline">سياسة الاستبدال والاسترجاع</a></li>
               <li><a href="#" className="text-blue-600 hover:underline">سياسة الخصوصية</a></li>
             </ul>
