@@ -31,34 +31,44 @@ export default function SellerRegister() {
   const handleCryptoConfirm = async ({ crypto, cryptoAmount, txHash }) => {
     if (!form.store_name) { toast.error('أدخل اسم المتجر'); return; }
     setLoading(true);
+
     const user = await base44.auth.me();
     const today = new Date();
     const expires = new Date(today);
     expires.setMonth(expires.getMonth() + 1);
 
-    // Create store with pending_payment status - will be activated by admin after payment verification
-    const store = await base44.entities.Store.create({
-      ...form,
-      owner_email: user.email,
-      owner_name: user.full_name,
-      status: 'pending_payment',
-      subscription_plan: selectedPlan,
-      subscription_expires: expires.toISOString().split('T')[0],
-      is_featured: false,
-      rating: 0,
-      total_sales: 0,
-    });
+    // Check if store already exists for this user to avoid duplicates
+    const existingStores = await base44.entities.Store.filter({ owner_email: user.email });
+    let store;
+    if (existingStores.length > 0) {
+      store = existingStores[0];
+    } else {
+      store = await base44.entities.Store.create({
+        ...form,
+        owner_email: user.email,
+        owner_name: user.full_name,
+        status: 'pending_payment',
+        subscription_plan: selectedPlan,
+        subscription_expires: expires.toISOString().split('T')[0],
+        is_featured: false,
+        rating: 0,
+        total_sales: 0,
+      });
+    }
 
-    // Create wallet
-    await base44.entities.SellerWallet.create({
-      owner_email: user.email,
-      store_id: store.id,
-      balance: 0,
-      total_deposited: 0,
-      total_spent: 0,
-    });
+    // Create wallet if not exists
+    const existingWallets = await base44.entities.SellerWallet.filter({ owner_email: user.email });
+    if (existingWallets.length === 0) {
+      await base44.entities.SellerWallet.create({
+        owner_email: user.email,
+        store_id: store.id,
+        balance: 0,
+        total_deposited: 0,
+        total_spent: 0,
+      });
+    }
 
-    // Record subscription transaction as pending - admin must confirm
+    // Always create a new transaction record for this payment attempt
     await base44.entities.WalletTransaction.create({
       owner_email: user.email,
       store_id: store.id,
@@ -83,8 +93,8 @@ export default function SellerRegister() {
     });
 
     toast.success('✅ تم إرسال طلبك! سيتم تفعيل متجرك بعد التحقق من الدفع');
-    navigate('/seller/dashboard');
     setLoading(false);
+    navigate('/seller/dashboard');
   };
 
   return (
