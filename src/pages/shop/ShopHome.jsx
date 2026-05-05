@@ -23,7 +23,7 @@ function HeroBanner() {
     return () => clearInterval(t);
   }, []);
   return (
-    <div className="relative w-full overflow-hidden bg-[#2d0a4e]" style={{ maxHeight: '420px' }}>
+    <div className="relative w-full overflow-hidden bg-[#2d0a4e]">
       <AnimatePresence mode="wait">
         <motion.img
           key={current}
@@ -33,8 +33,7 @@ function HeroBanner() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.7 }}
-          className="w-full object-cover object-center"
-          style={{ maxHeight: '420px' }}
+          className="w-full h-auto block"
         />
       </AnimatePresence>
       {/* Dots */}
@@ -340,8 +339,7 @@ export default function ShopHome() {
                 <img
                   src="https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/f948b2f51_WhatsAppImage2026-05-05at45728PM2.jpg"
                   alt="promo 1"
-                  className="w-full rounded-2xl object-cover hover:opacity-95 transition shadow-md"
-                  style={{ maxHeight: '220px', objectPosition: 'center' }}
+                  className="w-full h-auto block rounded-2xl hover:opacity-95 transition shadow-md"
                 />
               </Link>
             </motion.div>
@@ -350,8 +348,7 @@ export default function ShopHome() {
                 <img
                   src="https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/9b1e38864_WhatsAppImage2026-05-05at45728PM1.jpg"
                   alt="promo 2"
-                  className="w-full rounded-2xl object-cover hover:opacity-95 transition shadow-md"
-                  style={{ maxHeight: '220px', objectPosition: 'center' }}
+                  className="w-full h-auto block rounded-2xl hover:opacity-95 transition shadow-md"
                 />
               </Link>
             </motion.div>
