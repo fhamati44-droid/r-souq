@@ -1,37 +1,30 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Store, ShoppingBag, Star, Zap, TrendingUp, CheckCircle, LogIn, LogOut, User } from 'lucide-react';
+import { Store, ShoppingBag, Star, Zap, TrendingUp, CheckCircle, LogIn, LogOut, User, ArrowLeft, Play, Package, Truck, Settings, Globe, DollarSign, Users, MapPin, Shield } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import HeroSlider from '@/components/landing/HeroSlider';
 
 const plans = [
-  {
-    name: 'أساسي',
-    nameEn: 'Basic',
-    price: 49,
-    period: 'شهرياً',
-    color: 'from-slate-500 to-slate-700',
-    features: ['حتى 50 منتج', 'لوحة تحكم بسيطة', 'دعم عبر البريد', 'صفحة متجر'],
-  },
-  {
-    name: 'احترافي',
-    nameEn: 'Pro',
-    price: 99,
-    period: 'شهرياً',
-    color: 'from-violet-500 to-indigo-600',
-    popular: true,
-    features: ['حتى 200 منتج', 'إحصائيات المبيعات', 'دعم أولوية', 'تخصيص المتجر', 'ظهور في نتائج البحث'],
-  },
-  {
-    name: 'مميز',
-    nameEn: 'Premium',
-    price: 199,
-    period: 'شهرياً',
-    color: 'from-amber-500 to-orange-600',
-    features: ['منتجات غير محدودة', 'حملات إعلانية', 'إبراز المتجر', 'دعم VIP 24/7', 'أولوية في الصفحة الرئيسية'],
-  },
+  { name: 'أساسي', nameEn: 'Basic', price: 49, period: 'شهرياً', color: 'from-slate-500 to-slate-700', features: ['حتى 50 منتج', 'لوحة تحكم بسيطة', 'دعم عبر البريد', 'صفحة متجر'] },
+  { name: 'احترافي', nameEn: 'Pro', price: 99, period: 'شهرياً', color: 'from-violet-500 to-indigo-600', popular: true, features: ['حتى 200 منتج', 'إحصائيات المبيعات', 'دعم أولوية', 'تخصيص المتجر', 'ظهور في نتائج البحث'] },
+  { name: 'مميز', nameEn: 'Premium', price: 199, period: 'شهرياً', color: 'from-amber-500 to-orange-600', features: ['منتجات غير محدودة', 'حملات إعلانية', 'إبراز المتجر', 'دعم VIP 24/7', 'أولوية في الصفحة الرئيسية'] },
+];
+
+const features = [
+  { icon: DollarSign, title: 'دخل إضافي', desc: 'زد أرباحك ونمّ مشاريعك' },
+  { icon: ShoppingBag, title: 'تسوق ذكي', desc: 'منتجات مختارة وبأفضل الأسعار' },
+  { icon: Truck, title: 'شحن سريع وآمن', desc: 'توصيل في الوقت المحدد لعملائك' },
+  { icon: Settings, title: 'إدارة متكاملة', desc: 'نظام سهل لإدارة طلباتك وعملياتك' },
+  { icon: Globe, title: 'سهولة تامة', desc: 'كل شيء منظم لتوفير وقتك وجهدك' },
+];
+
+const stats = [
+  { icon: Users, value: '+10,000', label: 'عميل نشط' },
+  { icon: Package, value: '+50,000', label: 'طلب تم تنفيذه' },
+  { icon: MapPin, value: '+5', label: 'دول نخدمها' },
+  { icon: Shield, value: '99%', label: 'رضا العملاء' },
 ];
 
 export default function Landing() {
@@ -50,162 +43,189 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen bg-white" dir="rtl">
-      {/* Navbar */}
-      <nav className="sticky top-0 z-50 backdrop-blur shadow-md" style={{ background: '#6a1b9a', borderBottom: '2px solid #9c27b0' }}>
+
+      {/* ── Navbar ── */}
+      <nav className="sticky top-0 z-50 bg-white border-b border-slate-100 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
+          {/* Logo */}
           <div className="flex items-center gap-2">
-            <span className="text-xl font-extrabold text-white">R souq</span>
-            <span className="text-3xl">🚚</span>
+            <span className="text-2xl">🚚</span>
+            <span className="text-xl font-extrabold" style={{ color: '#6a1b9a' }}>R souq</span>
           </div>
+
+          {/* Nav Links */}
+          <div className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
+            <a href="#" className="hover:text-purple-700 transition">الرئيسية</a>
+            <a href="#features" className="hover:text-purple-700 transition">خدماتنا</a>
+            <a href="#pricing" className="hover:text-purple-700 transition">الأسعار</a>
+            <Link to="/shop" className="hover:text-purple-700 transition">المتاجر</Link>
+            <a href="#" className="hover:text-purple-700 transition">من نحن</a>
+            <a href="#" className="hover:text-purple-700 transition">تواصل معنا</a>
+          </div>
+
+          {/* CTA */}
           <div className="flex items-center gap-2">
-            <Link to="/shop" className="hidden sm:block">
-              <Button variant="ghost" className="rounded-full gap-2 text-white hover:bg-white/20">
-                <ShoppingBag className="w-4 h-4" /> تسوق الآن
-              </Button>
-            </Link>
-            <Link to="/seller/register" className="hidden sm:block">
-              <Button className="rounded-full gap-2 bg-white font-bold" style={{ color: '#7b2d8b' }}>
-                <Store className="w-4 h-4" /> افتح متجرك
-              </Button>
-            </Link>
             {authChecked && (
               user ? (
                 <div className="flex items-center gap-2">
                   <Link to="/seller/dashboard">
-                    <button className="rounded-full text-sm border border-white/40 text-white hover:bg-white/20 px-4 py-2 transition flex items-center gap-1.5">
+                    <Button size="sm" className="rounded-full gap-1.5 font-bold" style={{ background: '#7b2d8b' }}>
                       <User className="w-3.5 h-3.5" /> {user.full_name?.split(' ')[0] || 'لوحتي'}
-                    </button>
+                    </Button>
                   </Link>
-                  <button
-                    onClick={() => base44.auth.logout('/')}
-                    className="rounded-full text-sm border border-white/40 text-white hover:bg-white/20 px-3 py-2 transition"
-                    title="خروج"
-                  ><LogOut className="w-3.5 h-3.5" /></button>
+                  <button onClick={() => base44.auth.logout('/')} className="p-2 rounded-full hover:bg-slate-100 transition text-slate-500" title="خروج">
+                    <LogOut className="w-4 h-4" />
+                  </button>
                 </div>
               ) : (
-                <button
+                <Button
                   onClick={() => base44.auth.redirectToLogin('/seller/dashboard')}
-                  className="rounded-full text-sm border border-white/40 text-white hover:bg-white/20 px-4 py-2 transition flex items-center gap-1.5"
-                ><LogIn className="w-3.5 h-3.5" /> دخول البائع</button>
+                  className="rounded-full font-bold px-5"
+                  style={{ background: '#7b2d8b' }}
+                >
+                  ابدأ الآن
+                </Button>
               )
             )}
           </div>
         </div>
       </nav>
 
-      {/* Auth Status Bar */}
-      {authChecked && !user && (
-        <div className="bg-amber-50 border-b border-amber-200 py-2 px-4 text-center text-sm text-amber-800 flex items-center justify-center gap-3">
-          <span>⚡ سجّل دخولك أولاً للبدء كبائع أو لتتبع طلباتك</span>
-          <button
-            onClick={() => base44.auth.redirectToLogin('/')}
-            className="bg-amber-600 text-white px-4 py-1 rounded-full text-xs font-bold hover:bg-amber-700 transition"
-          >تسجيل الدخول</button>
-        </div>
-      )}
-      {authChecked && user && (
-        <div className="py-2 px-4 text-center text-sm flex items-center justify-center gap-3" style={{ background: '#f3e5f5', borderBottom: '1px solid #ce93d8' }}>
-          <span style={{ color: '#6a1b9a' }}>👋 أهلاً <strong>{user.full_name}</strong> — أنت مسجل الدخول</span>
-          <Link to="/seller/dashboard">
-            <button className="text-white px-4 py-1 rounded-full text-xs font-bold transition" style={{ background: '#7b2d8b' }}>
-              لوحة البائع
-            </button>
-          </Link>
-        </div>
-      )}
+      {/* ── Hero ── */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-50 via-purple-50 to-indigo-50 pt-12 pb-0">
+        {/* Decorative background blobs */}
+        <div className="absolute top-0 left-0 w-96 h-96 bg-purple-200 rounded-full opacity-20 blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+        <div className="absolute bottom-0 right-0 w-80 h-80 bg-indigo-200 rounded-full opacity-20 blur-3xl translate-x-1/4 translate-y-1/4 pointer-events-none" />
 
-      {/* Hero Slider */}
-      <HeroSlider />
-
-      {/* CTA Bar */}
-      <div style={{ background: '#7b2d8b' }} className="py-5">
-        <div className="max-w-5xl mx-auto px-4 flex flex-wrap items-center justify-center gap-4">
-          <p className="text-white font-bold text-lg">🚀 افتح متجرك الإلكتروني في دقائق</p>
-          <div className="flex gap-3 flex-wrap justify-center">
-            {user ? (
-              <Link to="/seller/register">
-                <Button size="sm" className="rounded-full bg-white font-bold gap-1" style={{ color: '#7b2d8b' }}>
-                  <Store className="w-4 h-4" /> ابدأ كبائع
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 grid md:grid-cols-2 gap-8 items-end">
+          {/* Text */}
+          <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} className="pb-12 order-2 md:order-1">
+            <span className="inline-flex items-center gap-1.5 text-xs font-bold bg-amber-100 text-amber-700 px-3 py-1 rounded-full mb-5">
+              <span className="w-2 h-2 bg-amber-500 rounded-full animate-pulse" />
+              شريكك في النجاح
+            </span>
+            <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-900 leading-tight mb-3">
+              شغلك أونلاين؟
+            </h1>
+            <h2 className="text-4xl sm:text-5xl font-extrabold leading-tight mb-5" style={{ color: '#f59e0b' }}>
+              خلّيه يشتغل لحاله
+            </h2>
+            <p className="text-slate-500 text-lg leading-relaxed mb-8">
+              نحن نهتم بالتسوق، الشحن، والإدارة<br />وأنت ركّز على البيع والنمو
+            </p>
+            <div className="flex flex-wrap gap-3">
+              {user ? (
+                <Link to="/seller/register">
+                  <Button size="lg" className="rounded-full font-bold px-8 gap-2 shadow-lg" style={{ background: '#7b2d8b' }}>
+                    ابدأ الآن <ArrowLeft className="w-4 h-4" />
+                  </Button>
+                </Link>
+              ) : (
+                <button
+                  onClick={() => base44.auth.redirectToLogin('/seller/register')}
+                  className="inline-flex items-center gap-2 rounded-full font-bold px-8 py-3 text-white shadow-lg transition hover:opacity-90"
+                  style={{ background: '#7b2d8b' }}
+                >
+                  ابدأ الآن <ArrowLeft className="w-4 h-4" />
+                </button>
+              )}
+              <Link to="/shop">
+                <Button size="lg" variant="outline" className="rounded-full font-bold px-6 gap-2 border-slate-300">
+                  <Play className="w-4 h-4" /> شاهد كيف نعمل
                 </Button>
               </Link>
-            ) : (
-              <button
-                onClick={() => base44.auth.redirectToLogin('/seller/register')}
-                className="rounded-full bg-white font-bold gap-1 px-4 py-2 text-sm flex items-center" style={{ color: '#7b2d8b' }}
-              >
-                <Store className="w-4 h-4 mr-1" /> ابدأ كبائع
-              </button>
-            )}
-            <Link to="/shop">
-              <Button size="sm" variant="outline" className="rounded-full border-white/50 text-white hover:bg-white/10 gap-1">
-                <ShoppingBag className="w-4 h-4" /> تسوق الآن
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* Stats */}
-      <section className="bg-white border-b border-purple-100 py-10">
-        <div className="max-w-5xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-          {[
-            { n: '5,000+', l: 'بائع نشط' },
-            { n: '200,000+', l: 'منتج معروض' },
-            { n: '1M+', l: 'متسوق' },
-            { n: '98%', l: 'رضا العملاء' },
-          ].map((s, i) => (
-            <div key={i}>
-              <p className="text-3xl font-extrabold" style={{ color: '#7b2d8b' }}>{s.n}</p>
-              <p className="text-muted-foreground text-sm mt-1">{s.l}</p>
             </div>
-          ))}
+          </motion.div>
+
+          {/* Hero Image */}
+          <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7 }} className="order-1 md:order-2">
+            <HeroSlider />
+          </motion.div>
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="py-20 bg-slate-50">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <h2 className="text-3xl font-extrabold text-center mb-14">كيف يعمل؟</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              { icon: Store, step: '01', title: 'سجّل وادفع الاشتراك', desc: 'اختر الباقة المناسبة وادفع رسوم إنشاء المتجر الشهرية' },
-              { icon: Zap, step: '02', title: 'أضف منتجاتك', desc: 'أضف منتجاتك من المخزن وحدد أسعارك بحرية كاملة' },
-              { icon: TrendingUp, step: '03', title: 'ابدأ البيع', desc: 'تلقّ الطلبات وروّج متجرك بحملات إعلانية مدفوعة' },
-            ].map((item, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-                className="bg-white rounded-2xl p-7 shadow-sm border border-slate-100 text-center"
-              >
-                <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: '#f3e5f5' }}>
-                  <item.icon className="w-7 h-7" style={{ color: '#7b2d8b' }} />
+      {/* ── Features Bar ── */}
+      <section id="features" className="py-14 bg-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 text-center">
+            {features.map((f, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }} className="flex flex-col items-center gap-3">
+                <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm" style={{ background: '#f3e5f5' }}>
+                  <f.icon className="w-6 h-6" style={{ color: '#7b2d8b' }} />
                 </div>
-                <span className="text-xs font-bold text-violet-400 uppercase tracking-widest">{item.step}</span>
-                <h3 className="text-lg font-bold mt-2 mb-3">{item.title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">{item.desc}</p>
+                <p className="font-bold text-sm text-slate-800">{f.title}</p>
+                <p className="text-xs text-slate-500 leading-relaxed">{f.desc}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Pricing */}
-      <section className="py-20">
+      {/* ── Stats Banner ── */}
+      <section className="py-10" style={{ background: 'linear-gradient(135deg, #f3e5f5 0%, #ede7f6 100%)' }}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <h2 className="text-3xl font-extrabold text-center mb-3">باقات الاشتراك</h2>
-          <p className="text-center text-muted-foreground mb-14">اختر الباقة المناسبة لحجم تجارتك</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {stats.map((s, i) => (
+              <motion.div key={i} initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }} className="bg-white rounded-2xl p-5 flex items-center gap-4 shadow-sm">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style={{ background: '#ede7f6' }}>
+                  <s.icon className="w-5 h-5" style={{ color: '#7b2d8b' }} />
+                </div>
+                <div>
+                  <p className="text-xl font-extrabold" style={{ color: '#6a1b9a' }}>{s.value}</p>
+                  <p className="text-xs text-slate-500">{s.label}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── How it works ── */}
+      <section className="py-20 bg-slate-50 relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-10 right-10 w-64 h-64 bg-purple-100 rounded-full opacity-40 blur-3xl" />
+          <div className="absolute bottom-10 left-10 w-64 h-64 bg-indigo-100 rounded-full opacity-40 blur-3xl" />
+        </div>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 relative">
+          <div className="text-center mb-14">
+            <h2 className="text-3xl font-extrabold mb-3">كيف يعمل؟</h2>
+            <p className="text-slate-500">ثلاث خطوات فقط لتبدأ رحلتك</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { icon: Store, step: '01', title: 'سجّل وادفع الاشتراك', desc: 'اختر الباقة المناسبة وادفع رسوم إنشاء المتجر الشهرية' },
+              { icon: Zap, step: '02', title: 'أضف منتجاتك', desc: 'أضف منتجاتك من المخزن وحدد أسعارك بحرية كاملة' },
+              { icon: TrendingUp, step: '03', title: 'ابدأ البيع', desc: 'تلقّ الطلبات وروّج متجرك بحملات إعلانية مدفوعة' },
+            ].map((item, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+                className="bg-white rounded-2xl p-7 shadow-sm border border-purple-100 text-center relative overflow-hidden">
+                <div className="absolute top-3 left-4 text-6xl font-extrabold text-purple-50 select-none">{item.step}</div>
+                <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4 relative" style={{ background: '#f3e5f5' }}>
+                  <item.icon className="w-7 h-7" style={{ color: '#7b2d8b' }} />
+                </div>
+                <h3 className="text-lg font-bold mt-2 mb-3">{item.title}</h3>
+                <p className="text-slate-500 text-sm leading-relaxed">{item.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Pricing ── */}
+      <section id="pricing" className="py-20 bg-white relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-1/2 w-96 h-96 bg-purple-50 rounded-full opacity-60 blur-3xl -translate-x-1/2" />
+        </div>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 relative">
+          <div className="text-center mb-14">
+            <h2 className="text-3xl font-extrabold mb-3">باقات الاشتراك</h2>
+            <p className="text-slate-500">اختر الباقة المناسبة لحجم تجارتك</p>
+          </div>
           <div className="grid md:grid-cols-3 gap-6">
             {plans.map((plan, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: i * 0.1 }}
-                className={`relative rounded-3xl border-2 p-8 ${plan.popular ? 'shadow-xl' : 'border-slate-200'}`}
-                style={plan.popular ? { borderColor: '#7b2d8b', boxShadow: '0 10px 40px rgba(123,45,139,0.15)' } : {}}
-              >
+              <motion.div key={i} initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+                className={`relative rounded-3xl border-2 p-8 bg-white ${plan.popular ? 'shadow-2xl' : 'border-slate-100 shadow-sm'}`}
+                style={plan.popular ? { borderColor: '#7b2d8b', boxShadow: '0 10px 40px rgba(123,45,139,0.15)' } : {}}>
                 {plan.popular && (
                   <span className="absolute -top-4 left-1/2 -translate-x-1/2 text-white px-4 py-1 rounded-full text-xs font-bold" style={{ background: '#7b2d8b' }}>الأكثر شعبية</span>
                 )}
@@ -215,13 +235,12 @@ export default function Landing() {
                 <h3 className="text-xl font-extrabold">{plan.name}</h3>
                 <div className="mt-3 mb-6">
                   <span className="text-4xl font-extrabold" style={{ color: '#7b2d8b' }}>{plan.price}</span>
-                  <span className="text-muted-foreground"> ر.س / {plan.period}</span>
+                  <span className="text-slate-400"> ر.س / {plan.period}</span>
                 </div>
                 <ul className="space-y-3 mb-8">
                   {plan.features.map((f, j) => (
-                    <li key={j} className="flex items-center gap-2 text-sm">
-                      <CheckCircle className="w-4 h-4 text-green-500 shrink-0" />
-                      {f}
+                    <li key={j} className="flex items-center gap-2 text-sm text-slate-600">
+                      <CheckCircle className="w-4 h-4 text-green-500 shrink-0" /> {f}
                     </li>
                   ))}
                 </ul>
@@ -236,28 +255,38 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Campaign CTA */}
-      <section className="py-16 border-y" style={{ background: 'linear-gradient(135deg, #f3e5f5 0%, #ede7f6 100%)', borderColor: '#ce93d8' }}>
-        <div className="max-w-3xl mx-auto px-4 text-center">
-          <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" style={{ background: '#e1bee7' }}>
-            <TrendingUp className="w-8 h-8" style={{ color: '#7b2d8b' }} />
+      {/* ── Campaign CTA ── */}
+      <section className="py-16 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #6a1b9a 0%, #7b2d8b 50%, #9c27b0 100%)' }}>
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl translate-x-1/4 -translate-y-1/4" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl -translate-x-1/4 translate-y-1/4" />
+        </div>
+        <div className="max-w-3xl mx-auto px-4 text-center relative">
+          <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5 bg-white/10 backdrop-blur">
+            <TrendingUp className="w-8 h-8 text-white" />
           </div>
-          <h2 className="text-2xl font-extrabold mb-3">روّج متجرك بحملة إعلانية</h2>
-          <p className="text-muted-foreground mb-6">افتح متجرك، أضف منتجاتك، وابدأ البيع لملايين المتسوقين — كل هذا في مكان واحد!</p>
+          <h2 className="text-2xl font-extrabold text-white mb-3">روّج متجرك بحملة إعلانية</h2>
+          <p className="text-white/70 mb-8">افتح متجرك، أضف منتجاتك، وابدأ البيع لملايين المتسوقين — كل هذا في مكان واحد!</p>
           <Link to="/seller/dashboard">
-            <Button className="rounded-full font-bold px-8 gap-2" style={{ background: '#7b2d8b' }}>
-              <Zap className="w-4 h-4" /> ابدأ حملتك الآن
+            <Button className="rounded-full font-bold px-10 py-6 text-base gap-2 bg-white hover:bg-white/90" style={{ color: '#7b2d8b' }}>
+              <Zap className="w-5 h-5" /> ابدأ حملتك الآن
             </Button>
           </Link>
         </div>
       </section>
 
-      <footer className="text-white py-10 text-center" style={{ background: '#4a1260' }}>
-        <div className="flex items-center justify-center gap-2 mb-2">
-          <Store className="w-5 h-5" style={{ color: '#ce93d8' }} />
-          <span className="font-bold text-lg">سوق بلس</span>
+      {/* ── Footer ── */}
+      <footer className="py-10 text-center" style={{ background: '#4a1260' }}>
+        <div className="flex items-center justify-center gap-2 mb-3">
+          <span className="text-2xl">🚚</span>
+          <span className="font-extrabold text-lg text-white">R souq</span>
         </div>
-        <p className="text-slate-400 text-sm">© 2026 سوق بلس. جميع الحقوق محفوظة.</p>
+        <div className="flex items-center justify-center gap-6 mb-4">
+          <Link to="/shop" className="text-slate-400 hover:text-white text-sm transition">تسوق الآن</Link>
+          <Link to="/seller/register" className="text-slate-400 hover:text-white text-sm transition">ابدأ كبائع</Link>
+          <Link to="/seller/dashboard" className="text-slate-400 hover:text-white text-sm transition">لوحة التحكم</Link>
+        </div>
+        <p className="text-slate-500 text-sm">© 2026 R souq. جميع الحقوق محفوظة.</p>
       </footer>
     </div>
   );
