@@ -332,27 +332,16 @@ export default function ShopHome() {
             </div>
           </section>
 
-          {/* ── Promo Banners (full-width images) ── */}
-          <section className="space-y-4">
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
-              <Link to="/shop/stores">
-                <img
-                  src="https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/f948b2f51_WhatsAppImage2026-05-05at45728PM2.jpg"
-                  alt="promo 1"
-                  className="w-full h-auto block rounded-2xl hover:opacity-95 transition shadow-md"
-                />
-              </Link>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-              <Link to="/shop/stores">
-                <img
-                  src="https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/9b1e38864_WhatsAppImage2026-05-05at45728PM1.jpg"
-                  alt="promo 2"
-                  className="w-full h-auto block rounded-2xl hover:opacity-95 transition shadow-md"
-                />
-              </Link>
-            </motion.div>
-          </section>
+          {/* ── Promo Banner 1 ── */}
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
+            <Link to="/shop/stores">
+              <img
+                src="https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/f948b2f51_WhatsAppImage2026-05-05at45728PM2.jpg"
+                alt="promo 1"
+                className="w-full h-auto block rounded-2xl hover:opacity-95 transition shadow-md"
+              />
+            </Link>
+          </motion.div>
 
           {/* ── Featured Stores ── */}
           {stores.length > 0 && (
@@ -420,6 +409,17 @@ export default function ShopHome() {
               </div>
             )}
           </section>
+
+          {/* ── Promo Banner 2 ── */}
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+            <Link to="/shop/stores">
+              <img
+                src="https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/9b1e38864_WhatsAppImage2026-05-05at45728PM1.jpg"
+                alt="promo 2"
+                className="w-full h-auto block rounded-2xl hover:opacity-95 transition shadow-md"
+              />
+            </Link>
+          </motion.div>
 
           {/* ── All Products with filters ── */}
           <section>
