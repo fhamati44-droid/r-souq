@@ -167,23 +167,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── Partners Marquee ── */}
-      <section className="py-10 bg-white border-b border-slate-100 overflow-hidden">
-        <div className="max-w-6xl mx-auto px-4 mb-6 text-center">
-          <h2 className="text-xl font-extrabold text-slate-800">شركاؤنا</h2>
-          <p className="text-sm text-slate-500 mt-1">نتعامل مع أكبر 20 منصة عالمية لتوريد البضائع</p>
-        </div>
-        <div className="relative">
-          <div className="flex whitespace-nowrap gap-8" style={{ animation: 'marquee 40s linear infinite' }}>
-            {[...PARTNERS, ...PARTNERS, ...PARTNERS].map((p, i) => (
-              <div key={i} className="inline-flex items-center justify-center px-4 py-3 rounded-2xl border border-slate-200 bg-white shrink-0 hover:border-violet-300 hover:shadow-md transition-all">
-                <img src={p.logo} alt={p.name} className="h-12 w-24 object-contain" />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── Features Bar ── */}
       <section id="features" className="py-14 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
@@ -247,6 +230,23 @@ export default function Landing() {
                 <p className="text-slate-500 text-sm leading-relaxed">{item.desc}</p>
               </motion.div>
             ))}
+          </div>
+
+          {/* ── Partners Marquee ── */}
+          <div className="mt-20 pt-10 border-t border-slate-200">
+            <div className="text-center mb-8">
+              <h3 className="text-xl font-extrabold text-slate-800">شركاؤنا</h3>
+              <p className="text-sm text-slate-500 mt-1">نتعامل مع أكبر 20 منصة عالمية لتوريد البضائع</p>
+            </div>
+            <div className="relative overflow-hidden">
+              <div className="flex whitespace-nowrap gap-8" style={{ animation: 'marquee 40s linear infinite' }}>
+                {[...PARTNERS, ...PARTNERS, ...PARTNERS].map((p, i) => (
+                  <div key={i} className="inline-flex items-center justify-center px-4 py-3 rounded-2xl border border-slate-200 bg-white shrink-0 hover:border-violet-300 hover:shadow-md transition-all">
+                    <img src={p.logo} alt={p.name} className="h-12 w-24 object-contain" />
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
