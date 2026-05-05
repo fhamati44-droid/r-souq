@@ -20,6 +20,29 @@ const features = [
   { icon: Globe, title: 'سهولة تامة', desc: 'كل شيء منظم لتوفير وقتك وجهدك' },
 ];
 
+const PARTNERS = [
+  { name: 'Alibaba', emoji: '🛒' },
+  { name: 'DHgate', emoji: '🏷️' },
+  { name: 'Taobao', emoji: '🛍️' },
+  { name: 'Tmall', emoji: '🏪' },
+  { name: 'Temu', emoji: '💸' },
+  { name: 'Wish', emoji: '⭐' },
+  { name: 'Banggood', emoji: '📦' },
+  { name: 'LightInTheBox', emoji: '💡' },
+  { name: 'Joom', emoji: '🌐' },
+  { name: 'Gearbest', emoji: '⚙️' },
+  { name: 'Tomtop', emoji: '🔧' },
+  { name: 'Geekbuying', emoji: '🤓' },
+  { name: 'Shein', emoji: '👗' },
+  { name: 'CJ Dropshipping', emoji: '🚚' },
+  { name: 'Doba', emoji: '📋' },
+  { name: 'Spocket', emoji: '🔌' },
+  { name: 'Trendyol', emoji: '📈' },
+  { name: 'Hepsiburada', emoji: '🛒' },
+  { name: 'n11', emoji: '🏷️' },
+  { name: 'Turkishexporter', emoji: '🇹🇷' },
+];
+
 const stats = [
   { icon: Users, value: '+10,000', label: 'عميل نشط' },
   { icon: Package, value: '+50,000', label: 'طلب تم تنفيذه' },
@@ -141,6 +164,24 @@ export default function Landing() {
           <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7 }} className="order-1 md:order-2">
             <HeroSlider />
           </motion.div>
+        </div>
+      </section>
+
+      {/* ── Partners Marquee ── */}
+      <section className="py-10 bg-white border-b border-slate-100 overflow-hidden">
+        <div className="max-w-6xl mx-auto px-4 mb-6 text-center">
+          <h2 className="text-xl font-extrabold text-slate-800">شركاؤنا</h2>
+          <p className="text-sm text-slate-500 mt-1">نتعامل مع أكبر 20 منصة عالمية لتوريد البضائع</p>
+        </div>
+        <div className="relative">
+          <div className="flex animate-marquee whitespace-nowrap gap-8">
+            {[...PARTNERS, ...PARTNERS].map((p, i) => (
+              <div key={i} className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl border border-slate-200 bg-slate-50 shrink-0 hover:border-violet-300 hover:bg-violet-50 transition-all">
+                <span className="text-xl">{p.emoji}</span>
+                <span className="font-bold text-sm text-slate-700">{p.name}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
