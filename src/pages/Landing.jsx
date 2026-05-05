@@ -49,21 +49,7 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 flex items-center justify-center">
-              <svg viewBox="0 0 64 48" fill="none" className="w-10 h-10">
-                {/* Truck body */}
-                <rect x="2" y="14" width="36" height="24" rx="3" fill="#7b2d8b"/>
-                {/* Truck cab */}
-                <path d="M38 20 L38 38 L58 38 L58 26 L50 20 Z" fill="#7b2d8b"/>
-                {/* Cab window */}
-                <path d="M40 21.5 L40 28 L54 28 L54 26 L48 21.5 Z" fill="white" opacity="0.35"/>
-                {/* Wheels */}
-                <circle cx="14" cy="38" r="5" fill="#7b2d8b" stroke="white" strokeWidth="2"/>
-                <circle cx="14" cy="38" r="2" fill="white"/>
-                <circle cx="48" cy="38" r="5" fill="#7b2d8b" stroke="white" strokeWidth="2"/>
-                <circle cx="48" cy="38" r="2" fill="white"/>
-              </svg>
-            </div>
+            <img src="https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/e5966bc5d_WhatsAppImage2026-05-05at110058AM1.jpeg" alt="truck" className="h-9 w-9 object-contain rounded-lg" />
             <span className="text-xl font-extrabold" style={{ color: '#6a1b9a' }}>R souq</span>
           </div>
 
