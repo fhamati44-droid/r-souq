@@ -173,11 +173,11 @@ export default function Landing() {
           <h2 className="text-xl font-extrabold text-slate-800">شركاؤنا</h2>
           <p className="text-sm text-slate-500 mt-1">نتعامل مع أكبر 20 منصة عالمية لتوريد البضائع</p>
         </div>
-        <div className="relative">
-          <div className="flex animate-marquee whitespace-nowrap gap-8">
+        <div className="relative overflow-hidden">
+          <div className="flex animate-marquee gap-6" style={{ width: 'max-content' }}>
             {[...PARTNERS, ...PARTNERS].map((p, i) => (
-              <div key={i} className="inline-flex items-center justify-center px-4 py-3 rounded-2xl border border-slate-200 bg-white shrink-0 hover:border-violet-300 hover:shadow-md transition-all">
-                <img src={p.logo} alt={p.name} className="h-12 w-auto max-w-[120px] object-contain" />
+              <div key={i} className="flex items-center justify-center px-5 py-4 rounded-2xl border border-slate-200 bg-white shadow-sm shrink-0" style={{ minWidth: '140px', height: '80px' }}>
+                <img src={p.logo} alt={p.name} style={{ maxHeight: '50px', maxWidth: '110px', objectFit: 'contain' }} />
               </div>
             ))}
           </div>
