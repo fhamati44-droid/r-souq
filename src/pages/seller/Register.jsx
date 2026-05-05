@@ -32,6 +32,14 @@ export default function SellerRegister() {
     if (!form.store_name) { toast.error('أدخل اسم المتجر'); return; }
     setLoading(true);
 
+    const isAuth = await base44.auth.isAuthenticated();
+    if (!isAuth) {
+      setLoading(false);
+      toast.error('يجب تسجيل الدخول أولاً لإتمام عملية الدفع');
+      base44.auth.redirectToLogin('/seller/register');
+      return;
+    }
+
     const user = await base44.auth.me();
     const today = new Date();
     const expires = new Date(today);
@@ -205,6 +213,9 @@ export default function SellerRegister() {
         {step === 3 && (
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
             <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100">
+              <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 text-sm text-blue-800 mb-5 text-right">
+                ⚠️ تأكد من أنك <button onClick={() => base44.auth.redirectToLogin('/seller/register')} className="font-bold underline">مسجل الدخول</button> قبل إتمام الدفع، وإلا لن يُسجَّل طلبك.
+              </div>
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center">
                   <span className="text-white text-lg">₿</span>
