@@ -48,8 +48,19 @@ export default function Landing() {
       <nav className="sticky top-0 z-50 bg-white border-b border-slate-100 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex items-center">
-            <img src="https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/c4576f965_WhatsAppImage2026-05-05at110058AM1.jpeg" alt="R souq" className="h-10 object-contain" />
+          <div className="flex items-center gap-2">
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: '#7b2d8b' }}>
+              <svg viewBox="0 0 40 28" fill="white" className="w-8 h-8">
+                <rect x="2" y="8" width="24" height="16" rx="2"/>
+                <polygon points="26,10 38,10 38,24 26,24"/>
+                <rect x="30" y="6" width="6" height="6" rx="1"/>
+                <circle cx="9" cy="25" r="3" fill="white"/>
+                <circle cx="9" cy="25" r="1.5" fill="#7b2d8b"/>
+                <circle cx="31" cy="25" r="3" fill="white"/>
+                <circle cx="31" cy="25" r="1.5" fill="#7b2d8b"/>
+              </svg>
+            </div>
+            <span className="text-xl font-extrabold" style={{ color: '#6a1b9a' }}>R souq</span>
           </div>
 
           {/* Nav Links */}
@@ -277,7 +288,17 @@ export default function Landing() {
       {/* ── Footer ── */}
       <footer className="py-10 text-center" style={{ background: '#4a1260' }}>
         <div className="flex items-center justify-center gap-2 mb-3">
-          <span className="text-2xl">🚚</span>
+          <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: '#9c27b0' }}>
+            <svg viewBox="0 0 40 28" fill="white" className="w-7 h-7">
+              <rect x="2" y="8" width="24" height="16" rx="2"/>
+              <polygon points="26,10 38,10 38,24 26,24"/>
+              <rect x="30" y="6" width="6" height="6" rx="1"/>
+              <circle cx="9" cy="25" r="3" fill="white"/>
+              <circle cx="9" cy="25" r="1.5" fill="#9c27b0"/>
+              <circle cx="31" cy="25" r="3" fill="white"/>
+              <circle cx="31" cy="25" r="1.5" fill="#9c27b0"/>
+            </svg>
+          </div>
           <span className="font-extrabold text-lg text-white">R souq</span>
         </div>
         <div className="flex items-center justify-center gap-6 mb-4">
