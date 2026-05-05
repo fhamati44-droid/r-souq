@@ -44,8 +44,7 @@ export default function HeroSlider() {
           <img
             src={slide.image}
             alt={slide.title}
-            className="w-full object-cover"
-            style={{ maxHeight: '420px', objectPosition: 'center' }}
+            className="w-full object-contain"
           />
         </motion.div>
       </AnimatePresence>
