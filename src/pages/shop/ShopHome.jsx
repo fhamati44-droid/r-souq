@@ -261,6 +261,9 @@ export default function ShopHome() {
             </form>
 
             <div className="flex items-center gap-2 shrink-0">
+              <Link to="/landing" className="hidden sm:flex items-center gap-1 text-sm font-semibold text-slate-600 hover:text-violet-600 transition">
+                ابدأ كبائع
+              </Link>
               <Link to="/shop/stores" className="hidden sm:flex items-center gap-1 text-sm font-semibold text-slate-600 hover:text-violet-600 transition">
                 <Store className="w-4 h-4" /> المتاجر
               </Link>

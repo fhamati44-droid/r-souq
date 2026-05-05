@@ -55,7 +55,8 @@ const AuthenticatedApp = () => {
   return (
     <Routes>
       {/* Landing page */}
-      <Route path="/" element={<Landing />} />
+      <Route path="/" element={<ShopHome />} />
+      <Route path="/landing" element={<Landing />} />
 
       {/* Admin routes */}
       <Route path="/admin/*" element={<AdminDashboard />} />
