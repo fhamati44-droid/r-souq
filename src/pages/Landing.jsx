@@ -21,26 +21,26 @@ const features = [
 ];
 
 const PARTNERS = [
-  { name: 'Alibaba', emoji: '🛒' },
-  { name: 'DHgate', emoji: '🏷️' },
-  { name: 'Taobao', emoji: '🛍️' },
-  { name: 'Tmall', emoji: '🏪' },
-  { name: 'Temu', emoji: '💸' },
-  { name: 'Wish', emoji: '⭐' },
-  { name: 'Banggood', emoji: '📦' },
-  { name: 'LightInTheBox', emoji: '💡' },
-  { name: 'Joom', emoji: '🌐' },
-  { name: 'Gearbest', emoji: '⚙️' },
-  { name: 'Tomtop', emoji: '🔧' },
-  { name: 'Geekbuying', emoji: '🤓' },
-  { name: 'Shein', emoji: '👗' },
-  { name: 'CJ Dropshipping', emoji: '🚚' },
-  { name: 'Doba', emoji: '📋' },
-  { name: 'Spocket', emoji: '🔌' },
-  { name: 'Trendyol', emoji: '📈' },
-  { name: 'Hepsiburada', emoji: '🛒' },
-  { name: 'n11', emoji: '🏷️' },
-  { name: 'Turkishexporter', emoji: '🇹🇷' },
+  { name: 'Alibaba', logo: 'https://logo.clearbit.com/alibaba.com' },
+  { name: 'DHgate', logo: 'https://logo.clearbit.com/dhgate.com' },
+  { name: 'Taobao', logo: 'https://logo.clearbit.com/taobao.com' },
+  { name: 'Tmall', logo: 'https://logo.clearbit.com/tmall.com' },
+  { name: 'Temu', logo: 'https://logo.clearbit.com/temu.com' },
+  { name: 'Wish', logo: 'https://logo.clearbit.com/wish.com' },
+  { name: 'Banggood', logo: 'https://logo.clearbit.com/banggood.com' },
+  { name: 'LightInTheBox', logo: 'https://logo.clearbit.com/lightinthebox.com' },
+  { name: 'Joom', logo: 'https://logo.clearbit.com/joom.com' },
+  { name: 'Gearbest', logo: 'https://logo.clearbit.com/gearbest.com' },
+  { name: 'Tomtop', logo: 'https://logo.clearbit.com/tomtop.com' },
+  { name: 'Geekbuying', logo: 'https://logo.clearbit.com/geekbuying.com' },
+  { name: 'Shein', logo: 'https://logo.clearbit.com/shein.com' },
+  { name: 'CJ Dropshipping', logo: 'https://logo.clearbit.com/cjdropshipping.com' },
+  { name: 'Doba', logo: 'https://logo.clearbit.com/doba.com' },
+  { name: 'Spocket', logo: 'https://logo.clearbit.com/spocket.co' },
+  { name: 'Trendyol', logo: 'https://logo.clearbit.com/trendyol.com' },
+  { name: 'Hepsiburada', logo: 'https://logo.clearbit.com/hepsiburada.com' },
+  { name: 'n11', logo: 'https://logo.clearbit.com/n11.com' },
+  { name: 'Turkishexporter', logo: 'https://logo.clearbit.com/turkishexporter.net' },
 ];
 
 const stats = [
@@ -176,8 +176,8 @@ export default function Landing() {
         <div className="relative">
           <div className="flex animate-marquee whitespace-nowrap gap-8">
             {[...PARTNERS, ...PARTNERS].map((p, i) => (
-              <div key={i} className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl border border-slate-200 bg-slate-50 shrink-0 hover:border-violet-300 hover:bg-violet-50 transition-all">
-                <span className="text-xl">{p.emoji}</span>
+              <div key={i} className="inline-flex items-center gap-3 px-5 py-3 rounded-2xl border border-slate-200 bg-white shrink-0 hover:border-violet-300 hover:shadow-md transition-all">
+                <img src={p.logo} alt={p.name} className="w-8 h-8 object-contain rounded" onError={e => { e.target.style.display='none'; }} />
                 <span className="font-bold text-sm text-slate-700">{p.name}</span>
               </div>
             ))}
