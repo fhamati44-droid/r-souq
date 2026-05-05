@@ -807,8 +807,11 @@ function PendingPaymentsPage() {
   const confirmPayment = async (tx) => {
     setProcessing(tx.id);
     if (tx.type === 'subscription') {
-      // Activate the store
-      const stores = await base44.entities.Store.filter({ owner_email: tx.owner_email, status: 'pending_payment' });
+      // Activate the store - search by store_id first, fallback to owner_email
+      let stores = tx.store_id
+        ? await base44.entities.Store.filter({ id: tx.store_id })
+        : await base44.entities.Store.filter({ owner_email: tx.owner_email });
+      
       if (stores.length > 0) {
         const store = stores[0];
         const isPremium = store.subscription_plan === 'premium';
