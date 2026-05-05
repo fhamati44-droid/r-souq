@@ -48,9 +48,8 @@ export default function Landing() {
       <nav className="sticky top-0 z-50 bg-white border-b border-slate-100 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">🚚</span>
-            <span className="text-xl font-extrabold" style={{ color: '#6a1b9a' }}>R souq</span>
+          <div className="flex items-center">
+            <img src="https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/c4576f965_WhatsAppImage2026-05-05at110058AM1.jpeg" alt="R souq" className="h-10 object-contain" />
           </div>
 
           {/* Nav Links */}
