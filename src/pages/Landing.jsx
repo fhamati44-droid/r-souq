@@ -174,9 +174,9 @@ export default function Landing() {
           <p className="text-sm text-slate-500 mt-1">نتعامل مع أكبر 20 منصة عالمية لتوريد البضائع</p>
         </div>
         <div className="relative">
-          <div className="flex animate-marquee whitespace-nowrap gap-8">
-            {[...PARTNERS, ...PARTNERS].map((p, i) => (
-              <div key={i} className="inline-flex items-center justify-center px-4 py-3 rounded-2xl border border-slate-200 bg-white shrink-0 hover:border-violet-300 hover:shadow-md transition-all">
+          <div className="flex whitespace-nowrap gap-8" style={{ animation: 'marquee 30s linear infinite' }}>
+            {[...PARTNERS, ...PARTNERS, ...PARTNERS].map((p, i) => (
+              <div key={i} className="inline-flex items-center justify-center px-4 py-3 rounded-2xl border border-slate-200 bg-white shrink-0">
                 <img src={p.logo} alt={p.name} className="h-12 w-24 object-contain" />
               </div>
             ))}
