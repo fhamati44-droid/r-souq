@@ -1,9 +1,58 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { ShoppingBag, Store, Star, TrendingUp, Zap, CheckCircle } from 'lucide-react';
+import { ShoppingBag, Store, Star, TrendingUp, Zap, CheckCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useCart } from '@/lib/CartContext';
 import { motion, AnimatePresence } from 'framer-motion';
+
+const HERO_SLIDES = [
+  'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/03d4baf5d_fPFsET2AgQI7TVZIlgRlv5MizZyNlsn2PkNVK2WB.png',
+  'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/c5dcda3f2_exJIj1WB1xXKzBHfeLblKpBDpOJccRStFXLEi0d3.png',
+];
+
+function HeroBanner() {
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    const t = setInterval(() => setCurrent(c => (c + 1) % HERO_SLIDES.length), 5000);
+    return () => clearInterval(t);
+  }, []);
+
+  return (
+    <div className="relative w-full overflow-hidden" style={{ background: '#7b1fa2' }}>
+      <AnimatePresence mode="wait">
+        <motion.img
+          key={current}
+          src={HERO_SLIDES[current]}
+          alt="hero"
+          initial={{ opacity: 0, scale: 1.03 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.6 }}
+          className="w-full object-cover"
+          style={{ maxHeight: '320px', objectPosition: 'center' }}
+        />
+      </AnimatePresence>
+      {/* Dots */}
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+        {HERO_SLIDES.map((_, i) => (
+          <button key={i} onClick={() => setCurrent(i)}
+            className={`rounded-full transition-all ${i === current ? 'w-6 h-2.5 bg-white' : 'w-2.5 h-2.5 bg-white/50'}`}
+          />
+        ))}
+      </div>
+      {/* Arrows */}
+      <button onClick={() => setCurrent(c => (c - 1 + HERO_SLIDES.length) % HERO_SLIDES.length)}
+        className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/20 hover:bg-black/40 flex items-center justify-center text-white transition">
+        <ChevronLeft className="w-5 h-5" />
+      </button>
+      <button onClick={() => setCurrent(c => (c + 1) % HERO_SLIDES.length)}
+        className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/20 hover:bg-black/40 flex items-center justify-center text-white transition">
+        <ChevronRight className="w-5 h-5" />
+      </button>
+    </div>
+  );
+}
 
 const PURCHASE_NOTIFICATIONS = [
   { name: 'أحمد من الرياض', product: 'سماعات لاسلكية', time: 'منذ دقيقتين' },
@@ -109,23 +158,8 @@ export default function ShopHome() {
         </div>
       </nav>
 
-      {/* Hero */}
-      <div className="bg-gradient-to-br from-violet-600 to-indigo-700 text-white py-16 px-4 text-center">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <h1 className="text-3xl sm:text-4xl font-extrabold mb-3">تسوّق من أفضل المتاجر</h1>
-          <p className="text-white/80 mb-3">آلاف المنتجات بأفضل الأسعار</p>
-          <div className="flex items-center justify-center gap-2 mb-6">
-            <span className="bg-white/20 backdrop-blur text-white text-sm font-bold px-4 py-1.5 rounded-full flex items-center gap-1.5">
-              <Store className="w-4 h-4" /> 100+ متجر نشط
-            </span>
-          </div>
-          <Link to="/shop/stores">
-            <button className="bg-white text-violet-700 font-bold px-8 py-3 rounded-full hover:bg-white/90 transition">
-              تصفح المتاجر
-            </button>
-          </Link>
-        </motion.div>
-      </div>
+      {/* Hero Slider */}
+      <HeroBanner />
 
       <div className="max-w-6xl mx-auto px-4 py-8 space-y-10">
         {/* Categories */}
