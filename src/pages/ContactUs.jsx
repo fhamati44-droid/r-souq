@@ -51,7 +51,7 @@ export default function ContactUs() {
           <div>
             <h3 className="font-bold text-slate-800 mb-4">عن المتجر</h3>
             <ul className="space-y-2">
-              <li><a href="#" className="text-blue-600 hover:underline">عن المتجر</a></li>
+              <li><a href="/about" className="text-blue-600 hover:underline">عن المتجر</a></li>
               <li><a href="#" className="text-blue-600 hover:underline">طرق الدفع</a></li>
               <li><a href="#" className="text-blue-600 hover:underline">الشحن والتسليم</a></li>
             </ul>
