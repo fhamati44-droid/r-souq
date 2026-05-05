@@ -106,8 +106,19 @@ export default function SellerRegister() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 to-indigo-50" dir="rtl">
-      <div className="max-w-4xl mx-auto px-4 py-12">
+    <div className="min-h-screen relative overflow-hidden" dir="rtl" style={{ background: 'linear-gradient(135deg, #f3e5f5 0%, #ede7f6 40%, #e8eaf6 100%)' }}>
+      {/* Decorative blobs */}
+      <div className="absolute top-0 right-0 w-96 h-96 rounded-full opacity-30 blur-3xl pointer-events-none" style={{ background: 'radial-gradient(circle, #9c27b0, #7b2d8b)' }} />
+      <div className="absolute bottom-0 left-0 w-80 h-80 rounded-full opacity-20 blur-3xl pointer-events-none" style={{ background: 'radial-gradient(circle, #673ab7, #512da8)' }} />
+      <div className="absolute top-1/2 left-1/4 w-64 h-64 rounded-full opacity-10 blur-2xl pointer-events-none" style={{ background: 'radial-gradient(circle, #e91e63, #9c27b0)' }} />
+      {/* Decorative dots grid */}
+      <div className="absolute inset-0 pointer-events-none opacity-10" style={{ backgroundImage: 'radial-gradient(#7b2d8b 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
+      {/* Floating shapes */}
+      <div className="absolute top-20 left-10 w-16 h-16 rounded-2xl rotate-12 opacity-20 pointer-events-none" style={{ background: '#7b2d8b' }} />
+      <div className="absolute top-40 right-16 w-10 h-10 rounded-xl rotate-45 opacity-15 pointer-events-none" style={{ background: '#9c27b0' }} />
+      <div className="absolute bottom-32 right-10 w-20 h-20 rounded-full opacity-15 pointer-events-none" style={{ background: '#6a1b9a' }} />
+      <div className="absolute bottom-20 left-1/3 w-12 h-12 rounded-lg rotate-12 opacity-10 pointer-events-none" style={{ background: '#ab47bc' }} />
+      <div className="max-w-4xl mx-auto px-4 py-12 relative z-10">
         {/* Header */}
         <div className="text-center mb-10">
           <div className="w-14 h-14 bg-gradient-to-br from-violet-600 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
