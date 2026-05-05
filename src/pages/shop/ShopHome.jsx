@@ -9,20 +9,10 @@ import { toast } from 'sonner';
 /* ── Hero Slider ─────────────────────────────────────────────────────────── */
 const HERO_SLIDES = [
   {
-    img: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/03d4baf5d_fPFsET2AgQI7TVZIlgRlv5MizZyNlsn2PkNVK2WB.png',
-    badge: '🔥 عروض حصرية',
-    title: 'خصومات تصل إلى 70%',
-    sub: 'على آلاف المنتجات من أفضل المتاجر',
-    cta: 'تسوق الآن',
-    bg: 'from-violet-900 via-purple-800 to-indigo-900',
+    img: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/0838d331f_WhatsAppImage2026-05-05at45758PM.jpg',
   },
   {
-    img: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/c5dcda3f2_exJIj1WB1xXKzBHfeLblKpBDpOJccRStFXLEi0d3.png',
-    badge: '⚡ وصل جديد',
-    title: 'أحدث المنتجات بأفضل الأسعار',
-    sub: 'اكتشف كل جديد في متجرنا يومياً',
-    cta: 'اكتشف الآن',
-    bg: 'from-fuchsia-900 via-violet-800 to-purple-900',
+    img: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/25a2fd050_WhatsAppImage2026-05-05at45728PM.jpg',
   },
 ];
 
@@ -32,46 +22,34 @@ function HeroBanner() {
     const t = setInterval(() => setCurrent(c => (c + 1) % HERO_SLIDES.length), 5500);
     return () => clearInterval(t);
   }, []);
-  const slide = HERO_SLIDES[current];
   return (
-    <div className="relative w-full overflow-hidden rounded-none" style={{ minHeight: '280px' }}>
+    <div className="relative w-full overflow-hidden bg-[#2d0a4e]" style={{ maxHeight: '420px' }}>
       <AnimatePresence mode="wait">
-        <motion.div key={current} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.6 }}
-          className={`absolute inset-0 bg-gradient-to-r ${slide.bg}`} />
+        <motion.img
+          key={current}
+          src={HERO_SLIDES[current].img}
+          alt="hero"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.7 }}
+          className="w-full object-cover object-center"
+          style={{ maxHeight: '420px' }}
+        />
       </AnimatePresence>
-      <div className="relative flex flex-col md:flex-row items-center max-w-6xl mx-auto px-6 py-8 gap-4 min-h-[280px]">
-        <div className="flex-1 text-white text-right z-10">
-          <span className="inline-block text-xs font-bold bg-white/20 backdrop-blur px-3 py-1 rounded-full mb-3">{slide.badge}</span>
-          <AnimatePresence mode="wait">
-            <motion.h2 key={current + 'title'} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-              className="text-3xl md:text-4xl font-extrabold mb-2 leading-tight">{slide.title}</motion.h2>
-          </AnimatePresence>
-          <p className="text-white/80 mb-5 text-sm">{slide.sub}</p>
-          <Link to="/shop/stores">
-            <button className="bg-amber-400 hover:bg-amber-300 text-slate-900 font-extrabold px-7 py-2.5 rounded-full text-sm transition shadow-lg">
-              {slide.cta} ←
-            </button>
-          </Link>
-        </div>
-        <AnimatePresence mode="wait">
-          <motion.img key={current + 'img'} src={slide.img} alt="hero"
-            initial={{ opacity: 0, scale: 1.05 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
-            transition={{ duration: 0.6 }} className="w-full md:w-1/2 max-h-52 object-contain drop-shadow-2xl" />
-        </AnimatePresence>
-      </div>
       {/* Dots */}
-      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
         {HERO_SLIDES.map((_, i) => (
           <button key={i} onClick={() => setCurrent(i)}
-            className={`rounded-full transition-all ${i === current ? 'w-6 h-2.5 bg-white' : 'w-2.5 h-2.5 bg-white/40'}`} />
+            className={`rounded-full transition-all ${i === current ? 'w-7 h-3 bg-white' : 'w-3 h-3 bg-white/40'}`} />
         ))}
       </div>
       <button onClick={() => setCurrent(c => (c - 1 + HERO_SLIDES.length) % HERO_SLIDES.length)}
-        className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/20 hover:bg-black/40 flex items-center justify-center text-white transition z-10">
+        className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/25 hover:bg-black/50 flex items-center justify-center text-white transition z-10 backdrop-blur-sm">
         <ChevronLeft className="w-5 h-5" />
       </button>
       <button onClick={() => setCurrent(c => (c + 1) % HERO_SLIDES.length)}
-        className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/20 hover:bg-black/40 flex items-center justify-center text-white transition z-10">
+        className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/25 hover:bg-black/50 flex items-center justify-center text-white transition z-10 backdrop-blur-sm">
         <ChevronRight className="w-5 h-5" />
       </button>
     </div>
@@ -135,12 +113,7 @@ const TRUST = [
   { icon: Headphones, label: 'دعم 24/7', sub: 'نحن هنا دائماً' },
 ];
 
-/* ── Promo Banners ───────────────────────────────────────────────────────── */
-const PROMO_BANNERS = [
-  { bg: 'from-violet-600 to-purple-700', emoji: '⚡', title: 'صفقات اليوم', sub: 'خصومات تنتهي اليوم فقط', badge: 'ينتهي قريباً', icon: Clock },
-  { bg: 'from-orange-500 to-amber-500', emoji: '🎁', title: 'عروض العيد', sub: 'هدايا رائعة بأسعار مذهلة', badge: 'مميز', icon: Gift },
-  { bg: 'from-pink-500 to-rose-500', emoji: '🔥', title: 'الأكثر مبيعاً', sub: 'المنتجات التي يحبها الجميع', badge: 'رائج', icon: Flame },
-];
+
 
 /* ── Product Card ────────────────────────────────────────────────────────── */
 function ProductCard({ product, onAddToCart }) {
@@ -360,24 +333,28 @@ export default function ShopHome() {
             </div>
           </section>
 
-          {/* ── 3 Promo Banners ── */}
-          <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {PROMO_BANNERS.map((b, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}>
-                <Link to="/shop/stores">
-                  <div className={`bg-gradient-to-br ${b.bg} rounded-2xl p-5 text-white flex items-center gap-4 hover:opacity-90 transition shadow-md`}>
-                    <span className="text-4xl">{b.emoji}</span>
-                    <div>
-                      <div className="flex items-center gap-2 mb-0.5">
-                        <p className="font-extrabold text-base">{b.title}</p>
-                        <span className="text-xs bg-white/20 px-2 py-0.5 rounded-full">{b.badge}</span>
-                      </div>
-                      <p className="text-white/80 text-xs">{b.sub}</p>
-                    </div>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
+          {/* ── Promo Banners (full-width images) ── */}
+          <section className="space-y-4">
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
+              <Link to="/shop/stores">
+                <img
+                  src="https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/f948b2f51_WhatsAppImage2026-05-05at45728PM2.jpg"
+                  alt="promo 1"
+                  className="w-full rounded-2xl object-cover hover:opacity-95 transition shadow-md"
+                  style={{ maxHeight: '220px', objectPosition: 'center' }}
+                />
+              </Link>
+            </motion.div>
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+              <Link to="/shop/stores">
+                <img
+                  src="https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/9b1e38864_WhatsAppImage2026-05-05at45728PM1.jpg"
+                  alt="promo 2"
+                  className="w-full rounded-2xl object-cover hover:opacity-95 transition shadow-md"
+                  style={{ maxHeight: '220px', objectPosition: 'center' }}
+                />
+              </Link>
+            </motion.div>
           </section>
 
           {/* ── Featured Stores ── */}
