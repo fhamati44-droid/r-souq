@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { ShoppingBag, Store, Star, TrendingUp, CheckCircle, ChevronLeft, ChevronRight, Search, Shield, Truck, RotateCcw, Headphones, Tag, Zap, Heart, Eye, Filter, ChevronDown, Flame, Clock, Gift } from 'lucide-react';
+import { ShoppingBag, Store, Star, TrendingUp, CheckCircle, ChevronLeft, ChevronRight, Search, Shield, Truck, RotateCcw, Headphones, Tag, Zap, Heart, Eye, Filter, ChevronDown, Flame, Clock, Gift, Globe } from 'lucide-react';
 import { useCart } from '@/lib/CartContext';
+import { useLang } from '@/lib/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 
@@ -194,6 +195,12 @@ function SectionHeader({ icon: Icon, title, linkTo, linkLabel = 'عرض الكل
 }
 
 /* ── Main Page ───────────────────────────────────────────────────────────── */
+const LANGS = [
+  { code: 'ar', label: 'العربية', flag: '🇸🇦' },
+  { code: 'en', label: 'English', flag: '🇬🇧' },
+  { code: 'de', label: 'Deutsch', flag: '🇩🇪' },
+];
+
 export default function ShopHome() {
   const [stores, setStores] = useState([]);
   const [products, setProducts] = useState([]);
@@ -202,7 +209,9 @@ export default function ShopHome() {
   const [search, setSearch] = useState('');
   const [searchInput, setSearchInput] = useState('');
   const [activeCategory, setActiveCategory] = useState(null);
+  const [showLangMenu, setShowLangMenu] = useState(false);
   const { addToCart, cartCount } = useCart();
+  const { lang, changeLang } = useLang();
 
   useEffect(() => {
     Promise.all([
@@ -218,6 +227,14 @@ export default function ShopHome() {
   }, []);
 
   const handleSearch = (e) => { e.preventDefault(); setSearch(searchInput); setActiveCategory(null); };
+
+  // Close lang menu on outside click
+  useEffect(() => {
+    if (!showLangMenu) return;
+    const handler = () => setShowLangMenu(false);
+    document.addEventListener('click', handler);
+    return () => document.removeEventListener('click', handler);
+  }, [showLangMenu]);
 
   const filteredProducts = products.filter(p => {
     const name = typeof p.name === 'object' ? (p.name?.ar || p.name?.en || '') : p.name || '';
@@ -267,6 +284,31 @@ export default function ShopHome() {
               <Link to="/shop/stores" className="hidden sm:flex items-center gap-1 text-sm font-semibold text-slate-600 hover:text-violet-600 transition">
                 <Store className="w-4 h-4" /> المتاجر
               </Link>
+
+              {/* Language Switcher */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowLangMenu(v => !v)}
+                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-slate-200 hover:border-violet-400 hover:bg-slate-50 transition text-sm font-semibold text-slate-600"
+                >
+                  <Globe className="w-4 h-4" />
+                  <span>{LANGS.find(l => l.code === lang)?.flag}</span>
+                </button>
+                {showLangMenu && (
+                  <div className="absolute left-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-lg z-50 overflow-hidden min-w-[130px]">
+                    {LANGS.map(l => (
+                      <button
+                        key={l.code}
+                        onClick={() => { changeLang(l.code); setShowLangMenu(false); }}
+                        className={`w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-violet-50 transition ${lang === l.code ? 'font-bold text-violet-700 bg-violet-50' : 'text-slate-700'}`}
+                      >
+                        <span>{l.flag}</span> {l.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               <Link to="/cart" className="relative p-2 rounded-full hover:bg-slate-100 transition">
                 <ShoppingBag className="w-5 h-5 text-slate-600" />
                 {cartCount > 0 && (
