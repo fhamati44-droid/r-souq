@@ -1,24 +1,11 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Store, ShoppingBag, Star, Zap, TrendingUp, CheckCircle, LogIn, LogOut, User, ArrowLeft, Play, Package, Truck, Settings, Globe, DollarSign, Users, MapPin, Shield } from 'lucide-react';
+import { Store, ShoppingBag, Star, Zap, TrendingUp, CheckCircle, LogOut, User, ArrowLeft, Play, Package, Truck, Settings, Globe, DollarSign, Users, MapPin, Shield } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import HeroSlider from '@/components/landing/HeroSlider';
-
-const plans = [
-  { name: 'أساسي', nameEn: 'Basic', price: 49, period: 'شهرياً', color: 'from-slate-500 to-slate-700', features: ['حتى 50 منتج', 'لوحة تحكم بسيطة', 'دعم عبر البريد', 'صفحة متجر'] },
-  { name: 'احترافي', nameEn: 'Pro', price: 99, period: 'شهرياً', color: 'from-violet-500 to-indigo-600', popular: true, features: ['حتى 200 منتج', 'إحصائيات المبيعات', 'دعم أولوية', 'تخصيص المتجر', 'ظهور في نتائج البحث'] },
-  { name: 'مميز', nameEn: 'Premium', price: 199, period: 'شهرياً', color: 'from-amber-500 to-orange-600', features: ['منتجات غير محدودة', 'حملات إعلانية', 'إبراز المتجر', 'دعم VIP 24/7', 'أولوية في الصفحة الرئيسية'] },
-];
-
-const features = [
-  { icon: DollarSign, title: 'دخل إضافي', desc: 'زد أرباحك ونمّ مشاريعك' },
-  { icon: ShoppingBag, title: 'تسوق ذكي', desc: 'منتجات مختارة وبأفضل الأسعار' },
-  { icon: Truck, title: 'شحن سريع وآمن', desc: 'توصيل في الوقت المحدد لعملائك' },
-  { icon: Settings, title: 'إدارة متكاملة', desc: 'نظام سهل لإدارة طلباتك وعملياتك' },
-  { icon: Globe, title: 'سهولة تامة', desc: 'كل شيء منظم لتوفير وقتك وجهدك' },
-];
+import { useLang } from '@/lib/LanguageContext';
 
 const PARTNERS = [
   { name: 'Alibaba', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/ec3c62eb0_download.jpg' },
@@ -43,16 +30,10 @@ const PARTNERS = [
   { name: 'Turkishexporter', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/688514d54_download4.png' },
 ];
 
-const stats = [
-  { icon: Users, value: '+10,000', label: 'عميل نشط' },
-  { icon: Package, value: '+50,000', label: 'طلب تم تنفيذه' },
-  { icon: MapPin, value: '+5', label: 'دول نخدمها' },
-  { icon: Shield, value: '99%', label: 'رضا العملاء' },
-];
-
 export default function Landing() {
   const [user, setUser] = useState(null);
   const [authChecked, setAuthChecked] = useState(false);
+  const { t, dir } = useLang();
 
   useEffect(() => {
     base44.auth.isAuthenticated().then(async (authed) => {
@@ -64,49 +45,69 @@ export default function Landing() {
     });
   }, []);
 
+  const plans = [
+    { name: t.land_plan_basic, nameEn: 'Basic', price: 49, color: 'from-slate-500 to-slate-700', features: [t.land_plan_basic_f1, t.land_plan_basic_f2, t.land_plan_basic_f3, t.land_plan_basic_f4] },
+    { name: t.land_plan_pro, nameEn: 'Pro', price: 99, color: 'from-violet-500 to-indigo-600', popular: true, features: [t.land_plan_pro_f1, t.land_plan_pro_f2, t.land_plan_pro_f3, t.land_plan_pro_f4, t.land_plan_pro_f5] },
+    { name: t.land_plan_premium, nameEn: 'Premium', price: 199, color: 'from-amber-500 to-orange-600', features: [t.land_plan_prem_f1, t.land_plan_prem_f2, t.land_plan_prem_f3, t.land_plan_prem_f4, t.land_plan_prem_f5] },
+  ];
+
+  const features = [
+    { icon: DollarSign, title: t.land_feat1_title, desc: t.land_feat1_desc },
+    { icon: ShoppingBag, title: t.land_feat2_title, desc: t.land_feat2_desc },
+    { icon: Truck, title: t.land_feat3_title, desc: t.land_feat3_desc },
+    { icon: Settings, title: t.land_feat4_title, desc: t.land_feat4_desc },
+    { icon: Globe, title: t.land_feat5_title, desc: t.land_feat5_desc },
+  ];
+
+  const stats = [
+    { icon: Users, value: '+10,000', label: t.land_stat1 },
+    { icon: Package, value: '+50,000', label: t.land_stat2 },
+    { icon: MapPin, value: '+5', label: t.land_stat3 },
+    { icon: Shield, value: '99%', label: t.land_stat4 },
+  ];
+
+  const steps = [
+    { icon: Store, step: '01', title: t.land_step1_title, desc: t.land_step1_desc },
+    { icon: Zap, step: '02', title: t.land_step2_title, desc: t.land_step2_desc },
+    { icon: TrendingUp, step: '03', title: t.land_step3_title, desc: t.land_step3_desc },
+  ];
+
   return (
-    <div className="min-h-screen bg-white" dir="rtl">
+    <div className="min-h-screen bg-white" dir={dir}>
 
       {/* ── Navbar ── */}
       <nav className="sticky top-0 z-50 bg-white border-b border-slate-100 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
-          {/* Logo */}
           <div className="flex items-center gap-2">
             <img src="https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/e5966bc5d_WhatsAppImage2026-05-05at110058AM1.jpeg" alt="truck" className="h-9 w-9 object-contain rounded-lg" />
             <span className="text-xl font-extrabold" style={{ color: '#6a1b9a' }}>R souq</span>
           </div>
 
-          {/* Nav Links */}
           <div className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
-            <a href="#" className="hover:text-purple-700 transition">الرئيسية</a>
-            <a href="#features" className="hover:text-purple-700 transition">خدماتنا</a>
-            <a href="#pricing" className="hover:text-purple-700 transition">الأسعار</a>
-            <Link to="/shop" className="hover:text-purple-700 transition">المتاجر</Link>
-            <a href="#" className="hover:text-purple-700 transition">من نحن</a>
-            <Link to="/contact" className="hover:text-purple-700 transition">تواصل معنا</Link>
+            <a href="#" className="hover:text-purple-700 transition">{t.land_nav_home}</a>
+            <a href="#features" className="hover:text-purple-700 transition">{t.land_nav_services}</a>
+            <a href="#pricing" className="hover:text-purple-700 transition">{t.land_nav_pricing}</a>
+            <Link to="/shop" className="hover:text-purple-700 transition">{t.land_nav_stores}</Link>
+            <a href="#" className="hover:text-purple-700 transition">{t.land_nav_about}</a>
+            <Link to="/contact" className="hover:text-purple-700 transition">{t.land_nav_contact}</Link>
           </div>
 
-          {/* CTA */}
           <div className="flex items-center gap-2">
             {authChecked && (
               user ? (
                 <div className="flex items-center gap-2">
                   <Link to="/seller/dashboard">
                     <Button size="sm" className="rounded-full gap-1.5 font-bold" style={{ background: '#7b2d8b' }}>
-                      <User className="w-3.5 h-3.5" /> {user.full_name?.split(' ')[0] || 'لوحتي'}
+                      <User className="w-3.5 h-3.5" /> {user.full_name?.split(' ')[0] || t.land_my_dashboard}
                     </Button>
                   </Link>
-                  <button onClick={() => base44.auth.logout('/')} className="p-2 rounded-full hover:bg-slate-100 transition text-slate-500" title="خروج">
+                  <button onClick={() => base44.auth.logout('/')} className="p-2 rounded-full hover:bg-slate-100 transition text-slate-500">
                     <LogOut className="w-4 h-4" />
                   </button>
                 </div>
               ) : (
-                <Button
-                  onClick={() => base44.auth.redirectToLogin('/seller/dashboard')}
-                  className="rounded-full font-bold px-5"
-                  style={{ background: '#7b2d8b' }}
-                >
-                  ابدأ الآن
+                <Button onClick={() => base44.auth.redirectToLogin('/seller/dashboard')} className="rounded-full font-bold px-5" style={{ background: '#7b2d8b' }}>
+                  {t.land_start}
                 </Button>
               )
             )}
@@ -116,51 +117,46 @@ export default function Landing() {
 
       {/* ── Hero ── */}
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-50 via-purple-50 to-indigo-50 pt-12 pb-0">
-        {/* Decorative background blobs */}
         <div className="absolute top-0 left-0 w-96 h-96 bg-purple-200 rounded-full opacity-20 blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
         <div className="absolute bottom-0 right-0 w-80 h-80 bg-indigo-200 rounded-full opacity-20 blur-3xl translate-x-1/4 translate-y-1/4 pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 grid md:grid-cols-2 gap-8 items-end">
-          {/* Text */}
           <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} className="pb-12 order-2 md:order-1">
             <span className="inline-flex items-center gap-1.5 text-xs font-bold bg-amber-100 text-amber-700 px-3 py-1 rounded-full mb-5">
               <span className="w-2 h-2 bg-amber-500 rounded-full animate-pulse" />
-              شريكك في النجاح
+              {t.land_partner}
             </span>
             <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-900 leading-tight mb-3">
-              شغلك أونلاين؟
+              {t.land_h1}
             </h1>
             <h2 className="text-4xl sm:text-5xl font-extrabold leading-tight mb-5" style={{ color: '#f59e0b' }}>
-              خلّيه يشتغل لحاله
+              {t.land_h2}
             </h2>
-            <p className="text-slate-500 text-lg leading-relaxed mb-8">
-              نحن نهتم بالتسوق، الشحن، والإدارة<br />وأنت ركّز على البيع والنمو
+            <p className="text-slate-500 text-lg leading-relaxed mb-8" style={{ whiteSpace: 'pre-line' }}>
+              {t.land_sub}
             </p>
             <div className="flex flex-wrap gap-3">
               {user ? (
                 <Link to="/seller/register">
                   <Button size="lg" className="rounded-full font-bold px-8 gap-2 shadow-lg" style={{ background: '#7b2d8b' }}>
-                    ابدأ الآن <ArrowLeft className="w-4 h-4" />
+                    {t.land_start} <ArrowLeft className="w-4 h-4" />
                   </Button>
                 </Link>
               ) : (
-                <button
-                  onClick={() => base44.auth.redirectToLogin('/seller/register')}
+                <button onClick={() => base44.auth.redirectToLogin('/seller/register')}
                   className="inline-flex items-center gap-2 rounded-full font-bold px-8 py-3 text-white shadow-lg transition hover:opacity-90"
-                  style={{ background: '#7b2d8b' }}
-                >
-                  ابدأ الآن <ArrowLeft className="w-4 h-4" />
+                  style={{ background: '#7b2d8b' }}>
+                  {t.land_start} <ArrowLeft className="w-4 h-4" />
                 </button>
               )}
               <Link to="/shop">
                 <Button size="lg" variant="outline" className="rounded-full font-bold px-6 gap-2 border-slate-300">
-                  <Play className="w-4 h-4" /> شاهد كيف نعمل
+                  <Play className="w-4 h-4" /> {t.land_watch}
                 </Button>
               </Link>
             </div>
           </motion.div>
 
-          {/* Hero Image */}
           <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7 }} className="order-1 md:order-2">
             <HeroSlider />
           </motion.div>
@@ -211,15 +207,11 @@ export default function Landing() {
         </div>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 relative">
           <div className="text-center mb-14">
-            <h2 className="text-3xl font-extrabold mb-3">كيف يعمل؟</h2>
-            <p className="text-slate-500">ثلاث خطوات فقط لتبدأ رحلتك</p>
+            <h2 className="text-3xl font-extrabold mb-3">{t.land_how_title}</h2>
+            <p className="text-slate-500">{t.land_how_sub}</p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
-            {[
-              { icon: Store, step: '01', title: 'سجّل وادفع الاشتراك', desc: 'اختر الباقة المناسبة وادفع رسوم إنشاء المتجر الشهرية' },
-              { icon: Zap, step: '02', title: 'أضف منتجاتك', desc: 'أضف منتجاتك من المخزن وحدد أسعارك بحرية كاملة' },
-              { icon: TrendingUp, step: '03', title: 'ابدأ البيع', desc: 'تلقّ الطلبات وروّج متجرك بحملات إعلانية مدفوعة' },
-            ].map((item, i) => (
+            {steps.map((item, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
                 className="bg-white rounded-2xl p-7 shadow-sm border border-purple-100 text-center relative overflow-hidden">
                 <div className="absolute top-3 left-4 text-6xl font-extrabold text-purple-50 select-none">{item.step}</div>
@@ -235,8 +227,8 @@ export default function Landing() {
           {/* ── Partners Marquee ── */}
           <div className="mt-20 pt-10 border-t border-slate-200">
             <div className="text-center mb-8">
-              <h3 className="text-xl font-extrabold text-slate-800">شركاؤنا</h3>
-              <p className="text-sm text-slate-500 mt-1">نتعامل مع أكبر 20 منصة عالمية لتوريد البضائع</p>
+              <h3 className="text-xl font-extrabold text-slate-800">{t.land_partners_title}</h3>
+              <p className="text-sm text-slate-500 mt-1">{t.land_partners_sub}</p>
             </div>
             <div className="relative overflow-hidden">
               <div className="flex whitespace-nowrap gap-8" style={{ animation: 'marquee 40s linear infinite' }}>
@@ -258,8 +250,8 @@ export default function Landing() {
         </div>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 relative">
           <div className="text-center mb-14">
-            <h2 className="text-3xl font-extrabold mb-3">باقات الاشتراك</h2>
-            <p className="text-slate-500">اختر الباقة المناسبة لحجم تجارتك</p>
+            <h2 className="text-3xl font-extrabold mb-3">{t.land_pricing_title}</h2>
+            <p className="text-slate-500">{t.land_pricing_sub}</p>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
             {plans.map((plan, i) => (
@@ -267,7 +259,7 @@ export default function Landing() {
                 className={`relative rounded-3xl border-2 p-8 bg-white ${plan.popular ? 'shadow-2xl' : 'border-slate-100 shadow-sm'}`}
                 style={plan.popular ? { borderColor: '#7b2d8b', boxShadow: '0 10px 40px rgba(123,45,139,0.15)' } : {}}>
                 {plan.popular && (
-                  <span className="absolute -top-4 left-1/2 -translate-x-1/2 text-white px-4 py-1 rounded-full text-xs font-bold" style={{ background: '#7b2d8b' }}>الأكثر شعبية</span>
+                  <span className="absolute -top-4 left-1/2 -translate-x-1/2 text-white px-4 py-1 rounded-full text-xs font-bold" style={{ background: '#7b2d8b' }}>{t.land_most_popular}</span>
                 )}
                 <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${plan.color} flex items-center justify-center mb-4`}>
                   <Star className="w-6 h-6 text-white" />
@@ -275,7 +267,7 @@ export default function Landing() {
                 <h3 className="text-xl font-extrabold">{plan.name}</h3>
                 <div className="mt-3 mb-6">
                   <span className="text-4xl font-extrabold" style={{ color: '#7b2d8b' }}>{plan.price}</span>
-                  <span className="text-slate-400"> ر.س / {plan.period}</span>
+                  <span className="text-slate-400"> ر.س / {t.land_per_month}</span>
                 </div>
                 <ul className="space-y-3 mb-8">
                   {plan.features.map((f, j) => (
@@ -286,7 +278,7 @@ export default function Landing() {
                 </ul>
                 <Link to={`/seller/register?plan=${plan.nameEn.toLowerCase()}`}>
                   <Button className="w-full rounded-full font-bold" variant={plan.popular ? 'default' : 'outline'} style={plan.popular ? { background: '#7b2d8b' } : {}}>
-                    ابدأ الآن
+                    {t.land_start}
                   </Button>
                 </Link>
               </motion.div>
@@ -305,11 +297,11 @@ export default function Landing() {
           <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5 bg-white/10 backdrop-blur">
             <TrendingUp className="w-8 h-8 text-white" />
           </div>
-          <h2 className="text-2xl font-extrabold text-white mb-3">روّج متجرك بحملة إعلانية</h2>
-          <p className="text-white/70 mb-8">افتح متجرك، أضف منتجاتك، وابدأ البيع لملايين المتسوقين — كل هذا في مكان واحد!</p>
+          <h2 className="text-2xl font-extrabold text-white mb-3">{t.land_cta_title}</h2>
+          <p className="text-white/70 mb-8">{t.land_cta_sub}</p>
           <Link to="/seller/dashboard">
             <Button className="rounded-full font-bold px-10 py-6 text-base gap-2 bg-white hover:bg-white/90" style={{ color: '#7b2d8b' }}>
-              <Zap className="w-5 h-5" /> ابدأ حملتك الآن
+              <Zap className="w-5 h-5" /> {t.land_cta_btn}
             </Button>
           </Link>
         </div>
@@ -332,11 +324,11 @@ export default function Landing() {
           <span className="font-extrabold text-lg text-white">R souq</span>
         </div>
         <div className="flex items-center justify-center gap-6 mb-4">
-          <Link to="/shop" className="text-slate-400 hover:text-white text-sm transition">تسوق الآن</Link>
-          <Link to="/seller/register" className="text-slate-400 hover:text-white text-sm transition">ابدأ كبائع</Link>
-          <Link to="/seller/dashboard" className="text-slate-400 hover:text-white text-sm transition">لوحة التحكم</Link>
+          <Link to="/shop" className="text-slate-400 hover:text-white text-sm transition">{t.land_footer_shop}</Link>
+          <Link to="/seller/register" className="text-slate-400 hover:text-white text-sm transition">{t.land_footer_seller}</Link>
+          <Link to="/seller/dashboard" className="text-slate-400 hover:text-white text-sm transition">{t.land_footer_dashboard}</Link>
         </div>
-        <p className="text-slate-500 text-sm">© 2026 R souq. جميع الحقوق محفوظة.</p>
+        <p className="text-slate-500 text-sm">{t.land_footer_rights}</p>
       </footer>
     </div>
   );
