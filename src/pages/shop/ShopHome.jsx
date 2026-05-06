@@ -94,15 +94,15 @@ function PurchaseNotification() {
 
 /* ── Categories ──────────────────────────────────────────────────────────── */
 const CATEGORIES = [
-  { id: 'electronics', label: 'إلكترونيات', emoji: '📱', color: '#dbeafe' },
-  { id: 'clothing', label: 'ملابس', emoji: '👕', color: '#fce7f3' },
-  { id: 'home', label: 'المنزل', emoji: '🏠', color: '#fef9c3' },
-  { id: 'beauty', label: 'جمال وعناية', emoji: '💄', color: '#ede9fe' },
-  { id: 'sports', label: 'رياضة', emoji: '⚽', color: '#dcfce7' },
-  { id: 'food', label: 'طعام', emoji: '🍕', color: '#fee2e2' },
-  { id: 'books', label: 'كتب', emoji: '📚', color: '#ffedd5' },
-  { id: 'toys', label: 'ألعاب', emoji: '🎮', color: '#e0f2fe' },
-  { id: 'general', label: 'متنوع', emoji: '🛍️', color: '#f1f5f9' },
+  { id: 'electronics', label: 'إلكترونيات', img: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=120&h=120&fit=crop' },
+  { id: 'clothing', label: 'ملابس', img: 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=120&h=120&fit=crop' },
+  { id: 'home', label: 'المنزل', img: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=120&h=120&fit=crop' },
+  { id: 'beauty', label: 'جمال وعناية', img: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=120&h=120&fit=crop' },
+  { id: 'sports', label: 'رياضة', img: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?w=120&h=120&fit=crop' },
+  { id: 'food', label: 'طعام', img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=120&h=120&fit=crop' },
+  { id: 'books', label: 'كتب', img: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=120&h=120&fit=crop' },
+  { id: 'toys', label: 'ألعاب', img: 'https://images.unsplash.com/photo-1558060370-d644479cb6f7?w=120&h=120&fit=crop' },
+  { id: 'general', label: 'متنوع', img: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=120&h=120&fit=crop' },
 ];
 
 /* ── Trust Badges ────────────────────────────────────────────────────────── */
@@ -332,7 +332,8 @@ export default function ShopHome() {
                 <button key={cat.id} onClick={() => setActiveCategory(activeCategory === cat.id ? null : cat.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition ${activeCategory === cat.id ? 'text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
                   style={activeCategory === cat.id ? { background: '#7b2d8b' } : {}}>
-                  {cat.emoji} {cat.label}
+                  <img src={cat.img} alt={cat.label} className="w-4 h-4 rounded-full object-cover" />
+                  {cat.label}
                 </button>
               ))}
             </div>
@@ -368,10 +369,9 @@ export default function ShopHome() {
               {CATEGORIES.map((cat, i) => (
                 <motion.button key={cat.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}
                   onClick={() => { setActiveCategory(activeCategory === cat.id ? null : cat.id); window.scrollTo({ top: 600, behavior: 'smooth' }); }}
-                  className={`flex flex-col items-center gap-2 rounded-2xl p-3 border-2 transition-all hover:shadow-md hover:scale-105 text-center ${activeCategory === cat.id ? 'border-violet-500 shadow-md' : 'border-transparent'}`}
-                  style={{ background: cat.color }}>
-                  <span className="text-2xl">{cat.emoji}</span>
-                  <span className="text-xs font-bold text-slate-700">{cat.label}</span>
+                  className={`flex flex-col items-center gap-2 rounded-2xl overflow-hidden border-2 transition-all hover:shadow-md hover:scale-105 text-center ${activeCategory === cat.id ? 'border-violet-500 shadow-md' : 'border-transparent'}`}>
+                  <img src={cat.img} alt={cat.label} className="w-full h-16 object-cover" />
+                  <span className="text-xs font-bold text-slate-700 pb-2 px-1">{cat.label}</span>
                 </motion.button>
               ))}
             </div>
