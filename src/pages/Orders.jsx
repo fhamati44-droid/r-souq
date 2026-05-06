@@ -1,15 +1,20 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
+import { useLang } from '@/lib/LanguageContext';
 import { ArrowRight, ShoppingBag, Package } from 'lucide-react';
 import { motion } from 'framer-motion';
-
-const STATUS_LABELS = { pending: 'معلق', confirmed: 'مؤكد', processing: 'قيد المعالجة', shipped: 'تم الشحن', delivered: 'تم التسليم', cancelled: 'ملغي' };
 const STATUS_COLORS = { pending: 'bg-yellow-100 text-yellow-700', confirmed: 'bg-blue-100 text-blue-700', processing: 'bg-purple-100 text-purple-700', shipped: 'bg-indigo-100 text-indigo-700', delivered: 'bg-green-100 text-green-700', cancelled: 'bg-red-100 text-red-700' };
 
 export default function Orders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { t, dir } = useLang();
+
+  const STATUS_LABELS = {
+    pending: t.pending, confirmed: t.confirmed, processing: t.processing,
+    shipped: t.shipped, delivered: t.delivered, cancelled: t.cancelled
+  };
 
   useEffect(() => {
     base44.entities.Order.list('-created_date', 50).then(data => {
@@ -19,12 +24,12 @@ export default function Orders() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-50" dir="rtl">
+    <div className="min-h-screen bg-slate-50" dir={dir}>
       <nav className="bg-white border-b border-slate-200 px-4 sm:px-6 h-14 flex items-center gap-3 sticky top-0 z-30">
         <Link to="/shop" className="p-1.5 rounded-lg hover:bg-slate-100 transition">
           <ArrowRight className="w-5 h-5 text-slate-600" />
         </Link>
-        <h1 className="font-bold">طلباتي</h1>
+        <h1 className="font-bold">{t.orders_title}</h1>
       </nav>
 
       <div className="max-w-2xl mx-auto px-4 py-6">
@@ -35,8 +40,8 @@ export default function Orders() {
         ) : orders.length === 0 ? (
           <div className="text-center py-24">
             <ShoppingBag className="w-16 h-16 mx-auto text-slate-300 mb-4" />
-            <p className="text-muted-foreground mb-6">لا توجد طلبات بعد</p>
-            <Link to="/shop" className="text-violet-600 font-semibold hover:underline">ابدأ التسوق</Link>
+            <p className="text-muted-foreground mb-6">{t.no_results}</p>
+            <Link to="/shop" className="text-violet-600 font-semibold hover:underline">{t.shop_now}</Link>
           </div>
         ) : (
           <div className="space-y-4">
@@ -46,7 +51,7 @@ export default function Orders() {
                 <div className="flex items-center justify-between mb-3">
                   <div>
                     <p className="font-bold">#{order.order_number}</p>
-                    <p className="text-xs text-muted-foreground">{order.items?.length} منتج</p>
+                    <p className="text-xs text-muted-foreground">{order.items?.length} {t.items}</p>
                   </div>
                   <span className={`text-xs px-2.5 py-1 rounded-full font-semibold ${STATUS_COLORS[order.status] || 'bg-slate-100 text-slate-500'}`}>
                     {STATUS_LABELS[order.status] || order.status}

@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '@/lib/CartContext';
+import { useLang } from '@/lib/LanguageContext';
 import { ArrowRight, ShoppingBag, Trash2, Plus, Minus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -7,16 +8,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function Cart() {
   const { cartItems: items, removeFromCart: removeItem, updateQuantity, cartTotal: total, clearCart } = useCart();
   const navigate = useNavigate();
+  const { t, dir } = useLang();
 
   return (
-    <div className="min-h-screen bg-slate-50" dir="rtl">
+    <div className="min-h-screen bg-slate-50" dir={dir}>
       <nav className="bg-white border-b border-slate-200 px-4 sm:px-6 h-14 flex items-center gap-3 sticky top-0 z-30">
         <Link to="/shop" className="p-1.5 rounded-lg hover:bg-slate-100 transition">
           <ArrowRight className="w-5 h-5 text-slate-600" />
         </Link>
-        <h1 className="font-bold flex-1">سلة التسوق</h1>
+        <h1 className="font-bold flex-1">{t.cart_title}</h1>
         {items.length > 0 && (
-          <button onClick={clearCart} className="text-xs text-red-500 hover:underline">إفراغ السلة</button>
+          <button onClick={clearCart} className="text-xs text-red-500 hover:underline">{t.cart_empty}</button>
         )}
       </nav>
 
@@ -24,9 +26,9 @@ export default function Cart() {
         {items.length === 0 ? (
           <div className="text-center py-24">
             <ShoppingBag className="w-16 h-16 mx-auto text-slate-300 mb-4" />
-            <p className="text-muted-foreground mb-6">سلتك فارغة</p>
+            <p className="text-muted-foreground mb-6">{t.cart_empty}</p>
             <Link to="/shop">
-              <Button className="rounded-full bg-violet-600">تسوق الآن</Button>
+              <Button className="rounded-full bg-violet-600">{t.shop_now}</Button>
             </Link>
           </div>
         ) : (
@@ -70,15 +72,15 @@ export default function Cart() {
             {/* Summary */}
             <div className="bg-white rounded-2xl border border-slate-100 p-5 space-y-3">
               <div className="flex justify-between text-sm text-muted-foreground">
-                <span>عدد المنتجات</span>
+                <span>{t.items}</span>
                 <span>{items.reduce((s, i) => s + i.quantity, 0)}</span>
               </div>
               <div className="flex justify-between font-extrabold text-lg border-t border-slate-100 pt-3">
-                <span>المجموع</span>
+                <span>{t.total}</span>
                 <span className="text-violet-700">{total.toFixed(2)} ر.س</span>
               </div>
               <Button onClick={() => navigate('/checkout')} className="w-full rounded-full bg-violet-600 hover:bg-violet-700 font-bold py-6 text-base">
-                إتمام الشراء
+                {t.checkout}
               </Button>
             </div>
           </div>
