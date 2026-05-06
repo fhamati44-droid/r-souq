@@ -211,7 +211,7 @@ export default function ShopHome() {
   const [activeCategory, setActiveCategory] = useState(null);
   const [showLangMenu, setShowLangMenu] = useState(false);
   const { addToCart, cartCount } = useCart();
-  const { lang, changeLang } = useLang();
+  const { lang, changeLang, t, dir } = useLang();
 
   useEffect(() => {
     Promise.all([
@@ -247,7 +247,7 @@ export default function ShopHome() {
 
   return (
     <>
-      <div className="min-h-screen bg-slate-50" dir="rtl">
+      <div className="min-h-screen bg-slate-50" dir={dir}>
 
         {/* ── Topbar announcement ── */}
         <div className="text-center text-xs font-bold py-2 text-white" style={{ background: 'linear-gradient(90deg, #6a1b9a, #9c27b0, #6a1b9a)' }}>
@@ -269,7 +269,7 @@ export default function ShopHome() {
             <form onSubmit={handleSearch} className="flex-1 max-w-xl mx-3">
               <div className="relative flex">
                 <input value={searchInput} onChange={e => setSearchInput(e.target.value)}
-                  placeholder="ابحث عن منتج، متجر، أو ماركة..."
+                  placeholder={t.search}
                   className="w-full h-10 pr-4 pl-12 rounded-r-2xl rounded-l-none border-2 border-l-0 text-sm focus:outline-none focus:border-violet-400 transition border-slate-200" />
                 <button type="submit" className="h-10 px-4 rounded-l-2xl text-white font-bold text-sm transition" style={{ background: '#7b2d8b' }}>
                   <Search className="w-4 h-4" />
@@ -279,14 +279,14 @@ export default function ShopHome() {
 
             <div className="flex items-center gap-2 shrink-0">
               <Link to="/landing" className="flex items-center gap-1 text-sm font-semibold text-slate-600 hover:text-violet-600 transition">
-                ابدأ كبائع
+                {lang === 'ar' ? 'ابدأ كبائع' : lang === 'de' ? 'Verkäufer werden' : 'Become a Seller'}
               </Link>
               <Link to="/shop/stores" className="hidden sm:flex items-center gap-1 text-sm font-semibold text-slate-600 hover:text-violet-600 transition">
-                <Store className="w-4 h-4" /> المتاجر
+                <Store className="w-4 h-4" /> {lang === 'ar' ? 'المتاجر' : lang === 'de' ? 'Shops' : 'Stores'}
               </Link>
 
               {/* Language Switcher */}
-              <div className="relative">
+              <div className="relative" onClick={e => e.stopPropagation()}>
                 <button
                   onClick={() => setShowLangMenu(v => !v)}
                   className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-slate-200 hover:border-violet-400 hover:bg-slate-50 transition text-sm font-semibold text-slate-600"
