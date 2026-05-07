@@ -46,9 +46,9 @@ export default function Landing() {
   }, []);
 
   const plans = [
-    { name: t.land_plan_basic, nameEn: 'Basic', price: 49, color: 'from-slate-500 to-slate-700', features: [t.land_plan_basic_f1, t.land_plan_basic_f2, t.land_plan_basic_f3, t.land_plan_basic_f4] },
-    { name: t.land_plan_pro, nameEn: 'Pro', price: 99, color: 'from-violet-500 to-indigo-600', popular: true, features: [t.land_plan_pro_f1, t.land_plan_pro_f2, t.land_plan_pro_f3, t.land_plan_pro_f4, t.land_plan_pro_f5] },
-    { name: t.land_plan_premium, nameEn: 'Premium', price: 199, color: 'from-amber-500 to-orange-600', features: [t.land_plan_prem_f1, t.land_plan_prem_f2, t.land_plan_prem_f3, t.land_plan_prem_f4, t.land_plan_prem_f5] },
+    { name: t.land_plan_basic, nameEn: 'Basic', price: 375, color: 'from-slate-500 to-slate-700', features: [t.land_plan_basic_f1, t.land_plan_basic_f2, t.land_plan_basic_f3, t.land_plan_basic_f4] },
+    { name: t.land_plan_pro, nameEn: 'Pro', price: 699, color: 'from-violet-500 to-indigo-600', popular: true, features: [t.land_plan_pro_f1, t.land_plan_pro_f2, t.land_plan_pro_f3, t.land_plan_pro_f4, t.land_plan_pro_f5] },
+    { name: t.land_plan_premium, nameEn: 'Premium', price: 1499, color: 'from-amber-500 to-orange-600', features: [t.land_plan_prem_f1, t.land_plan_prem_f2, t.land_plan_prem_f3, t.land_plan_prem_f4, t.land_plan_prem_f5] },
   ];
 
   const features = [
@@ -267,7 +267,7 @@ export default function Landing() {
                 <h3 className="text-xl font-extrabold">{plan.name}</h3>
                 <div className="mt-3 mb-6">
                   <span className="text-4xl font-extrabold" style={{ color: '#7b2d8b' }}>{plan.price}</span>
-                  <span className="text-slate-400"> ر.س / {t.land_per_month}</span>
+                  <span className="text-slate-400"> ر.س</span>
                 </div>
                 <ul className="space-y-3 mb-8">
                   {plan.features.map((f, j) => (
