@@ -232,11 +232,25 @@ export default function Landing() {
             <h3 className="text-xl font-extrabold text-slate-800">{t.land_partners_title}</h3>
             <p className="text-sm text-slate-500 mt-1">{t.land_partners_sub}</p>
           </div>
-          <div className="overflow-hidden w-full">
-            <div className="animate-marquee">
+          <div style={{ overflow: 'hidden', width: '100%' }}>
+            <div style={{
+              display: 'flex',
+              animation: 'marquee 50s linear infinite',
+              willChange: 'transform',
+            }}>
               {[...PARTNERS, ...PARTNERS].map((p, i) => (
-                <div key={i} className="inline-flex items-center justify-center px-4 py-3 rounded-2xl border border-slate-200 bg-white mx-3" style={{ flexShrink: 0 }}>
-                  <img src={p.logo} alt={p.name} className="h-16 w-32 object-contain" />
+                <div key={i} style={{
+                  flexShrink: 0,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '12px 16px',
+                  margin: '0 12px',
+                  borderRadius: '16px',
+                  border: '1px solid #e2e8f0',
+                  background: 'white',
+                }}>
+                  <img src={p.logo} alt={p.name} style={{ height: '64px', width: '128px', objectFit: 'contain' }} />
                 </div>
               ))}
             </div>

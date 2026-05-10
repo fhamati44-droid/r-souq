@@ -108,12 +108,6 @@
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
-.animate-marquee {
-  animation: marquee 50s linear infinite;
-  display: inline-flex;
-  white-space: nowrap;
-  will-change: transform;
-}
 
 .line-clamp-1 {
   display: -webkit-box;
