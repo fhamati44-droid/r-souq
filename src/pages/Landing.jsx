@@ -234,7 +234,7 @@ export default function Landing() {
               <div className="flex whitespace-nowrap gap-8" style={{ animation: 'marquee 40s linear infinite' }}>
                 {[...PARTNERS, ...PARTNERS, ...PARTNERS].map((p, i) => (
                   <div key={i} className="inline-flex items-center justify-center px-4 py-3 rounded-2xl border border-slate-200 bg-white shrink-0 hover:border-violet-300 hover:shadow-md transition-all">
-                    <img src={p.logo} alt={p.name} className="h-12 w-24 object-contain" />
+                    <img src={p.logo} alt={p.name} className="h-20 w-36 object-contain" />
                   </div>
                 ))}
               </div>
