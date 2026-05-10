@@ -231,8 +231,8 @@ export default function Landing() {
               <p className="text-sm text-slate-500 mt-1">{t.land_partners_sub}</p>
             </div>
             <div className="relative overflow-hidden">
-              <div className="flex whitespace-nowrap gap-8" style={{ animation: 'marquee 40s linear infinite', willChange: 'transform' }}>
-                {[...PARTNERS, ...PARTNERS, ...PARTNERS].map((p, i) => (
+              <div className="flex gap-8 animate-marquee">
+                {[...PARTNERS, ...PARTNERS].map((p, i) => (
                   <div key={i} className="inline-flex items-center justify-center px-4 py-3 rounded-2xl border border-slate-200 bg-white shrink-0 hover:border-violet-300 hover:shadow-md transition-all">
                     <img src={p.logo} alt={p.name} className="h-20 w-36 object-contain" />
                   </div>
