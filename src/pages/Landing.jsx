@@ -224,20 +224,21 @@ export default function Landing() {
             ))}
           </div>
 
-          {/* ── Partners Marquee ── */}
-          <div className="mt-20 pt-10 border-t border-slate-200">
-            <div className="text-center mb-8">
-              <h3 className="text-xl font-extrabold text-slate-800">{t.land_partners_title}</h3>
-              <p className="text-sm text-slate-500 mt-1">{t.land_partners_sub}</p>
-            </div>
-            <div className="relative overflow-hidden">
-              <div className="flex gap-8 animate-marquee">
-                {[...PARTNERS, ...PARTNERS].map((p, i) => (
-                  <div key={i} className="inline-flex items-center justify-center px-4 py-3 rounded-2xl border border-slate-200 bg-white shrink-0 hover:border-violet-300 hover:shadow-md transition-all">
-                    <img src={p.logo} alt={p.name} className="h-20 w-36 object-contain" />
-                  </div>
-                ))}
-              </div>
+        </div>
+
+        {/* ── Partners Marquee ── */}
+        <div className="mt-16 pt-10 border-t border-slate-200">
+          <div className="text-center mb-8">
+            <h3 className="text-xl font-extrabold text-slate-800">{t.land_partners_title}</h3>
+            <p className="text-sm text-slate-500 mt-1">{t.land_partners_sub}</p>
+          </div>
+          <div className="overflow-hidden w-full">
+            <div className="flex gap-6 animate-marquee">
+              {[...PARTNERS, ...PARTNERS].map((p, i) => (
+                <div key={i} className="inline-flex items-center justify-center px-4 py-3 rounded-2xl border border-slate-200 bg-white shrink-0 hover:border-violet-300 hover:shadow-md transition-all">
+                  <img src={p.logo} alt={p.name} className="h-16 w-32 object-contain" />
+                </div>
+              ))}
             </div>
           </div>
         </div>
