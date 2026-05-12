@@ -6,6 +6,7 @@ import { useCart } from '@/lib/CartContext';
 import { useLang } from '@/lib/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
+import ChatBot from '@/components/ChatBot';
 
 /* ── Hero Slider ─────────────────────────────────────────────────────────── */
 const HERO_SLIDES = [
@@ -564,6 +565,7 @@ export default function ShopHome() {
 
       </div>
       <PurchaseNotification />
+      <ChatBot />
     </>
   );
 }
