@@ -10,9 +10,9 @@ import { motion } from 'framer-motion';
 import CryptoPayment from '@/components/seller/CryptoPayment';
 
 const plans = [
-  { id: 'basic', name: 'أساسي', price: 49, maxProducts: 50, color: 'from-slate-500 to-slate-700', features: ['50 منتج', 'صفحة متجر', 'دعم بريد'] },
-  { id: 'pro', name: 'احترافي', price: 99, maxProducts: 200, color: 'from-violet-500 to-indigo-600', popular: true, features: ['200 منتج', 'إحصائيات', 'دعم أولوية', 'ظهور في البحث'] },
-  { id: 'premium', name: 'مميز', price: 199, maxProducts: 9999, color: 'from-amber-500 to-orange-600', features: ['منتجات لا محدودة', 'حملات إعلانية', 'إبراز متجر', 'دعم VIP'] },
+  { id: 'basic', name: 'أساسي', price: 375, maxProducts: 50, color: 'from-slate-500 to-slate-700', features: ['50 منتج', 'صفحة متجر', 'دعم بريد'] },
+  { id: 'pro', name: 'احترافي', price: 699, maxProducts: 200, color: 'from-violet-500 to-indigo-600', popular: true, features: ['200 منتج', 'إحصائيات', 'دعم أولوية', 'ظهور في البحث'] },
+  { id: 'premium', name: 'مميز', price: 1499, maxProducts: 9999, color: 'from-amber-500 to-orange-600', features: ['منتجات لا محدودة', 'حملات إعلانية', 'إبراز متجر', 'دعم VIP'] },
 ];
 
 export default function SellerRegister() {
