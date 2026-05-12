@@ -74,7 +74,7 @@ function ProductCard({ product, added, onAdd }) {
         {/* Cost price (fixed) */}
         <div className="bg-slate-50 rounded-xl px-2.5 py-2 text-xs space-y-1">
           <div className="flex justify-between text-slate-500">
-            <span>تكلفة الشراء من CJ</span>
+                    <span>سعر الشراء من المنصة</span>
             <span className="font-bold text-slate-700">
               {costSAR > 0 ? `${costSAR} ر.س` : '—'}
             </span>
@@ -183,7 +183,7 @@ export default function WarehousePage({ store, wallet, onWalletUpdate }) {
       price: salePrice,
       original_price: salePrice,
       cost_price: costSAR,
-      brand: product.supplierName || 'CJ Dropshipping',
+      brand: product.supplierName || 'R souq',
       stock: product.warehouseInventoryNum || 100,
       rating: 0,
       is_active: true,
@@ -197,8 +197,8 @@ export default function WarehousePage({ store, wallet, onWalletUpdate }) {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h2 className="font-extrabold text-lg">مخزن CJ Dropshipping</h2>
-          <p className="text-sm text-muted-foreground">اشترِ بسعر CJ وحدّد سعر بيعك بنفسك — الربح لك أنت</p>
+          <h2 className="font-extrabold text-lg">مخزن المنتجات</h2>
+          <p className="text-sm text-muted-foreground">اشترِ بسعر المنصة وحدّد سعر بيعك بنفسك — الربح لك أنت</p>
         </div>
         {total > 0 && (
           <div className="bg-violet-50 text-violet-700 text-sm font-semibold px-3 py-1.5 rounded-xl border border-violet-200">
@@ -211,7 +211,7 @@ export default function WarehousePage({ store, wallet, onWalletUpdate }) {
       <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-xs text-amber-800 flex gap-2 items-start">
         <span className="text-base">💡</span>
         <div>
-          <strong>كيف يعمل المخزن؟</strong> — تشوف سعر التكلفة من CJ، تحط سعر البيع اللي تبيه، والفرق ربحك. بعد ما يشتري العميل، نطلب المنتج من CJ ويوصل مباشرة.
+          <strong>كيف يعمل المخزن؟</strong> — تشوف سعر التكلفة من المنصة، تحط سعر البيع اللي تبيه، والفرق ربحك. بعد ما يشتري العميل، نتولى الشحن مباشرة.
         </div>
       </div>
 
@@ -220,7 +220,7 @@ export default function WarehousePage({ store, wallet, onWalletUpdate }) {
         <input
           value={searchInput}
           onChange={e => setSearchInput(e.target.value)}
-          placeholder="ابحث في منتجات CJ... (بالإنجليزي أفضل)"
+          placeholder="ابحث في المنتجات..."
           className="flex-1 h-10 pr-4 pl-4 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet-300"
         />
         <button type="submit" className="px-4 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 transition flex items-center gap-1.5">
@@ -245,7 +245,7 @@ export default function WarehousePage({ store, wallet, onWalletUpdate }) {
       {loading ? (
         <div className="flex flex-col items-center justify-center py-20 gap-3 text-slate-400">
           <Loader2 className="w-8 h-8 animate-spin text-violet-500" />
-          <span className="text-sm">جاري تحميل المنتجات من CJ...</span>
+          <span className="text-sm">جاري تحميل المنتجات...</span>
         </div>
       ) : products.length === 0 ? (
         <div className="text-center py-20 text-muted-foreground flex flex-col items-center gap-3">
