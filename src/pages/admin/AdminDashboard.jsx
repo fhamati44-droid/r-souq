@@ -5,8 +5,9 @@ import {
   LayoutDashboard, Store, Users, Package, ShoppingBag,
   ShieldCheck, Zap, LogOut, Menu, X, TrendingUp, DollarSign,
   Clock, CheckCircle, XCircle, AlertTriangle, ChevronRight,
-  Search, Eye, MoreVertical, Warehouse, BarChart3
+  Search, Eye, MoreVertical, Warehouse, BarChart3, Globe
 } from 'lucide-react';
+import CJImport from './CJImport';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
@@ -20,6 +21,7 @@ const NAV = [
   { path: '/admin/products', label: 'المنتجات', icon: Package },
   { path: '/admin/orders', label: 'الطلبات', icon: ShoppingBag },
   { path: '/admin/warehouse', label: 'المخزن', icon: Warehouse },
+  { path: '/admin/cj-import', label: 'استيراد CJ', icon: Globe },
 ];
 
 function Sidebar({ open, setOpen }) {
@@ -106,6 +108,7 @@ export default function AdminDashboard() {
             <Route path="/products" element={<ProductsPage />} />
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/warehouse" element={<WarehouseMgmtPage />} />
+            <Route path="/cj-import" element={<CJImport />} />
           </Routes>
         </main>
       </div>
