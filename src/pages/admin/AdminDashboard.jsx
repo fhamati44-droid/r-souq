@@ -8,7 +8,6 @@ import {
   Search, Eye, MoreVertical, Warehouse, BarChart3, Globe
 } from 'lucide-react';
 import CJImport from './CJImport';
-import AskAI from './AskAI';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
@@ -23,7 +22,6 @@ const NAV = [
   { path: '/admin/orders', label: 'الطلبات', icon: ShoppingBag },
   { path: '/admin/warehouse', label: 'المخزن', icon: Warehouse },
   { path: '/admin/cj-import', label: 'استيراد CJ', icon: Globe },
-  { path: '/admin/ask-ai', label: 'اسأل AI', icon: Zap },
 ];
 
 function Sidebar({ open, setOpen }) {
@@ -111,7 +109,6 @@ export default function AdminDashboard() {
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/warehouse" element={<WarehouseMgmtPage />} />
             <Route path="/cj-import" element={<CJImport />} />
-            <Route path="/ask-ai" element={<AskAI />} />
           </Routes>
         </main>
       </div>
