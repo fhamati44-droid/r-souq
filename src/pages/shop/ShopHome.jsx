@@ -571,6 +571,7 @@ export default function ShopHome() {
                   <li><Link to="/contact" className="hover:text-violet-600 transition">{t.contact_us}</Link></li>
                   <li><Link to="/return-policy" className="hover:text-violet-600 transition">{t.return_policy}</Link></li>
                   <li><Link to="/terms" className="hover:text-violet-600 transition">{t.terms}</Link></li>
+                  <li><Link to="/blog" className="hover:text-violet-600 transition">المدونة</Link></li>
                 </ul>
               </div>
               <div>

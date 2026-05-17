@@ -15,6 +15,7 @@ import ContactUs from './pages/ContactUs';
 import TermsOfUse from './pages/TermsOfUse';
 import ReturnPolicy from './pages/ReturnPolicy';
 import AboutUs from './pages/AboutUs';
+import Blog from './pages/Blog';
 
 // Admin
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -78,6 +79,8 @@ const AuthenticatedApp = () => {
       <Route path="/terms" element={<TermsOfUse />} />
       <Route path="/return-policy" element={<ReturnPolicy />} />
       <Route path="/about" element={<AboutUs />} />
+      <Route path="/blog" element={<Blog />} />
+      <Route path="/blog/:slug" element={<Blog />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

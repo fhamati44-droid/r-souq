@@ -32,6 +32,40 @@ export default function ProductDetail() {
     toast.success(`تمت إضافة ${quantity} قطعة للسلة`);
   };
 
+  // Inject Product JSON-LD for SEO
+  useEffect(() => {
+    if (!product) return;
+    const name = typeof product.name === 'object' ? (product.name?.ar || product.name?.en || '') : product.name;
+    const schema = {
+      "@context": "https://schema.org/",
+      "@type": "Product",
+      "name": name,
+      "image": product.images || [],
+      "description": product.description || name,
+      "brand": { "@type": "Brand", "name": product.brand || "R Souq" },
+      "offers": {
+        "@type": "Offer",
+        "url": window.location.href,
+        "priceCurrency": "SAR",
+        "price": product.price,
+        "availability": product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+        "seller": { "@type": "Organization", "name": product.store_name || "R Souq" }
+      },
+      ...(product.rating > 0 && {
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": product.rating,
+          "reviewCount": product.reviews_count || 1,
+          "bestRating": 5
+        }
+      })
+    };
+    let el = document.getElementById('product-jsonld');
+    if (!el) { el = document.createElement('script'); el.id = 'product-jsonld'; el.type = 'application/ld+json'; document.head.appendChild(el); }
+    el.textContent = JSON.stringify(schema);
+    return () => { const s = document.getElementById('product-jsonld'); if (s) s.remove(); };
+  }, [product]);
+
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="w-8 h-8 border-4 border-violet-200 border-t-violet-600 rounded-full animate-spin" />

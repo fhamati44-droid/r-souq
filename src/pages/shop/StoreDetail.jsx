@@ -36,6 +36,37 @@ export default function StoreDetail() {
     toast.success('تمت الإضافة للسلة');
   };
 
+  // Inject Store JSON-LD for SEO
+  useEffect(() => {
+    if (!store) return;
+    const schema = {
+      "@context": "https://schema.org",
+      "@type": "Store",
+      "name": store.store_name,
+      "description": store.store_description || store.store_name,
+      "image": store.store_logo || "",
+      "url": window.location.href,
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "SA",
+        "addressRegion": store.location || "المملكة العربية السعودية"
+      },
+      ...(store.phone && { "telephone": store.phone }),
+      ...(store.rating > 0 && {
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": store.rating,
+          "reviewCount": store.total_sales || 1,
+          "bestRating": 5
+        }
+      })
+    };
+    let el = document.getElementById('store-jsonld');
+    if (!el) { el = document.createElement('script'); el.id = 'store-jsonld'; el.type = 'application/ld+json'; document.head.appendChild(el); }
+    el.textContent = JSON.stringify(schema);
+    return () => { const s = document.getElementById('store-jsonld'); if (s) s.remove(); };
+  }, [store]);
+
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="w-8 h-8 border-4 border-violet-200 border-t-violet-600 rounded-full animate-spin" />
