@@ -512,32 +512,32 @@ export default function ShopHome() {
           </section>
 
           {/* ── Legal Links Section ── */}
-        <section className="bg-slate-50 rounded-3xl p-8 mb-8">
-          <h2 className="text-xl font-extrabold text-slate-800 mb-6 text-center">معلومات قانونية ومهمة</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
-            <Link to="/about" className="text-center p-3 bg-white rounded-2xl hover:shadow-md hover:border-violet-200 border border-slate-100 transition">
-              <p className="text-sm font-bold text-slate-800">من نحن</p>
-              <p className="text-xs text-slate-500 mt-1">عن المنصة</p>
+        <section style={{ background: 'linear-gradient(135deg, #f3e5f5 0%, #ede7f6 100%)' }} className="rounded-3xl p-10 mb-12">
+          <h2 className="text-2xl font-extrabold text-slate-900 mb-8 text-center">📋 معلومات قانونية ومهمة</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <Link to="/about" className="p-5 bg-white rounded-2xl hover:shadow-lg hover:border-violet-400 border-2 border-slate-200 transition transform hover:scale-105">
+              <p className="text-base font-bold text-slate-800 mb-1">ℹ️ من نحن</p>
+              <p className="text-sm text-slate-600">معلومات عن المنصة والشركة</p>
             </Link>
-            <Link to="/terms" className="text-center p-3 bg-white rounded-2xl hover:shadow-md hover:border-violet-200 border border-slate-100 transition">
-              <p className="text-sm font-bold text-slate-800">الشروط</p>
-              <p className="text-xs text-slate-500 mt-1">الأحكام</p>
+            <Link to="/terms" className="p-5 bg-white rounded-2xl hover:shadow-lg hover:border-violet-400 border-2 border-slate-200 transition transform hover:scale-105">
+              <p className="text-base font-bold text-slate-800 mb-1">⚖️ الشروط والأحكام</p>
+              <p className="text-sm text-slate-600">شروط استخدام المنصة</p>
             </Link>
-            <Link to="/privacy" className="text-center p-3 bg-white rounded-2xl hover:shadow-md hover:border-violet-200 border border-slate-100 transition">
-              <p className="text-sm font-bold text-slate-800">الخصوصية</p>
-              <p className="text-xs text-slate-500 mt-1">حماية البيانات</p>
+            <Link to="/privacy" className="p-5 bg-white rounded-2xl hover:shadow-lg hover:border-violet-400 border-2 border-slate-200 transition transform hover:scale-105">
+              <p className="text-base font-bold text-slate-800 mb-1">🔒 سياسة الخصوصية</p>
+              <p className="text-sm text-slate-600">حماية بياناتك الشخصية</p>
             </Link>
-            <Link to="/refund-policy" className="text-center p-3 bg-white rounded-2xl hover:shadow-md hover:border-violet-200 border border-slate-100 transition">
-              <p className="text-sm font-bold text-slate-800">الاسترجاع</p>
-              <p className="text-xs text-slate-500 mt-1">سياسة الاسترجاع</p>
+            <Link to="/refund-policy" className="p-5 bg-white rounded-2xl hover:shadow-lg hover:border-violet-400 border-2 border-slate-200 transition transform hover:scale-105">
+              <p className="text-base font-bold text-slate-800 mb-1">💰 سياسة الاسترجاع</p>
+              <p className="text-sm text-slate-600">استرجاع المبالغ والعملات</p>
             </Link>
-            <Link to="/return-policy" className="text-center p-3 bg-white rounded-2xl hover:shadow-md hover:border-violet-200 border border-slate-100 transition">
-              <p className="text-sm font-bold text-slate-800">الإرجاع</p>
-              <p className="text-xs text-slate-500 mt-1">سياسة الإرجاع</p>
+            <Link to="/return-policy" className="p-5 bg-white rounded-2xl hover:shadow-lg hover:border-violet-400 border-2 border-slate-200 transition transform hover:scale-105">
+              <p className="text-base font-bold text-slate-800 mb-1">📦 سياسة الإرجاع</p>
+              <p className="text-sm text-slate-600">إرجاع المنتجات والسلع</p>
             </Link>
-            <Link to="/contact" className="text-center p-3 bg-white rounded-2xl hover:shadow-md hover:border-violet-200 border border-slate-100 transition">
-              <p className="text-sm font-bold text-slate-800">تواصل</p>
-              <p className="text-xs text-slate-500 mt-1">الدعم</p>
+            <Link to="/contact" className="p-5 bg-white rounded-2xl hover:shadow-lg hover:border-violet-400 border-2 border-slate-200 transition transform hover:scale-105">
+              <p className="text-base font-bold text-slate-800 mb-1">📞 تواصل معنا</p>
+              <p className="text-sm text-slate-600">الدعم والمساعدة الفنية</p>
             </Link>
           </div>
         </section>
