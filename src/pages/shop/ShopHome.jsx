@@ -511,7 +511,38 @@ export default function ShopHome() {
             )}
           </section>
 
-          {/* ── Seller CTA ── */}
+          {/* ── Legal Links Section ── */}
+        <section className="bg-slate-50 rounded-3xl p-8 mb-8">
+          <h2 className="text-xl font-extrabold text-slate-800 mb-6 text-center">معلومات قانونية ومهمة</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+            <Link to="/about" className="text-center p-3 bg-white rounded-2xl hover:shadow-md hover:border-violet-200 border border-slate-100 transition">
+              <p className="text-sm font-bold text-slate-800">من نحن</p>
+              <p className="text-xs text-slate-500 mt-1">عن المنصة</p>
+            </Link>
+            <Link to="/terms" className="text-center p-3 bg-white rounded-2xl hover:shadow-md hover:border-violet-200 border border-slate-100 transition">
+              <p className="text-sm font-bold text-slate-800">الشروط</p>
+              <p className="text-xs text-slate-500 mt-1">الأحكام</p>
+            </Link>
+            <Link to="/privacy" className="text-center p-3 bg-white rounded-2xl hover:shadow-md hover:border-violet-200 border border-slate-100 transition">
+              <p className="text-sm font-bold text-slate-800">الخصوصية</p>
+              <p className="text-xs text-slate-500 mt-1">حماية البيانات</p>
+            </Link>
+            <Link to="/refund-policy" className="text-center p-3 bg-white rounded-2xl hover:shadow-md hover:border-violet-200 border border-slate-100 transition">
+              <p className="text-sm font-bold text-slate-800">الاسترجاع</p>
+              <p className="text-xs text-slate-500 mt-1">سياسة الاسترجاع</p>
+            </Link>
+            <Link to="/return-policy" className="text-center p-3 bg-white rounded-2xl hover:shadow-md hover:border-violet-200 border border-slate-100 transition">
+              <p className="text-sm font-bold text-slate-800">الإرجاع</p>
+              <p className="text-xs text-slate-500 mt-1">سياسة الإرجاع</p>
+            </Link>
+            <Link to="/contact" className="text-center p-3 bg-white rounded-2xl hover:shadow-md hover:border-violet-200 border border-slate-100 transition">
+              <p className="text-sm font-bold text-slate-800">تواصل</p>
+              <p className="text-xs text-slate-500 mt-1">الدعم</p>
+            </Link>
+          </div>
+        </section>
+
+        {/* ── Seller CTA ── */}
           <section className="text-center bg-white rounded-3xl border border-slate-100 py-10 px-6 shadow-sm">
             <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: '#ede7f6' }}>
               <Store className="w-7 h-7" style={{ color: '#7b2d8b' }} />
