@@ -16,6 +16,8 @@ import TermsOfUse from './pages/TermsOfUse';
 import ReturnPolicy from './pages/ReturnPolicy';
 import AboutUs from './pages/AboutUs';
 import Blog from './pages/Blog';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import RefundPolicy from './pages/RefundPolicy';
 
 // Admin
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -77,6 +79,8 @@ const AuthenticatedApp = () => {
 
       <Route path="/contact" element={<ContactUs />} />
       <Route path="/terms" element={<TermsOfUse />} />
+      <Route path="/privacy" element={<PrivacyPolicy />} />
+      <Route path="/refund-policy" element={<RefundPolicy />} />
       <Route path="/return-policy" element={<ReturnPolicy />} />
       <Route path="/about" element={<AboutUs />} />
       <Route path="/blog" element={<Blog />} />

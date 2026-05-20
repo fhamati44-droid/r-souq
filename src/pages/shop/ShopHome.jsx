@@ -565,8 +565,10 @@ export default function ShopHome() {
                 <p className="font-bold text-slate-700 mb-3">{t.support}</p>
                 <ul className="space-y-2 text-slate-400">
                   <li><Link to="/contact" className="hover:text-violet-600 transition">{t.contact_us}</Link></li>
-                  <li><Link to="/return-policy" className="hover:text-violet-600 transition">{t.return_policy}</Link></li>
                   <li><Link to="/terms" className="hover:text-violet-600 transition">{t.terms}</Link></li>
+                  <li><Link to="/privacy" className="hover:text-violet-600 transition">سياسة الخصوصية</Link></li>
+                  <li><Link to="/refund-policy" className="hover:text-violet-600 transition">سياسة الاسترجاع</Link></li>
+                  <li><Link to="/return-policy" className="hover:text-violet-600 transition">{t.return_policy}</Link></li>
                   <li><Link to="/blog" className="hover:text-violet-600 transition">المدونة</Link></li>
                 </ul>
               </div>
