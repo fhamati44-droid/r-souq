@@ -173,14 +173,16 @@ export default function WarehousePage({ store, wallet, onWalletUpdate }) {
     if (!store) { toast.error('لا يوجد متجر'); return; }
     const user = await base44.auth.me();
 
-    // Translate product name to Arabic using AI
+    // Translate product name to Arabic using backend function
     let arabicName = product.nameEn;
     try {
-      const res = await base44.integrations.Core.InvokeLLM({
-        prompt: `ترجم اسم المنتج التالي إلى العربية بشكل مختصر واحترافي مناسب للتجارة الإلكترونية. أعطني فقط الاسم المترجم بدون أي شرح:\n${product.nameEn}`,
-      });
-      if (res && typeof res === 'string' && res.trim()) arabicName = res.trim();
-    } catch (_) {}
+      toast.info('⏳ جاري ترجمة اسم المنتج...', { duration: 3000 });
+      const res = await base44.functions.invoke('translateProduct', { nameEn: product.nameEn });
+      const translated = res?.data?.arabicName || '';
+      if (translated) arabicName = translated;
+    } catch (e) {
+      console.error('Translation failed:', e);
+    }
 
     await base44.entities.Product.create({
       warehouse_product_id: `cj_${product.id}`,
