@@ -261,7 +261,7 @@ export default function ShopHome() {
         {/* ── Navbar ── */}
         <nav className="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
           {/* Top nav row */}
-          <div className="px-4 sm:px-6 h-14 flex items-center gap-3 max-w-7xl mx-auto">
+          <div className="px-4 sm:px-6 h-14 flex items-center gap-2 max-w-7xl mx-auto">
             <Link to="/" className="flex items-center gap-2 shrink-0">
               <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #7b2d8b, #6a1b9a)' }}>
                 <Store className="w-5 h-5 text-white" />
@@ -269,20 +269,23 @@ export default function ShopHome() {
               <span className="font-extrabold text-lg hidden sm:block" style={{ color: '#6a1b9a' }}>R souq</span>
             </Link>
 
-            {/* Search */}
-            <form onSubmit={handleSearch} className="flex-1 max-w-xl mx-3">
-              <div className="relative flex">
+            {/* Search - hidden on mobile (shown below) */}
+            <form onSubmit={handleSearch} className="hidden sm:flex flex-1 max-w-xl mx-3">
+              <div className="relative flex w-full">
                 <input value={searchInput} onChange={e => setSearchInput(e.target.value)}
                   placeholder={t.search}
-                  className="w-full h-10 pr-4 pl-12 rounded-r-2xl rounded-l-none border-2 border-l-0 text-sm focus:outline-none focus:border-violet-400 transition border-slate-200" />
+                  className="w-full h-10 pr-4 pl-4 rounded-r-2xl rounded-l-none border-2 border-l-0 text-sm focus:outline-none focus:border-violet-400 transition border-slate-200" />
                 <button type="submit" className="h-10 px-4 rounded-l-2xl text-white font-bold text-sm transition" style={{ background: '#7b2d8b' }}>
                   <Search className="w-4 h-4" />
                 </button>
               </div>
             </form>
 
+            {/* Mobile: spacer */}
+            <div className="flex-1 sm:hidden" />
+
             <div className="flex items-center gap-2 shrink-0">
-              <Link to="/landing" className="flex items-center gap-1 text-sm font-semibold text-slate-600 hover:text-violet-600 transition">
+              <Link to="/landing" className="hidden sm:flex items-center gap-1 text-sm font-semibold text-slate-600 hover:text-violet-600 transition">
                 {t.become_seller}
               </Link>
               <Link to="/shop/stores" className="hidden sm:flex items-center gap-1 text-sm font-semibold text-slate-600 hover:text-violet-600 transition">
@@ -293,7 +296,7 @@ export default function ShopHome() {
               <div className="relative" onClick={e => e.stopPropagation()}>
                 <button
                   onClick={() => setShowLangMenu(v => !v)}
-                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-slate-200 hover:border-violet-400 hover:bg-slate-50 transition text-sm font-semibold text-slate-600"
+                  className="flex items-center gap-1.5 px-2 py-1.5 rounded-xl border border-slate-200 hover:border-violet-400 hover:bg-slate-50 transition text-sm font-semibold text-slate-600"
                 >
                   <Globe className="w-4 h-4" />
                   <span>{LANGS.find(l => l.code === lang)?.flag}</span>
@@ -322,6 +325,18 @@ export default function ShopHome() {
                 )}
               </Link>
             </div>
+          </div>
+
+          {/* Mobile search row */}
+          <div className="sm:hidden px-3 pb-2">
+            <form onSubmit={handleSearch} className="flex">
+              <input value={searchInput} onChange={e => setSearchInput(e.target.value)}
+                placeholder={t.search}
+                className="flex-1 h-10 pr-4 pl-4 rounded-r-xl rounded-l-none border-2 border-l-0 text-sm focus:outline-none focus:border-violet-400 transition border-slate-200" />
+              <button type="submit" className="h-10 px-4 rounded-l-xl text-white font-bold text-sm transition" style={{ background: '#7b2d8b' }}>
+                <Search className="w-4 h-4" />
+              </button>
+            </form>
           </div>
 
           {/* Category nav row */}
