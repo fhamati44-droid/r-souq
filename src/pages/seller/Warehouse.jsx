@@ -70,6 +70,7 @@ function ProductCard({ product, added, onAdd }) {
 
       <div className="p-3 flex flex-col gap-2 flex-1">
         <p className="font-semibold text-xs leading-tight line-clamp-2 text-slate-800">{product.nameEn}</p>
+        <p className="text-xs text-slate-400 font-mono bg-slate-50 rounded px-1.5 py-0.5 truncate">SKU: {product.id || product.sku || '—'}</p>
 
         {/* Cost price (fixed) */}
         <div className="bg-slate-50 rounded-xl px-2.5 py-2 text-xs space-y-1">
@@ -171,13 +172,23 @@ export default function WarehousePage({ store, wallet, onWalletUpdate }) {
   const handleAdd = async (product, salePrice, costSAR) => {
     if (!store) { toast.error('لا يوجد متجر'); return; }
     const user = await base44.auth.me();
+
+    // Translate product name to Arabic using AI
+    let arabicName = product.nameEn;
+    try {
+      const res = await base44.integrations.Core.InvokeLLM({
+        prompt: `ترجم اسم المنتج التالي إلى العربية بشكل مختصر واحترافي مناسب للتجارة الإلكترونية. أعطني فقط الاسم المترجم بدون أي شرح:\n${product.nameEn}`,
+      });
+      if (res && typeof res === 'string' && res.trim()) arabicName = res.trim();
+    } catch (_) {}
+
     await base44.entities.Product.create({
       warehouse_product_id: `cj_${product.id}`,
       store_id: store.id,
       store_name: store.store_name,
       owner_email: user.email,
-      name: product.nameEn,
-      description: product.nameEn,
+      name: arabicName,
+      description: arabicName,
       category: 'general',
       images: [product.bigImage].filter(Boolean),
       price: salePrice,
@@ -189,7 +200,7 @@ export default function WarehousePage({ store, wallet, onWalletUpdate }) {
       is_active: true,
     });
     setMyProductIds(prev => new Set([...prev, `cj_${product.id}`]));
-    toast.success(`✅ أُضيف "${product.nameEn}" بسعر ${salePrice} ر.س`);
+    toast.success(`✅ أُضيف "${arabicName}" بسعر ${salePrice} ر.س`);
   };
 
   return (

@@ -210,6 +210,9 @@ function ProductRow({ product, onToggle, onRemove, onUpdatePrice }) {
       <div className="flex-1 min-w-0">
         <p className="font-semibold text-sm truncate">{typeof product.name === 'object' ? (product.name?.ar || product.name?.en || '') : product.name}</p>
         <p className="text-xs text-muted-foreground">مخزون: {product.stock}</p>
+        {product.warehouse_product_id && (
+          <p className="text-xs text-slate-400 font-mono">SKU: {product.warehouse_product_id}</p>
+        )}
       </div>
       <div className="flex items-center gap-2 shrink-0">
         {editingPrice ? (
