@@ -70,7 +70,7 @@ function ProductCard({ product, added, onAdd }) {
 
       <div className="p-3 flex flex-col gap-2 flex-1">
         <p className="font-semibold text-xs leading-tight line-clamp-2 text-slate-800">{product.nameEn}</p>
-        <p className="text-xs text-slate-400 font-mono bg-slate-50 rounded px-1.5 py-0.5 truncate">SKU: {product.id || product.sku || '—'}</p>
+        <p className="text-xs text-slate-400 font-mono bg-slate-50 rounded px-1.5 py-0.5 truncate">SKU: {product.sku || '—'}</p>
 
         {/* Cost price (fixed) */}
         <div className="bg-slate-50 rounded-xl px-2.5 py-2 text-xs space-y-1">
