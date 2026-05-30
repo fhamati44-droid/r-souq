@@ -45,11 +45,7 @@ export default function Landing() {
     });
   }, []);
 
-  const plans = [
-    { name: t.land_plan_basic, nameEn: 'Basic', price: 375, color: 'from-slate-500 to-slate-700', features: [t.land_plan_basic_f1, t.land_plan_basic_f2, t.land_plan_basic_f3, t.land_plan_basic_f4] },
-    { name: t.land_plan_pro, nameEn: 'Pro', price: 699, color: 'from-violet-500 to-indigo-600', popular: true, features: [t.land_plan_pro_f1, t.land_plan_pro_f2, t.land_plan_pro_f3, t.land_plan_pro_f4, t.land_plan_pro_f5] },
-    { name: t.land_plan_premium, nameEn: 'Premium', price: 1499, color: 'from-amber-500 to-orange-600', features: [t.land_plan_prem_f1, t.land_plan_prem_f2, t.land_plan_prem_f3, t.land_plan_prem_f4, t.land_plan_prem_f5] },
-  ];
+
 
   const features = [
     { icon: DollarSign, title: t.land_feat1_title, desc: t.land_feat1_desc },
@@ -86,7 +82,6 @@ export default function Landing() {
           <div className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
             <a href="#" className="hover:text-purple-700 transition">{t.land_nav_home}</a>
             <a href="#features" className="hover:text-purple-700 transition">{t.land_nav_services}</a>
-            <a href="#pricing" className="hover:text-purple-700 transition">{t.land_nav_pricing}</a>
             <Link to="/shop" className="hover:text-purple-700 transition">{t.land_nav_stores}</Link>
             <a href="#" className="hover:text-purple-700 transition">{t.land_nav_about}</a>
             <Link to="/contact" className="hover:text-purple-700 transition">{t.land_nav_contact}</Link>
@@ -258,49 +253,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── Pricing ── */}
-      <section id="pricing" className="py-20 bg-white relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-1/2 w-96 h-96 bg-purple-50 rounded-full opacity-60 blur-3xl -translate-x-1/2" />
-        </div>
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 relative">
-          <div className="text-center mb-14">
-            <h2 className="text-3xl font-extrabold mb-3">{t.land_pricing_title}</h2>
-            <p className="text-slate-500">{t.land_pricing_sub}</p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {plans.map((plan, i) => (
-              <motion.div key={i} initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                className={`relative rounded-3xl border-2 p-8 bg-white ${plan.popular ? 'shadow-2xl' : 'border-slate-100 shadow-sm'}`}
-                style={plan.popular ? { borderColor: '#7b2d8b', boxShadow: '0 10px 40px rgba(123,45,139,0.15)' } : {}}>
-                {plan.popular && (
-                  <span className="absolute -top-4 left-1/2 -translate-x-1/2 text-white px-4 py-1 rounded-full text-xs font-bold" style={{ background: '#7b2d8b' }}>{t.land_most_popular}</span>
-                )}
-                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${plan.color} flex items-center justify-center mb-4`}>
-                  <Star className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-xl font-extrabold">{plan.name}</h3>
-                <div className="mt-3 mb-6">
-                  <span className="text-4xl font-extrabold" style={{ color: '#7b2d8b' }}>{plan.price}</span>
-                  <span className="text-slate-400"> ر.س</span>
-                </div>
-                <ul className="space-y-3 mb-8">
-                  {plan.features.map((f, j) => (
-                    <li key={j} className="flex items-center gap-2 text-sm text-slate-600">
-                      <CheckCircle className="w-4 h-4 text-green-500 shrink-0" /> {f}
-                    </li>
-                  ))}
-                </ul>
-                <Link to={`/seller/register?plan=${plan.nameEn.toLowerCase()}`}>
-                  <Button className="w-full rounded-full font-bold" variant={plan.popular ? 'default' : 'outline'} style={plan.popular ? { background: '#7b2d8b' } : {}}>
-                    {t.land_start}
-                  </Button>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+
 
       {/* ── Campaign CTA ── */}
       <section className="py-16 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #6a1b9a 0%, #7b2d8b 50%, #9c27b0 100%)' }}>
