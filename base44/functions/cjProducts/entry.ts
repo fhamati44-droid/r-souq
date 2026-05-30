@@ -74,29 +74,52 @@ Deno.serve(async (req) => {
       const { productId, quantity = 1 } = body;
       if (!productId) return Response.json({ error: 'No productId' }, { status: 400 });
 
+      // Step 1: get product variants to find a valid vid
+      const detailRes = await fetch(`${CJ_BASE_URL}/product/variant/query?pid=${productId}`, { headers });
+      const detailData = await detailRes.json();
+
+      let vid = null;
+      // data is an array of variants directly
+      const variants = Array.isArray(detailData.data) ? detailData.data : [];
+      if (variants.length > 0) {
+        vid = variants[0].vid || variants[0].variantId || variants[0].id;
+      }
+
+      if (!vid) {
+        return Response.json({ shippingCost: 0, options: [], error: 'No variant vid found', firstVariant: variants[0] || null });
+      }
+
+      if (!vid) {
+        return Response.json({ shippingCost: 0, options: [], error: 'No variant found' });
+      }
+
+      // Step 2: calculate freight with the variant id
       const res = await fetch(`${CJ_BASE_URL}/logistic/freightCalculate`, {
         method: 'POST',
         headers,
         body: JSON.stringify({
-          productId,
-          quantity,
-          countryCode: 'SA', // Saudi Arabia
+          startCountryCode: 'CN',
+          endCountryCode: 'SA',
+          products: [{ vid, quantity }],
         }),
       });
       const data = await res.json();
+      console.log('CJ Freight response:', JSON.stringify(data).slice(0, 500));
 
       if (!data.result || !data.data) {
-        return Response.json({ shippingCost: 0, options: [] });
+        return Response.json({ shippingCost: 0, options: [], raw: data });
       }
 
-      // Return all options and the cheapest one
       const options = (data.data || []).map(o => ({
         name: o.logisticName,
         cost: parseFloat(o.logisticPrice) || 0,
         days: o.logisticAging,
       }));
-      const cheapest = options.reduce((a, b) => (a.cost < b.cost ? a : b), options[0] || { cost: 0 });
-      const costUSD = cheapest?.cost || 0;
+      const validOptions = options.filter(o => o.cost > 0);
+      const cheapest = validOptions.length > 0
+        ? validOptions.reduce((a, b) => (a.cost < b.cost ? a : b))
+        : { cost: 0 };
+      const costUSD = cheapest.cost || 0;
       const costSAR = parseFloat((costUSD * 3.75).toFixed(2));
 
       return Response.json({ shippingCost: costSAR, options, cheapest });
