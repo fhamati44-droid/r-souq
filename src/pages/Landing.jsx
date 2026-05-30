@@ -250,7 +250,7 @@ export default function Landing() {
                   border: '1px solid #e2e8f0',
                   background: 'white',
                 }}>
-                  <img src={p.logo} alt={p.name} style={{ height: '40px', width: '80px', objectFit: 'contain' }} />
+                  <img src={p.logo} alt={p.name} style={{ height: '64px', width: '128px', objectFit: 'contain' }} />
                 </div>
               ))}
             </div>
