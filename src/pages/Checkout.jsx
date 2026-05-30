@@ -35,6 +35,41 @@ export default function Checkout() {
       return;
     }
     setLoading(true);
+
+    if (form.payment_method === 'credit_card') {
+      // Redirect to Stripe Checkout
+      const res = await base44.functions.invoke('stripeCheckout', {
+        action: 'create_checkout',
+        items: items.map(i => ({
+          product_name: i.product_name,
+          product_image: i.product_image,
+          price: i.price,
+          quantity: i.quantity,
+        })),
+        total,
+        successUrl: `${window.location.origin}/orders?payment=success`,
+        cancelUrl: `${window.location.origin}/checkout`,
+      });
+      if (res.data?.url) {
+        // Save order as pending before redirect
+        const orderNumber = `ORD-${Date.now().toString().slice(-6)}`;
+        await base44.entities.Order.create({
+          ...form,
+          order_number: orderNumber,
+          items: items.map(i => ({ product_id: i.product_id, product_name: i.product_name, product_image: i.product_image, quantity: i.quantity, price: i.price })),
+          total_amount: total,
+          status: 'pending',
+        });
+        clearCart();
+        window.location.href = res.data.url;
+        return;
+      }
+      toast.error('حدث خطأ في الدفع، حاول مرة أخرى');
+      setLoading(false);
+      return;
+    }
+
+    // Cash on delivery
     const orderNumber = `ORD-${Date.now().toString().slice(-6)}`;
     await base44.entities.Order.create({
       ...form,
@@ -98,7 +133,7 @@ export default function Checkout() {
         {step === 2 && (
           <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} className="bg-white rounded-2xl border border-slate-100 p-6 space-y-4">
             <h2 className="font-bold text-lg">{t.payment_method}</h2>
-            {[{id:'credit_card',label:'💳 بطاقة فيزا / ماستركارد'}].map(pm => (
+            {[{id:'credit_card',label:'💳 بطاقة فيزا / ماستركارد (Stripe)'},{id:'cash_on_delivery',label:'💵 الدفع عند الاستلام'}].map(pm => (
               <label key={pm.id} className={`flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition ${form.payment_method === pm.id ? 'border-violet-500 bg-violet-50' : 'border-slate-200'}`}>
                 <input type="radio" name="payment" value={pm.id} checked={form.payment_method === pm.id} onChange={() => set('payment_method', pm.id)} className="accent-violet-600" />
                 <span className="font-medium">{pm.label}</span>
