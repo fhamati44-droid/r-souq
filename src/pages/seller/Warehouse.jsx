@@ -25,34 +25,31 @@ function getCostSAR(product) {
   return parseFloat((usd * USD_TO_SAR).toFixed(2));
 }
 
-async function fetchShippingCost(productId) {
-  try {
-    const res = await base44.functions.invoke('cjProducts', { action: 'getShipping', productId, quantity: 1 });
-    return res?.data?.shippingCost || 0;
-  } catch {
-    return 0;
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+// Fetch shipping for all products sequentially with delay to avoid CJ rate limit
+async function fetchAllShipping(products) {
+  const results = {};
+  for (const product of products) {
+    try {
+      const res = await base44.functions.invoke('cjProducts', { action: 'getShipping', productId: product.id, quantity: 1 });
+      results[product.id] = res?.data?.shippingCost || 0;
+    } catch {
+      results[product.id] = 0;
+    }
+    await sleep(1200); // 1.2s delay to respect CJ's 1 req/sec limit
   }
+  return results;
 }
 
-function ProductCard({ product, added, onAdd }) {
+function ProductCard({ product, shippingCost, added, onAdd }) {
   const productCostSAR = getCostSAR(product);
-  const [shippingCost, setShippingCost] = useState(null); // null = loading
-  const [loadingShipping, setLoadingShipping] = useState(true);
+  const loadingShipping = shippingCost === undefined;
 
-  useEffect(() => {
-    if (product.id) {
-      fetchShippingCost(product.id).then(cost => {
-        setShippingCost(cost);
-        setLoadingShipping(false);
-      });
-    }
-  }, [product.id]);
-
-  const costSAR = shippingCost !== null
+  const costSAR = !loadingShipping
     ? parseFloat((productCostSAR + shippingCost).toFixed(2))
     : productCostSAR;
 
-  const defaultSalePrice = parseFloat((costSAR * 1.5).toFixed(2));
   const [salePrice, setSalePrice] = useState('');
   const [adding, setAdding] = useState(false);
 
@@ -66,14 +63,8 @@ function ProductCard({ product, added, onAdd }) {
   const profitPct = profit && costSAR > 0 ? Math.round((profit / costSAR) * 100) : null;
 
   const handleAdd = async () => {
-    if (!salePrice || parseFloat(salePrice) <= 0) {
-      toast.error('أدخل سعر بيع صحيح');
-      return;
-    }
-    if (parseFloat(salePrice) <= costSAR) {
-      toast.error('سعر البيع يجب أن يكون أعلى من التكلفة الإجمالية (منتج + شحن)');
-      return;
-    }
+    if (!salePrice || parseFloat(salePrice) <= 0) { toast.error('أدخل سعر بيع صحيح'); return; }
+    if (parseFloat(salePrice) <= costSAR) { toast.error('سعر البيع يجب أن يكون أعلى من التكلفة الإجمالية (منتج + شحن)'); return; }
     setAdding(true);
     await onAdd(product, parseFloat(salePrice), costSAR);
     setAdding(false);
@@ -103,7 +94,6 @@ function ProductCard({ product, added, onAdd }) {
         <p className="font-semibold text-xs leading-tight line-clamp-2 text-slate-800">{product.nameEn}</p>
         <p className="text-xs text-slate-400 font-mono bg-slate-50 rounded px-1.5 py-0.5 truncate">SKU: {product.sku || '—'}</p>
 
-        {/* Cost price (fixed) */}
         <div className="bg-slate-50 rounded-xl px-2.5 py-2 text-xs space-y-1">
           <div className="flex justify-between text-slate-500">
             <span>سعر المنتج</span>
@@ -112,7 +102,7 @@ function ProductCard({ product, added, onAdd }) {
           <div className="flex justify-between text-slate-500">
             <span>شحن للسعودية</span>
             {loadingShipping ? (
-              <span className="text-slate-400 italic">جاري الجلب...</span>
+              <span className="text-slate-400 italic flex items-center gap-1"><Loader2 className="w-3 h-3 animate-spin" /> جاري...</span>
             ) : (
               <span className="font-bold text-blue-600">{shippingCost > 0 ? `+${shippingCost} ر.س` : 'مجاني'}</span>
             )}
@@ -132,7 +122,6 @@ function ProductCard({ product, added, onAdd }) {
           )}
         </div>
 
-        {/* Editable sale price */}
         <div>
           <label className="text-xs text-slate-500 mb-1 block flex items-center gap-1">
             <Tag className="w-3 h-3" /> سعر بيعك للعميل (ر.س)
@@ -148,7 +137,6 @@ function ProductCard({ product, added, onAdd }) {
           />
         </div>
 
-        {/* Add button */}
         {added ? (
           <div className="w-full flex items-center justify-center gap-1 text-xs bg-green-100 text-green-700 py-1.5 rounded-xl font-semibold">
             <Check className="w-3 h-3" /> مضاف للمتجر
@@ -156,7 +144,7 @@ function ProductCard({ product, added, onAdd }) {
         ) : (
           <button
             onClick={handleAdd}
-            disabled={adding}
+            disabled={adding || loadingShipping}
             className="w-full flex items-center justify-center gap-1 text-xs bg-violet-600 text-white py-1.5 rounded-xl font-semibold hover:bg-violet-700 transition disabled:opacity-50 mt-auto"
           >
             {adding
@@ -172,6 +160,7 @@ function ProductCard({ product, added, onAdd }) {
 
 export default function WarehousePage({ store, wallet, onWalletUpdate }) {
   const [products, setProducts] = useState([]);
+  const [shippingMap, setShippingMap] = useState({}); // productId -> shippingCost
   const [myProductIds, setMyProductIds] = useState(new Set());
   const [search, setSearch] = useState('');
   const [searchInput, setSearchInput] = useState('');
@@ -192,14 +181,21 @@ export default function WarehousePage({ store, wallet, onWalletUpdate }) {
   useEffect(() => {
     setLoading(true);
     setProducts([]);
+    setShippingMap({});
     const keyword = search.trim() || activeCategory || 'product';
     base44.functions.invoke('cjProducts', { action: 'search', keyword, page, size: 20 })
       .then(res => {
         const data = res.data;
-        setProducts(data.products || []);
+        const prods = data.products || [];
+        setProducts(prods);
         setTotal(data.total || 0);
         setTotalPages(data.pages || 1);
         setLoading(false);
+
+        // Fetch shipping sequentially after products load
+        if (prods.length > 0) {
+          fetchAllShipping(prods).then(map => setShippingMap(map));
+        }
       }).catch(() => {
         toast.error('خطأ في تحميل المنتجات');
         setLoading(false);
@@ -214,7 +210,6 @@ export default function WarehousePage({ store, wallet, onWalletUpdate }) {
     if (!store) { toast.error('لا يوجد متجر'); return; }
     const user = await base44.auth.me();
 
-    // Translate product name to Arabic using backend function
     let arabicName = product.nameEn;
     try {
       toast.info('⏳ جاري ترجمة اسم المنتج...', { duration: 3000 });
@@ -248,7 +243,6 @@ export default function WarehousePage({ store, wallet, onWalletUpdate }) {
 
   return (
     <div className="space-y-5" dir="rtl">
-      {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h2 className="font-extrabold text-lg">مخزن المنتجات</h2>
@@ -261,7 +255,6 @@ export default function WarehousePage({ store, wallet, onWalletUpdate }) {
         )}
       </div>
 
-      {/* Info Banner */}
       <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-xs text-amber-800 flex gap-2 items-start">
         <span className="text-base">💡</span>
         <div>
@@ -269,7 +262,6 @@ export default function WarehousePage({ store, wallet, onWalletUpdate }) {
         </div>
       </div>
 
-      {/* Search */}
       <form onSubmit={handleSearch} className="flex gap-2">
         <input
           value={searchInput}
@@ -282,7 +274,6 @@ export default function WarehousePage({ store, wallet, onWalletUpdate }) {
         </button>
       </form>
 
-      {/* Category pills */}
       <div className="flex gap-2 overflow-x-auto pb-1 flex-wrap">
         {CJ_CATEGORIES.map(cat => (
           <button
@@ -295,7 +286,6 @@ export default function WarehousePage({ store, wallet, onWalletUpdate }) {
         ))}
       </div>
 
-      {/* Grid */}
       {loading ? (
         <div className="flex flex-col items-center justify-center py-20 gap-3 text-slate-400">
           <Loader2 className="w-8 h-8 animate-spin text-violet-500" />
@@ -312,6 +302,7 @@ export default function WarehousePage({ store, wallet, onWalletUpdate }) {
             <ProductCard
               key={product.id}
               product={product}
+              shippingCost={shippingMap[product.id]} // undefined = loading, 0 = free/failed
               added={myProductIds.has(`cj_${product.id}`)}
               onAdd={handleAdd}
             />
@@ -319,7 +310,6 @@ export default function WarehousePage({ store, wallet, onWalletUpdate }) {
         </div>
       )}
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-3 pt-2">
           <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}

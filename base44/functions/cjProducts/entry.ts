@@ -80,33 +80,33 @@ Deno.serve(async (req) => {
       const { productId, quantity = 1 } = body;
       if (!productId) return Response.json({ error: 'No productId' }, { status: 400 });
 
-      // Step 1: get product variants to find a valid vid
-      const detailRes = await fetch(`${CJ_BASE_URL}/product/variant/query?pid=${productId}`, { headers });
-      const detailData = await detailRes.json();
-
+      // Step 1: get product detail to find a valid vid
+      // Try variant/query first, then fall back to product detail endpoint
       let vid = null;
-      // data is an array of variants directly
-      const variants = Array.isArray(detailData.data) ? detailData.data : [];
+
+      // CJ variant/query endpoint - try with pid param
+      const variantRes = await fetch(`${CJ_BASE_URL}/product/variant/query?pid=${productId}`, { headers });
+      const variantData = await variantRes.json();
+      const variants = Array.isArray(variantData.data) ? variantData.data : [];
       if (variants.length > 0) {
         vid = variants[0].vid || variants[0].variantId || variants[0].id;
       }
+      console.log('variant/query result:', variantData.message, '| variants:', variants.length, '| vid:', vid);
 
       if (!vid) {
-        return Response.json({ shippingCost: 0, options: [], error: 'No variant vid found', firstVariant: variants[0] || null });
+        return Response.json({ shippingCost: 0, options: [], error: 'No vid found for this product' });
       }
 
-      if (!vid) {
-        return Response.json({ shippingCost: 0, options: [], error: 'No variant found' });
-      }
+      const productPayload = { vid, quantity };
 
-      // Step 2: calculate freight with the variant id
+      // Step 2: calculate freight
       const res = await fetch(`${CJ_BASE_URL}/logistic/freightCalculate`, {
         method: 'POST',
         headers,
         body: JSON.stringify({
           startCountryCode: 'CN',
           endCountryCode: 'SA',
-          products: [{ vid, quantity }],
+          products: [productPayload],
         }),
       });
       const data = await res.json();
