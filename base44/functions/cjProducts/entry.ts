@@ -42,12 +42,18 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
-    if (!user || user.role !== 'admin') {
-      return Response.json({ error: 'Forbidden' }, { status: 403 });
+    if (!user) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await req.json();
     const { action, keyword, page = 1, size = 20, categoryId } = body;
+
+    // Only restrict import/bulk actions to admins; search & shipping are open to all authenticated users
+    const adminOnlyActions = ['import', 'importBulk'];
+    if (adminOnlyActions.includes(action) && user.role !== 'admin') {
+      return Response.json({ error: 'Forbidden' }, { status: 403 });
+    }
 
     const token = await getCJAccessToken();
     const headers = { 'CJ-Access-Token': token, 'Content-Type': 'application/json' };
