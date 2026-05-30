@@ -163,6 +163,7 @@ function ProductCard({ product, onAddToCart }) {
           <div>
             <span className="font-extrabold text-base" style={{ color: '#7b2d8b' }}>{product.price} ر.س</span>
             {hasDiscount && <p className="text-xs text-slate-400 line-through">{product.original_price} ر.س</p>}
+            <p className="text-xs text-green-600 font-medium">شامل الشحن للسعودية</p>
           </div>
           <button onClick={() => onAddToCart(product)}
             className="text-white text-xs px-3 py-1.5 rounded-xl font-bold hover:opacity-90 transition flex items-center gap-1 shadow"
