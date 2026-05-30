@@ -25,11 +25,42 @@ function getCostSAR(product) {
   return parseFloat((usd * USD_TO_SAR).toFixed(2));
 }
 
+async function fetchShippingCost(productId) {
+  try {
+    const res = await base44.functions.invoke('cjProducts', { action: 'getShipping', productId, quantity: 1 });
+    return res?.data?.shippingCost || 0;
+  } catch {
+    return 0;
+  }
+}
+
 function ProductCard({ product, added, onAdd }) {
-  const costSAR = getCostSAR(product);
+  const productCostSAR = getCostSAR(product);
+  const [shippingCost, setShippingCost] = useState(null); // null = loading
+  const [loadingShipping, setLoadingShipping] = useState(true);
+
+  useEffect(() => {
+    if (product.id) {
+      fetchShippingCost(product.id).then(cost => {
+        setShippingCost(cost);
+        setLoadingShipping(false);
+      });
+    }
+  }, [product.id]);
+
+  const costSAR = shippingCost !== null
+    ? parseFloat((productCostSAR + shippingCost).toFixed(2))
+    : productCostSAR;
+
   const defaultSalePrice = parseFloat((costSAR * 1.5).toFixed(2));
-  const [salePrice, setSalePrice] = useState(defaultSalePrice || '');
+  const [salePrice, setSalePrice] = useState('');
   const [adding, setAdding] = useState(false);
+
+  useEffect(() => {
+    if (!loadingShipping) {
+      setSalePrice(parseFloat((costSAR * 1.5).toFixed(2)));
+    }
+  }, [loadingShipping, costSAR]);
 
   const profit = salePrice && costSAR > 0 ? parseFloat((salePrice - costSAR).toFixed(2)) : null;
   const profitPct = profit && costSAR > 0 ? Math.round((profit / costSAR) * 100) : null;
@@ -40,7 +71,7 @@ function ProductCard({ product, added, onAdd }) {
       return;
     }
     if (parseFloat(salePrice) <= costSAR) {
-      toast.error('سعر البيع يجب أن يكون أعلى من سعر التكلفة');
+      toast.error('سعر البيع يجب أن يكون أعلى من التكلفة الإجمالية (منتج + شحن)');
       return;
     }
     setAdding(true);
@@ -75,10 +106,20 @@ function ProductCard({ product, added, onAdd }) {
         {/* Cost price (fixed) */}
         <div className="bg-slate-50 rounded-xl px-2.5 py-2 text-xs space-y-1">
           <div className="flex justify-between text-slate-500">
-                    <span>سعر الشراء من المنصة</span>
-            <span className="font-bold text-slate-700">
-              {costSAR > 0 ? `${costSAR} ر.س` : '—'}
-            </span>
+            <span>سعر المنتج</span>
+            <span className="font-bold text-slate-700">{productCostSAR > 0 ? `${productCostSAR} ر.س` : '—'}</span>
+          </div>
+          <div className="flex justify-between text-slate-500">
+            <span>شحن للسعودية</span>
+            {loadingShipping ? (
+              <span className="text-slate-400 italic">جاري الجلب...</span>
+            ) : (
+              <span className="font-bold text-blue-600">{shippingCost > 0 ? `+${shippingCost} ر.س` : 'مجاني'}</span>
+            )}
+          </div>
+          <div className="flex justify-between text-slate-700 border-t border-slate-200 pt-1">
+            <span className="font-semibold">التكلفة الإجمالية</span>
+            <span className="font-bold">{loadingShipping ? '...' : `${costSAR} ر.س`}</span>
           </div>
           {profit !== null && profit > 0 && (
             <div className="flex justify-between text-green-600 font-semibold">

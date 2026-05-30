@@ -69,6 +69,39 @@ Deno.serve(async (req) => {
       return Response.json({ products, total: data.data?.totalRecords || 0, pages: data.data?.totalPages || 0 });
     }
 
+    // Get shipping cost for a product to Saudi Arabia
+    if (action === 'getShipping') {
+      const { productId, quantity = 1 } = body;
+      if (!productId) return Response.json({ error: 'No productId' }, { status: 400 });
+
+      const res = await fetch(`${CJ_BASE_URL}/logistic/freightCalculate`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          productId,
+          quantity,
+          countryCode: 'SA', // Saudi Arabia
+        }),
+      });
+      const data = await res.json();
+
+      if (!data.result || !data.data) {
+        return Response.json({ shippingCost: 0, options: [] });
+      }
+
+      // Return all options and the cheapest one
+      const options = (data.data || []).map(o => ({
+        name: o.logisticName,
+        cost: parseFloat(o.logisticPrice) || 0,
+        days: o.logisticAging,
+      }));
+      const cheapest = options.reduce((a, b) => (a.cost < b.cost ? a : b), options[0] || { cost: 0 });
+      const costUSD = cheapest?.cost || 0;
+      const costSAR = parseFloat((costUSD * 3.75).toFixed(2));
+
+      return Response.json({ shippingCost: costSAR, options, cheapest });
+    }
+
     // Import single product to warehouse
     if (action === 'import') {
       const { product } = body;
