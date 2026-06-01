@@ -201,13 +201,7 @@ export default function ProductDetail() {
               )}
             </div>
 
-            {/* Cost price (supplier) */}
-            {product.cost_price > 0 && (
-              <div className="bg-slate-50 rounded-xl px-3 py-2 text-sm text-slate-500 flex justify-between">
-                <span>سعر التكلفة (من المورد)</span>
-                <span className="font-bold text-slate-700">{product.cost_price} ر.س</span>
-              </div>
-            )}
+
 
             {product.description && (
               <p className="text-sm text-muted-foreground leading-relaxed">{product.description}</p>
