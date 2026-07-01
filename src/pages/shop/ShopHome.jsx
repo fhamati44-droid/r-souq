@@ -282,7 +282,7 @@ export default function ShopHome() {
         setCjProducts((res?.data?.products || []).map(normalizeCJProduct));
         setLoadingCJ(false);
       })
-      .catch(() => setLoadingCJ(false));
+      .catch(() => { setCjProducts([]); setLoadingCJ(false); });
   }, [activeCategory, search]);
 
   // Fetch shipping costs sequentially (CJ API: 1 request/second per IP)
@@ -324,7 +324,9 @@ export default function ShopHome() {
     const matchCat = !activeCategory || p.category === activeCategory;
     return matchSearch && matchCat;
   });
-  const filteredProducts = [...localFiltered, ...cjProducts];
+  // Fallback: if no local products match the category and CJ is empty, show all local products
+  const showFallback = activeCategory && localFiltered.length === 0 && cjProducts.length === 0 && !loadingCJ;
+  const filteredProducts = showFallback ? [...products, ...cjProducts] : [...localFiltered, ...cjProducts];
 
   const handleAddToCart = (product) => { addToCart(product, 1); toast.success('✅ ' + t.added_to_cart); };
 

@@ -2,8 +2,14 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 const CJ_BASE_URL = 'https://developers.cjdropshipping.com/api2.0/v1';
 
-// Get CJ access token using API key
+// Cached CJ access token (persists across invocations in the same isolate)
+let cachedToken = null;
+let tokenExpiry = 0;
+
 async function getCJAccessToken() {
+  // Reuse cached token if still valid (CJ tokens last ~2 hours; refresh after 100 min)
+  if (cachedToken && Date.now() < tokenExpiry) return cachedToken;
+
   const apiKey = Deno.env.get('CJ_API_KEY');
   if (!apiKey) throw new Error('CJ_API_KEY not set');
 
@@ -16,7 +22,25 @@ async function getCJAccessToken() {
   if (!data.result || !data.data?.accessToken) {
     throw new Error(data.message || 'Failed to get CJ access token');
   }
-  return data.data.accessToken;
+  cachedToken = data.data.accessToken;
+  tokenExpiry = Date.now() + 100 * 60 * 1000; // 100 minutes
+  return cachedToken;
+}
+
+// Fetch with retry on rate limit
+async function cjFetch(url, options, retries = 1) {
+  for (let i = 0; i <= retries; i++) {
+    const res = await fetch(url, options);
+    const data = await res.json();
+    if (data.result) return data;
+    // Rate limited — wait and retry
+    if (data.message?.includes('Too Many Requests') && i < retries) {
+      await new Promise(r => setTimeout(r, 2000));
+      continue;
+    }
+    return data;
+  }
+  return { result: false, message: 'Too Many Requests' };
 }
 
 const CATEGORY_MAP = {
@@ -64,8 +88,7 @@ Deno.serve(async (req) => {
       if (keyword) params.append('keyWord', keyword);
       if (categoryId) params.append('categoryId', categoryId);
 
-      const res = await fetch(`${CJ_BASE_URL}/product/listV2?${params}`, { headers });
-      const data = await res.json();
+      const data = await cjFetch(`${CJ_BASE_URL}/product/listV2?${params}`, { headers });
 
       if (!data.result) {
         return Response.json({ error: data.message || 'CJ API error' }, { status: 400 });
@@ -98,8 +121,7 @@ Deno.serve(async (req) => {
       let vid = null;
 
       // CJ variant/query endpoint - try with pid param
-      const variantRes = await fetch(`${CJ_BASE_URL}/product/variant/query?pid=${productId}`, { headers });
-      const variantData = await variantRes.json();
+      const variantData = await cjFetch(`${CJ_BASE_URL}/product/variant/query?pid=${productId}`, { headers });
       const variants = Array.isArray(variantData.data) ? variantData.data : [];
       if (variants.length > 0) {
         vid = variants[0].vid || variants[0].variantId || variants[0].id;
@@ -113,7 +135,7 @@ Deno.serve(async (req) => {
       const productPayload = { vid, quantity };
 
       // Step 2: calculate freight
-      const res = await fetch(`${CJ_BASE_URL}/logistic/freightCalculate`, {
+      const data = await cjFetch(`${CJ_BASE_URL}/logistic/freightCalculate`, {
         method: 'POST',
         headers,
         body: JSON.stringify({
@@ -122,8 +144,6 @@ Deno.serve(async (req) => {
           products: [productPayload],
         }),
       });
-      const data = await res.json();
-      console.log('CJ Freight response:', JSON.stringify(data).slice(0, 500));
 
       if (!data.result || !data.data) {
         return Response.json({ shippingCost: 0, options: [], raw: data });
