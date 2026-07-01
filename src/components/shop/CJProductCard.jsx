@@ -1,30 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { base44 } from '@/api/base44Client';
-import { ShoppingBag, Star, Heart, Eye, Loader2, Truck } from 'lucide-react';
+import { ShoppingBag, Heart, Eye, Truck } from 'lucide-react';
 import { useLang } from '@/lib/LanguageContext';
-import { toast } from 'sonner';
 
-const USD_TO_SAR = 3.75;
-
-export default function CJProductCard({ product, onAddToCart }) {
+export default function CJProductCard({ product, onAddToCart, shippingCost = null }) {
   const [wished, setWished] = useState(false);
   const { t } = useLang();
-  const [shippingCost, setShippingCost] = useState(null); // null = loading, number = loaded
-
-  const cjId = product.warehouse_product_id?.replace('cj_', '') || product.id?.replace('cj_', '');
-
-  useEffect(() => {
-    if (!cjId) return;
-    let cancelled = false;
-    base44.functions.invoke('cjProducts', { action: 'getShipping', productId: cjId, quantity: 1 })
-      .then(res => {
-        if (cancelled) return;
-        setShippingCost(res?.data?.shippingCost || 0);
-      })
-      .catch(() => { if (!cancelled) setShippingCost(0); });
-    return () => { cancelled = true; };
-  }, [cjId]);
 
   const name = typeof product.name === 'object' ? (product.name?.ar || product.name?.en || '') : product.name || '';
   const hasDiscount = product.original_price && product.original_price > product.price;
@@ -59,32 +40,20 @@ export default function CJProductCard({ product, onAddToCart }) {
         </Link>
         <div className="flex items-center justify-between mt-1">
           <div>
-            {shippingCost === null ? (
-              <>
-                <span className="font-extrabold text-base text-slate-400">{product.price} ر.س</span>
-                <p className="text-xs text-slate-400 flex items-center gap-1">
-                  <Loader2 className="w-3 h-3 animate-spin" /> حساب الشحن...
-                </p>
-              </>
-            ) : (
-              <>
-                <span className="font-extrabold text-base" style={{ color: '#7b2d8b' }}>
-                  {totalWithShipping} ر.س
-                </span>
-                {hasDiscount && <p className="text-xs text-slate-400 line-through">{(product.original_price + shippingSAR).toFixed(2)} ر.س</p>}
-                <p className="text-xs text-green-600 font-medium flex items-center gap-0.5">
-                  <Truck className="w-3 h-3" /> شامل الشحن للسعودية
-                </p>
-                {shippingSAR > 0 && (
-                  <p className="text-[10px] text-slate-400">+{shippingSAR} ر.س شحن</p>
-                )}
-              </>
+            <span className="font-extrabold text-base" style={{ color: '#7b2d8b' }}>
+              {totalWithShipping} ر.س
+            </span>
+            {hasDiscount && <p className="text-xs text-slate-400 line-through">{(product.original_price + shippingSAR).toFixed(2)} ر.س</p>}
+            <p className="text-xs text-green-600 font-medium flex items-center gap-0.5">
+              <Truck className="w-3 h-3" /> شامل الشحن للسعودية
+            </p>
+            {shippingSAR > 0 && (
+              <p className="text-[10px] text-slate-400">+{shippingSAR} ر.س شحن</p>
             )}
           </div>
           <button onClick={() => onAddToCart(product)}
             className="text-white text-xs px-3 py-1.5 rounded-xl font-bold hover:opacity-90 transition flex items-center gap-1 shadow"
-            style={{ background: 'linear-gradient(135deg, #7b2d8b, #9c27b0)' }}
-            disabled={shippingCost === null}>
+            style={{ background: 'linear-gradient(135deg, #7b2d8b, #9c27b0)' }}>
             <ShoppingBag className="w-3 h-3" /> {t.add}
           </button>
         </div>

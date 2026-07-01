@@ -255,6 +255,7 @@ export default function ShopHome() {
   const [showLangMenu, setShowLangMenu] = useState(false);
   const [cjProducts, setCjProducts] = useState([]);
   const [loadingCJ, setLoadingCJ] = useState(false);
+  const [cjShippingMap, setCjShippingMap] = useState({});
   const { addToCart, cartCount } = useCart();
   const { lang, changeLang, t, dir } = useLang();
 
@@ -283,6 +284,29 @@ export default function ShopHome() {
       })
       .catch(() => setLoadingCJ(false));
   }, [activeCategory, search]);
+
+  // Fetch shipping costs sequentially (CJ API: 1 request/second per IP)
+  useEffect(() => {
+    if (cjProducts.length === 0) { setCjShippingMap({}); return; }
+    let cancelled = false;
+    (async () => {
+      const map = {};
+      for (const p of cjProducts) {
+        if (cancelled) break;
+        const cjId = p.id?.replace('cj_', '');
+        if (!cjId) continue;
+        try {
+          const res = await base44.functions.invoke('cjProducts', { action: 'getShipping', productId: cjId, quantity: 1 });
+          if (!cancelled) {
+            map[p.id] = res?.data?.shippingCost || 0;
+            setCjShippingMap({ ...map });
+          }
+        } catch { map[p.id] = 0; }
+        await new Promise(r => setTimeout(r, 1200));
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [cjProducts]);
 
   const handleSearch = (e) => { e.preventDefault(); setSearch(searchInput); setActiveCategory(null); };
 
@@ -575,7 +599,7 @@ export default function ShopHome() {
                 {filteredProducts.map((product, i) => (
                   <motion.div key={product.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}>
                     {product.warehouse_product_id?.startsWith('cj_')
-                      ? <CJProductCard product={product} onAddToCart={handleAddToCart} />
+                      ? <CJProductCard product={product} onAddToCart={handleAddToCart} shippingCost={cjShippingMap[product.id]} />
                       : <ProductCard product={product} onAddToCart={handleAddToCart} />}
                   </motion.div>
                 ))}
