@@ -7,6 +7,7 @@ import { useLang } from '@/lib/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import ChatBot from '@/components/ChatBot';
+import CJProductCard from '@/components/shop/CJProductCard';
 
 /* ── Hero Slider ─────────────────────────────────────────────────────────── */
 const HERO_SLIDES = [
@@ -573,7 +574,9 @@ export default function ShopHome() {
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                 {filteredProducts.map((product, i) => (
                   <motion.div key={product.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}>
-                    <ProductCard product={product} onAddToCart={handleAddToCart} />
+                    {product.warehouse_product_id?.startsWith('cj_')
+                      ? <CJProductCard product={product} onAddToCart={handleAddToCart} />
+                      : <ProductCard product={product} onAddToCart={handleAddToCart} />}
                   </motion.div>
                 ))}
               </div>
