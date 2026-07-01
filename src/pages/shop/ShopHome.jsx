@@ -106,6 +106,43 @@ const CATEGORIES = [
   { id: 'general', labelKey: 'cat_general', img: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=120&h=120&fit=crop' },
 ];
 
+const USD_TO_SAR = 3.75;
+
+function normalizeCJProduct(p) {
+  const rawPrice = p.sellPrice?.split(' -- ')?.[0] || p.sellPrice || '0';
+  const costSAR = parseFloat((parseFloat(rawPrice) * USD_TO_SAR).toFixed(2));
+  const retailPrice = parseFloat((costSAR * 1.5).toFixed(2));
+  return {
+    id: `cj_${p.id}`,
+    name: p.nameEn,
+    description: p.description || p.nameEn,
+    price: retailPrice,
+    original_price: parseFloat((retailPrice * 1.3).toFixed(2)),
+    cost_price: costSAR,
+    category: 'general',
+    images: [p.bigImage].filter(Boolean),
+    brand: p.supplierName || 'R souq',
+    stock: p.warehouseInventoryNum || 100,
+    rating: 0,
+    reviews_count: 0,
+    is_active: true,
+    store_name: 'R souq Marketplace',
+    warehouse_product_id: `cj_${p.id}`,
+  };
+}
+
+const CATEGORY_CJ_KEYWORD = {
+  electronics: 'electronics',
+  clothing: 'clothing fashion',
+  home: 'home',
+  beauty: 'beauty cosmetic',
+  sports: 'sports fitness',
+  food: 'food',
+  books: 'book',
+  toys: 'toy kids',
+  general: 'product',
+};
+
 /* ── Trust Badges ────────────────────────────────────────────────────────── */
 const TRUST_KEYS = [
   { icon: Truck, labelKey: 'trust_shipping', subKey: 'trust_shipping_sub' },
@@ -215,6 +252,8 @@ export default function ShopHome() {
   const [searchInput, setSearchInput] = useState('');
   const [activeCategory, setActiveCategory] = useState(null);
   const [showLangMenu, setShowLangMenu] = useState(false);
+  const [cjProducts, setCjProducts] = useState([]);
+  const [loadingCJ, setLoadingCJ] = useState(false);
   const { addToCart, cartCount } = useCart();
   const { lang, changeLang, t, dir } = useLang();
 
@@ -231,6 +270,19 @@ export default function ShopHome() {
     });
   }, []);
 
+  // Fetch CJ marketplace products when category or search is active
+  useEffect(() => {
+    const keyword = search || (activeCategory ? CATEGORY_CJ_KEYWORD[activeCategory] : null);
+    if (!keyword) { setCjProducts([]); return; }
+    setLoadingCJ(true);
+    base44.functions.invoke('cjProducts', { action: 'search', keyword, page: 1, size: 20 })
+      .then(res => {
+        setCjProducts((res?.data?.products || []).map(normalizeCJProduct));
+        setLoadingCJ(false);
+      })
+      .catch(() => setLoadingCJ(false));
+  }, [activeCategory, search]);
+
   const handleSearch = (e) => { e.preventDefault(); setSearch(searchInput); setActiveCategory(null); };
 
   // Close lang menu on outside click
@@ -241,12 +293,13 @@ export default function ShopHome() {
     return () => document.removeEventListener('click', handler);
   }, [showLangMenu]);
 
-  const filteredProducts = products.filter(p => {
+  const localFiltered = products.filter(p => {
     const name = typeof p.name === 'object' ? (p.name?.ar || p.name?.en || '') : p.name || '';
     const matchSearch = !search || name.toLowerCase().includes(search.toLowerCase());
     const matchCat = !activeCategory || p.category === activeCategory;
     return matchSearch && matchCat;
   });
+  const filteredProducts = [...localFiltered, ...cjProducts];
 
   const handleAddToCart = (product) => { addToCart(product, 1); toast.success('✅ ' + t.added_to_cart); };
 
@@ -506,7 +559,7 @@ export default function ShopHome() {
               )}
             </div>
 
-            {loading ? (
+            {(loading || (loadingCJ && filteredProducts.length === 0)) ? (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                 {[...Array(10)].map((_, i) => <div key={i} className="bg-white rounded-2xl h-64 animate-pulse" />)}
               </div>

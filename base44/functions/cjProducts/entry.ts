@@ -75,6 +75,19 @@ Deno.serve(async (req) => {
       return Response.json({ products, total: data.data?.totalRecords || 0, pages: data.data?.totalPages || 0 });
     }
 
+    // Get single product detail from CJ
+    if (action === 'getProduct') {
+      const { productId } = body;
+      if (!productId) return Response.json({ error: 'No productId' }, { status: 400 });
+
+      const res = await fetch(`${CJ_BASE_URL}/product/query?productId=${productId}`, { headers });
+      const data = await res.json();
+      if (!data.result) {
+        return Response.json({ error: data.message || 'CJ API error' }, { status: 400 });
+      }
+      return Response.json({ product: data.data });
+    }
+
     // Get shipping cost for a product to Saudi Arabia
     if (action === 'getShipping') {
       const { productId, quantity = 1 } = body;

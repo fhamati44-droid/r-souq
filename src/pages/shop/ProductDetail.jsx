@@ -7,6 +7,31 @@ import { useCart } from '@/lib/CartContext';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 
+const USD_TO_SAR = 3.75;
+
+function normalizeCJProduct(p) {
+  const rawPrice = p.sellPrice?.split(' -- ')?.[0] || p.sellPrice || '0';
+  const costSAR = parseFloat((parseFloat(rawPrice) * USD_TO_SAR).toFixed(2));
+  const retailPrice = parseFloat((costSAR * 1.5).toFixed(2));
+  return {
+    id: `cj_${p.id}`,
+    name: p.nameEn,
+    description: p.description || p.nameEn,
+    price: retailPrice,
+    original_price: parseFloat((retailPrice * 1.3).toFixed(2)),
+    cost_price: costSAR,
+    category: 'general',
+    images: [p.bigImage].filter(Boolean),
+    brand: p.supplierName || 'R souq',
+    stock: p.warehouseInventoryNum || 100,
+    rating: 0,
+    reviews_count: 0,
+    is_active: true,
+    store_name: 'R souq Marketplace',
+    warehouse_product_id: `cj_${p.id}`,
+  };
+}
+
 export default function ProductDetail() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
@@ -23,6 +48,33 @@ export default function ProductDetail() {
   const { addToCart } = useCart();
 
   useEffect(() => {
+    // Handle CJ marketplace products (not yet in DB)
+    if (id?.startsWith('cj_')) {
+      const cjId = id.replace('cj_', '');
+      Promise.all([
+        base44.functions.invoke('cjProducts', { action: 'getProduct', productId: cjId }),
+        base44.entities.Review.filter({ product_id: id }),
+      ]).then(([res, revs]) => {
+        const cjProduct = res?.data?.product;
+        if (cjProduct) {
+          setProduct(normalizeCJProduct(cjProduct));
+          setReviews(revs);
+          setLoadingShipping(true);
+          base44.functions.invoke('cjProducts', { action: 'getShipping', productId: cjId, quantity: 1 })
+            .then(shipRes => {
+              const opts = shipRes?.data?.options || [];
+              setShippingOptions(opts.filter(o => o.cost > 0));
+              if (opts.length > 0) {
+                const cheapest = opts.filter(o => o.cost > 0).reduce((a, b) => a.cost < b.cost ? a : b, opts[0]);
+                setSelectedShipping(cheapest);
+              }
+            }).finally(() => setLoadingShipping(false));
+        }
+        setLoading(false);
+      }).catch(() => setLoading(false));
+      return;
+    }
+
     Promise.all([
       base44.entities.Product.filter({ id }),
       base44.entities.Review.filter({ product_id: id }),
