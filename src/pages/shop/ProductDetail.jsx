@@ -9,6 +9,26 @@ import { Button } from '@/components/ui/button';
 
 const USD_TO_SAR = 3.75;
 
+function cacheToProduct(c) {
+  return {
+    id: `cj_${c.cj_product_id}`,
+    name: c.name || c.name_en,
+    description: c.description || '',
+    price: c.price_sar,
+    original_price: c.original_price_sar,
+    cost_price: c.cost_sar,
+    category: c.category,
+    images: c.images?.length ? c.images : (c.image ? [c.image] : []),
+    brand: c.brand || 'R souq',
+    stock: c.stock || 100,
+    rating: 0,
+    reviews_count: 0,
+    is_active: true,
+    store_name: 'R souq Marketplace',
+    warehouse_product_id: `cj_${c.cj_product_id}`,
+  };
+}
+
 function normalizeCJProduct(p) {
   const rawPrice = p.sellPrice?.split(' -- ')?.[0] || p.sellPrice || '0';
   const costSAR = parseFloat((parseFloat(rawPrice) * USD_TO_SAR).toFixed(2));
@@ -48,30 +68,52 @@ export default function ProductDetail() {
   const { addToCart } = useCart();
 
   useEffect(() => {
-    // Handle CJ marketplace products (not yet in DB)
+    // Handle CJ marketplace products — try cache first, then live API
     if (id?.startsWith('cj_')) {
       const cjId = id.replace('cj_', '');
-      Promise.all([
-        base44.functions.invoke('cjProducts', { action: 'getProduct', productId: cjId }),
-        base44.entities.Review.filter({ product_id: id }),
-      ]).then(([res, revs]) => {
-        const cjProduct = res?.data?.product;
-        if (cjProduct) {
-          setProduct(normalizeCJProduct(cjProduct));
-          setReviews(revs);
-          setLoadingShipping(true);
-          base44.functions.invoke('cjProducts', { action: 'getShipping', productId: cjId, quantity: 1 })
-            .then(shipRes => {
-              const opts = shipRes?.data?.options || [];
-              setShippingOptions(opts.filter(o => o.cost > 0));
-              if (opts.length > 0) {
-                const cheapest = opts.filter(o => o.cost > 0).reduce((a, b) => a.cost < b.cost ? a : b, opts[0]);
-                setSelectedShipping(cheapest);
-              }
-            }).finally(() => setLoadingShipping(false));
-        }
-        setLoading(false);
-      }).catch(() => setLoading(false));
+      base44.entities.CJProductCache.filter({ cj_product_id: cjId })
+        .then(async (cached) => {
+          if (cached && cached.length > 0) {
+            const c = cached[0];
+            setProduct(cacheToProduct(c));
+            base44.entities.Review.filter({ product_id: id }).then(setReviews);
+            // Try live shipping (will fail silently if rate-limited)
+            setLoadingShipping(true);
+            base44.functions.invoke('cjProducts', { action: 'getShipping', productId: cjId, quantity: 1 })
+              .then(shipRes => {
+                const opts = shipRes?.data?.options || [];
+                setShippingOptions(opts.filter(o => o.cost > 0));
+                if (opts.length > 0) {
+                  const cheapest = opts.filter(o => o.cost > 0).reduce((a, b) => a.cost < b.cost ? a : b, opts[0]);
+                  setSelectedShipping(cheapest);
+                }
+              }).finally(() => setLoadingShipping(false));
+            setLoading(false);
+          } else {
+            // Not in cache — fetch live from CJ
+            const [res, revs] = await Promise.all([
+              base44.functions.invoke('cjProducts', { action: 'getProduct', productId: cjId }),
+              base44.entities.Review.filter({ product_id: id }),
+            ]);
+            const cjProduct = res?.data?.product;
+            if (cjProduct) {
+              setProduct(normalizeCJProduct(cjProduct));
+              setReviews(revs);
+              setLoadingShipping(true);
+              base44.functions.invoke('cjProducts', { action: 'getShipping', productId: cjId, quantity: 1 })
+                .then(shipRes => {
+                  const opts = shipRes?.data?.options || [];
+                  setShippingOptions(opts.filter(o => o.cost > 0));
+                  if (opts.length > 0) {
+                    const cheapest = opts.filter(o => o.cost > 0).reduce((a, b) => a.cost < b.cost ? a : b, opts[0]);
+                    setSelectedShipping(cheapest);
+                  }
+                }).finally(() => setLoadingShipping(false));
+            }
+            setLoading(false);
+          }
+        })
+        .catch(() => setLoading(false));
       return;
     }
 
