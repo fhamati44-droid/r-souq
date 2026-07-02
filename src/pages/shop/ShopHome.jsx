@@ -107,42 +107,25 @@ const CATEGORIES = [
   { id: 'general', labelKey: 'cat_general', img: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=120&h=120&fit=crop' },
 ];
 
-const USD_TO_SAR = 3.75;
-
-function normalizeCJProduct(p) {
-  const rawPrice = p.sellPrice?.split(' -- ')?.[0] || p.sellPrice || '0';
-  const costSAR = parseFloat((parseFloat(rawPrice) * USD_TO_SAR).toFixed(2));
-  const retailPrice = parseFloat((costSAR * 1.5).toFixed(2));
+function cacheToProduct(c) {
   return {
-    id: `cj_${p.id}`,
-    name: p.nameEn,
-    description: p.description || p.nameEn,
-    price: retailPrice,
-    original_price: parseFloat((retailPrice * 1.3).toFixed(2)),
-    cost_price: costSAR,
-    category: 'general',
-    images: [p.bigImage].filter(Boolean),
-    brand: p.supplierName || 'R souq',
-    stock: p.warehouseInventoryNum || 100,
+    id: `cj_${c.cj_product_id}`,
+    name: c.name || c.name_en,
+    description: c.description || '',
+    price: c.price_sar,
+    original_price: c.original_price_sar,
+    cost_price: c.cost_sar,
+    category: c.category,
+    images: c.images?.length ? c.images : (c.image ? [c.image] : []),
+    brand: c.brand || 'R souq',
+    stock: c.stock || 100,
     rating: 0,
     reviews_count: 0,
     is_active: true,
     store_name: 'R souq Marketplace',
-    warehouse_product_id: `cj_${p.id}`,
+    warehouse_product_id: `cj_${c.cj_product_id}`,
   };
 }
-
-const CATEGORY_CJ_KEYWORD = {
-  electronics: 'electronics',
-  clothing: 'clothing fashion',
-  home: 'home',
-  beauty: 'beauty cosmetic',
-  sports: 'sports fitness',
-  food: 'food',
-  books: 'book',
-  toys: 'toy kids',
-  general: 'product',
-};
 
 /* ── Trust Badges ────────────────────────────────────────────────────────── */
 const TRUST_KEYS = [
@@ -255,7 +238,6 @@ export default function ShopHome() {
   const [showLangMenu, setShowLangMenu] = useState(false);
   const [cjProducts, setCjProducts] = useState([]);
   const [loadingCJ, setLoadingCJ] = useState(false);
-  const [cjShippingMap, setCjShippingMap] = useState({});
   const { addToCart, cartCount } = useCart();
   const { lang, changeLang, t, dir } = useLang();
 
@@ -272,41 +254,25 @@ export default function ShopHome() {
     });
   }, []);
 
-  // Fetch CJ marketplace products when category or search is active
+  // Fetch CJ products from cache (pre-synced from CJ API by scheduled task)
   useEffect(() => {
-    const keyword = search || (activeCategory ? CATEGORY_CJ_KEYWORD[activeCategory] : null);
-    if (!keyword) { setCjProducts([]); return; }
     setLoadingCJ(true);
-    base44.functions.invoke('cjProducts', { action: 'search', keyword, page: 1, size: 20 })
-      .then(res => {
-        setCjProducts((res?.data?.products || []).map(normalizeCJProduct));
+    const filter = {};
+    if (activeCategory) filter.category = activeCategory;
+    base44.entities.CJProductCache.filter(filter, '-last_synced', 30)
+      .then(items => {
+        let mapped = items.map(cacheToProduct);
+        if (search) {
+          mapped = mapped.filter(p => {
+            const name = typeof p.name === 'object' ? (p.name?.ar || p.name?.en || '') : p.name || '';
+            return name.toLowerCase().includes(search.toLowerCase());
+          });
+        }
+        setCjProducts(mapped);
         setLoadingCJ(false);
       })
       .catch(() => { setCjProducts([]); setLoadingCJ(false); });
   }, [activeCategory, search]);
-
-  // Fetch shipping costs sequentially (CJ API: 1 request/second per IP)
-  useEffect(() => {
-    if (cjProducts.length === 0) { setCjShippingMap({}); return; }
-    let cancelled = false;
-    (async () => {
-      const map = {};
-      for (const p of cjProducts) {
-        if (cancelled) break;
-        const cjId = p.id?.replace('cj_', '');
-        if (!cjId) continue;
-        try {
-          const res = await base44.functions.invoke('cjProducts', { action: 'getShipping', productId: cjId, quantity: 1 });
-          if (!cancelled) {
-            map[p.id] = res?.data?.shippingCost || 0;
-            setCjShippingMap({ ...map });
-          }
-        } catch { map[p.id] = 0; }
-        await new Promise(r => setTimeout(r, 1200));
-      }
-    })();
-    return () => { cancelled = true; };
-  }, [cjProducts]);
 
   const handleSearch = (e) => { e.preventDefault(); setSearch(searchInput); setActiveCategory(null); };
 
@@ -324,9 +290,7 @@ export default function ShopHome() {
     const matchCat = !activeCategory || p.category === activeCategory;
     return matchSearch && matchCat;
   });
-  // Fallback: if no local products match the category and CJ is empty, show all local products
-  const showFallback = activeCategory && localFiltered.length === 0 && cjProducts.length === 0 && !loadingCJ;
-  const filteredProducts = showFallback ? [...products, ...cjProducts] : [...localFiltered, ...cjProducts];
+  const filteredProducts = [...localFiltered, ...cjProducts];
 
   const handleAddToCart = (product) => { addToCart(product, 1); toast.success('✅ ' + t.added_to_cart); };
 
@@ -601,7 +565,7 @@ export default function ShopHome() {
                 {filteredProducts.map((product, i) => (
                   <motion.div key={product.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}>
                     {product.warehouse_product_id?.startsWith('cj_')
-                      ? <CJProductCard product={product} onAddToCart={handleAddToCart} shippingCost={cjShippingMap[product.id]} />
+                      ? <CJProductCard product={product} onAddToCart={handleAddToCart} />
                       : <ProductCard product={product} onAddToCart={handleAddToCart} />}
                   </motion.div>
                 ))}

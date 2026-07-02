@@ -1,0 +1,67 @@
+{
+  "name": "CJProductCache",
+  "type": "object",
+  "properties": {
+    "cj_product_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "name_en": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "clothing",
+        "electronics",
+        "home",
+        "sports",
+        "beauty",
+        "books",
+        "toys",
+        "food",
+        "general"
+      ]
+    },
+    "image": {
+      "type": "string"
+    },
+    "images": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "price_sar": {
+      "type": "number"
+    },
+    "original_price_sar": {
+      "type": "number"
+    },
+    "cost_sar": {
+      "type": "number"
+    },
+    "brand": {
+      "type": "string"
+    },
+    "stock": {
+      "type": "number"
+    },
+    "supplier_name": {
+      "type": "string"
+    },
+    "last_synced": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "cj_product_id",
+    "name",
+    "category"
+  ]
+}
