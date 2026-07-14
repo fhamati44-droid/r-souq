@@ -20,9 +20,24 @@ const CJ_CATEGORIES = [
 ];
 
 function getCostSAR(product) {
+  // Local WarehouseProduct already has cost_price in SAR
+  if (product.cost_price != null) return parseFloat(product.cost_price.toFixed(2));
   const raw = product.sellPrice?.split(' -- ')?.[0] || product.sellPrice || '0';
   const usd = parseFloat(raw) || 0;
   return parseFloat((usd * USD_TO_SAR).toFixed(2));
+}
+
+function getProductName(product) {
+  if (!product.nameEn) return typeof product.name === 'object' ? (product.name?.ar || product.name?.en || '') : product.name || '';
+  return product.nameEn;
+}
+
+function getProductImage(product) {
+  return product.bigImage || product.images?.[0] || 'https://images.unsplash.com/photo-1560393464-5c69a73c5770?w=300&h=180&fit=crop';
+}
+
+function getProductId(product) {
+  return product.id;
 }
 
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
@@ -43,21 +58,20 @@ async function fetchAllShipping(products) {
 }
 
 function ProductCard({ product, shippingCost, added, onAdd }) {
+  const isLocal = !product.nameEn; // Local WarehouseProduct has no nameEn
   const productCostSAR = getCostSAR(product);
-  const loadingShipping = shippingCost === undefined;
+  const loadingShipping = !isLocal && shippingCost === undefined;
 
   const costSAR = !loadingShipping
-    ? parseFloat((productCostSAR + shippingCost).toFixed(2))
+    ? parseFloat((productCostSAR + (shippingCost || 0)).toFixed(2))
     : productCostSAR;
 
   const [salePrice, setSalePrice] = useState('');
   const [adding, setAdding] = useState(false);
 
   useEffect(() => {
-    if (!loadingShipping) {
-      setSalePrice(parseFloat((costSAR * 1.5).toFixed(2)));
-    }
-  }, [loadingShipping, costSAR]);
+    setSalePrice(parseFloat((costSAR * 1.5).toFixed(2)));
+  }, [costSAR]);
 
   const profit = salePrice && costSAR > 0 ? parseFloat((salePrice - costSAR).toFixed(2)) : null;
   const profitPct = profit && costSAR > 0 ? Math.round((profit / costSAR) * 100) : null;
@@ -78,8 +92,8 @@ function ProductCard({ product, shippingCost, added, onAdd }) {
     >
       <div className="relative">
         <img
-          src={product.bigImage || 'https://images.unsplash.com/photo-1560393464-5c69a73c5770?w=300&h=180&fit=crop'}
-          alt={product.nameEn}
+          src={getProductImage(product)}
+          alt={getProductName(product)}
           className="w-full h-32 object-cover"
           onError={e => { e.target.src = 'https://images.unsplash.com/photo-1560393464-5c69a73c5770?w=300&h=180&fit=crop'; }}
         />
@@ -91,7 +105,7 @@ function ProductCard({ product, shippingCost, added, onAdd }) {
       </div>
 
       <div className="p-3 flex flex-col gap-2 flex-1">
-        <p className="font-semibold text-xs leading-tight line-clamp-2 text-slate-800">{product.nameEn}</p>
+        <p className="font-semibold text-xs leading-tight line-clamp-2 text-slate-800">{getProductName(product)}</p>
         <p className="text-xs text-slate-400 font-mono bg-slate-50 rounded px-1.5 py-0.5 truncate">SKU: {product.sku || '—'}</p>
 
         <div className="bg-slate-50 rounded-xl px-2.5 py-2 text-xs space-y-1">
@@ -99,14 +113,16 @@ function ProductCard({ product, shippingCost, added, onAdd }) {
             <span>سعر المنتج</span>
             <span className="font-bold text-slate-700">{productCostSAR > 0 ? `${productCostSAR} ر.س` : '—'}</span>
           </div>
-          <div className="flex justify-between text-slate-500">
-            <span>شحن للسعودية</span>
-            {loadingShipping ? (
-              <span className="text-slate-400 italic flex items-center gap-1"><Loader2 className="w-3 h-3 animate-spin" /> جاري...</span>
-            ) : (
-              <span className="font-bold text-blue-600">{shippingCost > 0 ? `+${shippingCost} ر.س` : 'مجاني'}</span>
-            )}
-          </div>
+          {!isLocal && (
+            <div className="flex justify-between text-slate-500">
+              <span>شحن للسعودية</span>
+              {loadingShipping ? (
+                <span className="text-slate-400 italic flex items-center gap-1"><Loader2 className="w-3 h-3 animate-spin" /> جاري...</span>
+              ) : (
+                <span className="font-bold text-blue-600">{shippingCost > 0 ? `+${shippingCost} ر.س` : 'مجاني'}</span>
+              )}
+            </div>
+          )}
           <div className="flex justify-between text-slate-700 border-t border-slate-200 pt-1">
             <span className="font-semibold">التكلفة الإجمالية</span>
             <span className="font-bold">{loadingShipping ? '...' : `${costSAR} ر.س`}</span>
@@ -183,23 +199,49 @@ export default function WarehousePage({ store, wallet, onWalletUpdate }) {
     setProducts([]);
     setShippingMap({});
     const keyword = search.trim() || activeCategory || 'product';
+
+    // Try CJ API first, fall back to local WarehouseProduct if rate-limited
     base44.functions.invoke('cjProducts', { action: 'search', keyword, page, size: 20 })
       .then(res => {
         const data = res.data;
         const prods = data.products || [];
-        setProducts(prods);
-        setTotal(data.total || 0);
-        setTotalPages(data.pages || 1);
-        setLoading(false);
-
-        // Fetch shipping sequentially after products load
         if (prods.length > 0) {
+          setProducts(prods);
+          setTotal(data.total || 0);
+          setTotalPages(data.pages || 1);
+          setLoading(false);
           fetchAllShipping(prods).then(map => setShippingMap(map));
+        } else {
+          // Empty results — fall back to local
+          return loadLocalFallback();
         }
       }).catch(() => {
-        toast.error('خطأ في تحميل المنتجات');
-        setLoading(false);
+        // CJ API failed (rate limit) — load local WarehouseProducts
+        loadLocalFallback();
       });
+
+    function loadLocalFallback() {
+      const filter = {};
+      if (activeCategory) filter.category = activeCategory;
+      const kw = search.trim();
+      base44.entities.WarehouseProduct.filter(filter, '-created_date', 50)
+        .then(localProds => {
+          let filtered = localProds;
+          if (kw) {
+            filtered = localProds.filter(p => {
+              const name = typeof p.name === 'object' ? (p.name?.ar || p.name?.en || '') : p.name || '';
+              return name.toLowerCase().includes(kw.toLowerCase());
+            });
+          }
+          setProducts(filtered);
+          setTotal(filtered.length);
+          setTotalPages(1);
+          setLoading(false);
+        }).catch(() => {
+          toast.error('خطأ في تحميل المنتجات');
+          setLoading(false);
+        });
+    }
   }, [search, activeCategory, page]);
 
   useEffect(() => { setPage(1); }, [search, activeCategory]);
@@ -210,34 +252,42 @@ export default function WarehousePage({ store, wallet, onWalletUpdate }) {
     if (!store) { toast.error('لا يوجد متجر'); return; }
     const user = await base44.auth.me();
 
-    let arabicName = product.nameEn;
-    try {
-      toast.info('⏳ جاري ترجمة اسم المنتج...', { duration: 3000 });
-      const res = await base44.functions.invoke('translateProduct', { nameEn: product.nameEn });
-      const translated = res?.data?.arabicName || '';
-      if (translated) arabicName = translated;
-    } catch (e) {
-      console.error('Translation failed:', e);
+    const isLocal = !product.nameEn;
+    const wpid = isLocal ? `wp_${product.id}` : `cj_${product.id}`;
+    const image = isLocal ? (product.images?.[0] || '') : product.bigImage;
+
+    let arabicName = isLocal
+      ? (typeof product.name === 'object' ? (product.name?.ar || product.name?.en || '') : product.name || '')
+      : product.nameEn;
+    if (!isLocal) {
+      try {
+        toast.info('⏳ جاري ترجمة اسم المنتج...', { duration: 3000 });
+        const res = await base44.functions.invoke('translateProduct', { nameEn: product.nameEn });
+        const translated = res?.data?.arabicName || '';
+        if (translated) arabicName = translated;
+      } catch (e) {
+        console.error('Translation failed:', e);
+      }
     }
 
     await base44.entities.Product.create({
-      warehouse_product_id: `cj_${product.id}`,
+      warehouse_product_id: wpid,
       store_id: store.id,
       store_name: store.store_name,
       owner_email: user.email,
       name: arabicName,
       description: arabicName,
-      category: 'general',
-      images: [product.bigImage].filter(Boolean),
+      category: product.category || 'general',
+      images: [image].filter(Boolean),
       price: salePrice,
       original_price: salePrice,
       cost_price: costSAR,
-      brand: product.supplierName || 'R souq',
-      stock: product.warehouseInventoryNum || 100,
+      brand: product.brand || product.supplierName || 'R souq',
+      stock: product.warehouseInventoryNum || product.stock || 100,
       rating: 0,
       is_active: true,
     });
-    setMyProductIds(prev => new Set([...prev, `cj_${product.id}`]));
+    setMyProductIds(prev => new Set([...prev, wpid]));
     toast.success(`✅ أُضيف "${arabicName}" بسعر ${salePrice} ر.س`);
   };
 
@@ -298,15 +348,19 @@ export default function WarehousePage({ store, wallet, onWalletUpdate }) {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {products.map((product) => (
+          {products.map((product) => {
+            const isLocal = !product.nameEn;
+            const wpid = isLocal ? `wp_${product.id}` : `cj_${product.id}`;
+            return (
             <ProductCard
               key={product.id}
               product={product}
-              shippingCost={shippingMap[product.id]} // undefined = loading, 0 = free/failed
-              added={myProductIds.has(`cj_${product.id}`)}
+              shippingCost={shippingMap[product.id]}
+              added={myProductIds.has(wpid)}
               onAdd={handleAdd}
             />
-          ))}
+            );
+          })}
         </div>
       )}
 
