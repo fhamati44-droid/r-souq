@@ -114,7 +114,7 @@ export default function Landing() {
               </p>
 
               {/* Video player */}
-              <a href="https://youtube.com/shorts/7NVSyeGO_-Y" target="_blank" rel="noopener noreferrer" className="relative rounded-2xl overflow-hidden shadow-2xl border border-purple-100 group cursor-pointer max-w-xl block">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-purple-100 group cursor-pointer max-w-xl" onClick={() => setVideoOpen(true)}>
                 <img
                   src="https://images.unsplash.com/photo-1556761175-b413da4baf72?w=800&h=450&fit=crop"
                   alt="فيديو تعريفي R SOUQ"
@@ -130,7 +130,7 @@ export default function Landing() {
                   <p className="font-bold text-sm">رسالة من فريق R SOUQ</p>
                   <p className="text-white/80 text-xs">شاهد كيف نبني شراكة استثمارية حقيقية</p>
                 </div>
-              </a>
+              </div>
 
               <div className="flex items-center gap-6 mt-7 text-sm">
                 <div className="flex items-center gap-2">
@@ -297,7 +297,7 @@ export default function Landing() {
             </button>
             <div className="aspect-video bg-slate-900 rounded-2xl overflow-hidden">
               <iframe
-                src="https://www.youtube.com/embed/7NVSyeGO_-Y?autoplay=1&rel=0"
+                src="https://www.youtube-nocookie.com/embed/7NVSyeGO_-Y?autoplay=1&rel=0&modestbranding=1"
                 title="فيديو تعريفي R SOUQ"
                 className="w-full h-full"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
