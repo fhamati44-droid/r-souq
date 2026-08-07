@@ -295,12 +295,14 @@ export default function Landing() {
             >
               إغلاق <span className="text-xl">×</span>
             </button>
-            <div className="aspect-video bg-slate-900 rounded-2xl overflow-hidden flex items-center justify-center">
-              <div className="text-center text-white/60 px-6">
-                <Play className="w-14 h-14 mx-auto mb-3 opacity-50" />
-                <p className="text-sm">سيتم إضافة فيديو الفنان أحمد قشطة قريباً</p>
-                <p className="text-xs text-white/40 mt-1">رابط الفيديو الرسمي سيُحدّث هنا</p>
-              </div>
+            <div className="aspect-video bg-slate-900 rounded-2xl overflow-hidden">
+              <iframe
+                src="https://www.youtube.com/embed/7NVSyeGO_-Y?autoplay=1&rel=0"
+                title="فيديو تعريفي R SOUQ"
+                className="w-full h-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
             </div>
           </div>
         </div>
