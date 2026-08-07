@@ -297,7 +297,7 @@ export default function Landing() {
             </button>
             <div className="aspect-video bg-slate-900 rounded-2xl overflow-hidden">
               <iframe
-                src="https://www.youtube-nocookie.com/embed/7NVSyeGO_-Y?autoplay=1&rel=0&modestbranding=1"
+                src="https://www.youtube.com/embed/7NVSyeGO_-Y?autoplay=1"
                 title="فيديو تعريفي R SOUQ"
                 className="w-full h-full"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
