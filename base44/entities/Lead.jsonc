@@ -1,0 +1,38 @@
+{
+  "name": "Lead",
+  "type": "object",
+  "properties": {
+    "full_name": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "interest_type": {
+      "type": "string",
+      "enum": [
+        "new_investor",
+        "existing_merchant",
+        "supplier"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "new",
+        "contacted",
+        "converted",
+        "lost"
+      ],
+      "default": "new"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "full_name",
+    "phone",
+    "interest_type"
+  ]
+}

@@ -1,303 +1,341 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Store, ShoppingBag, Star, Zap, TrendingUp, CheckCircle, LogOut, User, ArrowLeft, Play, Package, Truck, Settings, Globe, DollarSign, Users, MapPin, Shield } from 'lucide-react';
+import {
+  Shield, Package, HeartHandshake, BarChart3, Play, Phone,
+  ArrowLeft, ChevronLeft, User, LogOut, Quote,
+} from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import HeroSlider from '@/components/landing/HeroSlider';
-import { useLang } from '@/lib/LanguageContext';
+import LeadForm from '@/components/landing/LeadForm';
+import FAQ from '@/components/landing/FAQ';
 
-const PARTNERS = [
-  { name: 'Alibaba', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/ec3c62eb0_download.jpg' },
-  { name: 'DHgate', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/683ccf2ef_download1.jpg' },
-  { name: 'Taobao', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/455f7deef_download2.jpg' },
-  { name: 'Tmall', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/5c2af63ab_download3.jpg' },
-  { name: 'Temu', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/53838fc7a_download4.jpg' },
-  { name: 'Wish', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/7c9335087_download5.jpg' },
-  { name: 'Banggood', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/546a65601_download2.png' },
-  { name: 'LightInTheBox', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/1a57716fe_download5.png' },
-  { name: 'Joom', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/488fcee5f_download6.png' },
-  { name: 'Gearbest', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/cdd0e32b5_download7.png' },
-  { name: 'Tomtop', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/0a7acff19_download8.png' },
-  { name: 'Geekbuying', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/1b06b8f15_download9.png' },
-  { name: 'Shein', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/a8a833ee7_download10.png' },
-  { name: 'CJ Dropshipping', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/f2fc9bc96_download11.png' },
-  { name: 'Doba', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/ce6e89e22_download12.png' },
-  { name: 'Spocket', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/735ff015c_download13.png' },
-  { name: 'Trendyol', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/185884d1a_download14.png' },
-  { name: 'Hepsiburada', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/1b8476f5a_download15.png' },
-  { name: 'n11', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/b751a774d_download3.png' },
-  { name: 'Turkishexporter', logo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/688514d54_download4.png' },
+const LOGO_URL = 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/e5966bc5d_WhatsAppImage2026-05-05at110058AM1.jpeg';
+
+const FEATURES = [
+  { icon: Shield, title: 'شفافية وأمان كامل', desc: 'جميع الاتفاقيات والمدفوعات تتم حصراً عبر الحسابات الرسمية للشركة، مما يضمن حقوقك القانونية والمالية.' },
+  { icon: Package, title: 'إدارة تشغيلية شاملة', desc: 'نتكفل بالتخزين، التجهيز، الشحن، وكافة الخدمات اللوجستية — لتتفرغ أنت للإدارة الاستراتيجية لأعمالك.' },
+  { icon: HeartHandshake, title: 'تواجد ومتابعة محلية', desc: 'فريق متواجد داخل المملكة لمتابعة أعمالك خطوة بخطوة، مع دعم مباشر وسريع عند الحاجة.' },
+  { icon: BarChart3, title: 'متابعة الأداء والنمو', desc: 'لوحة تحكم شفافة تمكّنك من متابعة المبيعات والأرباح والنتائج بوضوح تام في أي وقت.' },
+];
+
+const STEPS = [
+  { num: '1', title: 'تسجيل البيانات', desc: 'املأ نموذج التسجيل ببياناتك الأساسية لتصل مباشرةً لفريق تطوير الأعمال.' },
+  { num: '2', title: 'التواصل والتنسيق', desc: 'يتواصل معك فريقنا خلال 24 ساعة لترتيب جلسة استشارية رسمية ومناقشة التفاصيل.' },
+  { num: '3', title: 'تجهيز المتجر والمنتجات', desc: 'نبدأ بإعداد متجرك الإلكتروني وتوفير المنتجات وتجهيز كافة العمليات التشغيلية.' },
+  { num: '4', title: 'الانطلاق ومتابعة الأرباح', desc: 'تنطلق أعمالك رسمياً مع متابعة مستمرة وتقارير دورية لضمان تحقيق أفضل النتائج.' },
 ];
 
 export default function Landing() {
   const [user, setUser] = useState(null);
   const [authChecked, setAuthChecked] = useState(false);
-  const { t, dir } = useLang();
+  const [videoOpen, setVideoOpen] = useState(false);
 
   useEffect(() => {
     base44.auth.isAuthenticated().then(async (authed) => {
       if (authed) {
-        const me = await base44.auth.me();
-        setUser(me);
+        try {
+          const me = await base44.auth.me();
+          setUser(me);
+        } catch (e) { /* ignore */ }
       }
       setAuthChecked(true);
     });
   }, []);
 
-
-
-  const features = [
-    { icon: DollarSign, title: t.land_feat1_title, desc: t.land_feat1_desc },
-    { icon: ShoppingBag, title: t.land_feat2_title, desc: t.land_feat2_desc },
-    { icon: Truck, title: t.land_feat3_title, desc: t.land_feat3_desc },
-    { icon: Settings, title: t.land_feat4_title, desc: t.land_feat4_desc },
-    { icon: Globe, title: t.land_feat5_title, desc: t.land_feat5_desc },
-  ];
-
-  const stats = [
-    { icon: Users, value: '+10,000', label: t.land_stat1 },
-    { icon: Package, value: '+50,000', label: t.land_stat2 },
-    { icon: MapPin, value: '+5', label: t.land_stat3 },
-    { icon: Shield, value: '99%', label: t.land_stat4 },
-  ];
-
-  const steps = [
-    { icon: Store, step: '01', title: t.land_step1_title, desc: t.land_step1_desc },
-    { icon: Zap, step: '02', title: t.land_step2_title, desc: t.land_step2_desc },
-    { icon: TrendingUp, step: '03', title: t.land_step3_title, desc: t.land_step3_desc },
-  ];
+  const scrollToForm = () => {
+    document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
 
   return (
-    <div className="min-h-screen bg-white" dir={dir}>
+    <div className="min-h-screen bg-white" dir="rtl" style={{ fontFamily: "'Cairo', 'Tajawal', sans-serif" }}>
 
       {/* ── Navbar ── */}
-      <nav className="sticky top-0 z-50 bg-white border-b border-slate-100 shadow-sm">
+      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
-          <div className="flex items-center gap-2">
-            <img src="https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/e5966bc5d_WhatsAppImage2026-05-05at110058AM1.jpeg" alt="truck" className="h-9 w-9 object-contain rounded-lg" />
-            <span className="text-xl font-extrabold" style={{ color: '#6a1b9a' }}>R souq</span>
+          <div className="flex items-center gap-2.5">
+            <img src={LOGO_URL} alt="R SOUQ" className="h-10 w-10 object-contain rounded-xl" />
+            <div className="flex flex-col leading-none">
+              <span className="text-lg font-extrabold tracking-tight" style={{ color: '#6a1b9a' }}>R SOUQ</span>
+              <span className="text-[10px] text-slate-400 font-medium">rsouq.com</span>
+            </div>
           </div>
 
-          <div className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
-            <a href="#" className="hover:text-purple-700 transition">{t.land_nav_home}</a>
-            <a href="#features" className="hover:text-purple-700 transition">{t.land_nav_services}</a>
-            <Link to="/shop" className="hover:text-purple-700 transition">{t.land_nav_stores}</Link>
-            <a href="#" className="hover:text-purple-700 transition">{t.land_nav_about}</a>
-            <Link to="/contact" className="hover:text-purple-700 transition">{t.land_nav_contact}</Link>
+          <div className="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
+            <a href="#features" className="hover:text-violet-700 transition">المميزات</a>
+            <a href="#how" className="hover:text-violet-700 transition">كيف نعمل</a>
+            <a href="#proof" className="hover:text-violet-700 transition">المصداقية</a>
+            <a href="#faq" className="hover:text-violet-700 transition">الأسئلة الشائعة</a>
           </div>
 
           <div className="flex items-center gap-2">
-            {authChecked && (
-              user ? (
-                <div className="flex items-center gap-2">
-                  <Link to="/seller/dashboard">
-                    <Button size="sm" className="rounded-full gap-1.5 font-bold" style={{ background: '#7b2d8b' }}>
-                      <User className="w-3.5 h-3.5" /> {user.full_name?.split(' ')[0] || t.land_my_dashboard}
-                    </Button>
-                  </Link>
-                  <button onClick={() => base44.auth.logout('/')} className="p-2 rounded-full hover:bg-slate-100 transition text-slate-500">
-                    <LogOut className="w-4 h-4" />
-                  </button>
-                </div>
-              ) : (
-                <Button onClick={() => base44.auth.redirectToLogin('/seller/dashboard')} className="rounded-full font-bold px-5" style={{ background: '#7b2d8b' }}>
-                  {t.land_start}
-                </Button>
-              )
+            {authChecked && user && (
+              <div className="hidden sm:flex items-center gap-2">
+                <Link to="/seller/dashboard">
+                  <Button size="sm" variant="ghost" className="rounded-full gap-1.5 font-bold text-slate-600">
+                    <User className="w-3.5 h-3.5" /> {user.full_name?.split(' ')[0] || 'لوحتي'}
+                  </Button>
+                </Link>
+                <button onClick={() => base44.auth.logout('/')} className="p-2 rounded-full hover:bg-slate-100 transition text-slate-500">
+                  <LogOut className="w-4 h-4" />
+                </button>
+              </div>
             )}
+            <button
+              onClick={scrollToForm}
+              className="rounded-full font-bold px-5 py-2.5 text-sm text-white shadow-md transition hover:opacity-90"
+              style={{ background: 'linear-gradient(135deg, #6a1b9a, #7b2d8b)' }}
+            >
+              احجز استشارتك
+            </button>
           </div>
         </div>
       </nav>
 
       {/* ── Hero ── */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-50 via-purple-50 to-indigo-50 pt-12 pb-0">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-purple-200 rounded-full opacity-20 blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
-        <div className="absolute bottom-0 right-0 w-80 h-80 bg-indigo-200 rounded-full opacity-20 blur-3xl translate-x-1/4 translate-y-1/4 pointer-events-none" />
+      <section className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #faf5ff 0%, #f3e8ff 50%, #ede9fe 100%)' }}>
+        <div className="absolute top-0 left-0 w-96 h-96 bg-purple-300 rounded-full opacity-20 blur-3xl -translate-x-1/3 -translate-y-1/3 pointer-events-none" />
+        <div className="absolute bottom-0 right-0 w-80 h-80 bg-violet-300 rounded-full opacity-20 blur-3xl translate-x-1/3 translate-y-1/3 pointer-events-none" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 grid md:grid-cols-2 gap-8 items-end">
-          <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} className="pb-12 order-2 md:order-1">
-            <span className="inline-flex items-center gap-1.5 text-xs font-bold bg-amber-100 text-amber-700 px-3 py-1 rounded-full mb-5">
-              <span className="w-2 h-2 bg-amber-500 rounded-full animate-pulse" />
-              {t.land_partner}
-            </span>
-            <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-900 leading-tight mb-3">
-              {t.land_h1}
-            </h1>
-            <h2 className="text-4xl sm:text-5xl font-extrabold leading-tight mb-5" style={{ color: '#f59e0b' }}>
-              {t.land_h2}
-            </h2>
-            <p className="text-slate-500 text-lg leading-relaxed mb-8" style={{ whiteSpace: 'pre-line' }}>
-              {t.land_sub}
-            </p>
-            <div className="flex flex-wrap gap-3">
-              {user ? (
-                <Link to="/seller/register">
-                  <Button size="lg" className="rounded-full font-bold px-8 gap-2 shadow-lg" style={{ background: '#7b2d8b' }}>
-                    {t.land_start} <ArrowLeft className="w-4 h-4" />
-                  </Button>
-                </Link>
-              ) : (
-                <button onClick={() => base44.auth.redirectToLogin('/seller/register')}
-                  className="inline-flex items-center gap-2 rounded-full font-bold px-8 py-3 text-white shadow-lg transition hover:opacity-90"
-                  style={{ background: '#7b2d8b' }}>
-                  {t.land_start} <ArrowLeft className="w-4 h-4" />
-                </button>
-              )}
-              <Link to="/shop">
-                <Button size="lg" variant="outline" className="rounded-full font-bold px-6 gap-2 border-slate-300">
-                  <Play className="w-4 h-4" /> {t.land_watch}
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-14 lg:py-20 relative">
+          <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+            {/* Right side (content in RTL) */}
+            <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold bg-white text-violet-700 px-3 py-1.5 rounded-full mb-5 shadow-sm border border-purple-100">
+                <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#7b2d8b' }} />
+                منظومة تجارة إلكترونية متكاملة في السعودية
+              </span>
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 leading-tight mb-4">
+                توسّع في عالم التجارة الإلكترونية في السعودية
+                <span className="block mt-1" style={{ color: '#6a1b9a' }}>بثقة وشفافية كاملة</span>
+              </h1>
+              <p className="text-slate-600 text-base sm:text-lg leading-relaxed mb-7 max-w-xl">
+                منظومة تشغيلية متكاملة تدير متجرك من التوريد وحتى الشحن والتسويق — بتواجد ومتابعة محلية داخل المملكة.
+              </p>
 
-          <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7 }} className="order-1 md:order-2">
-            <HeroSlider />
-          </motion.div>
+              {/* Video player */}
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-purple-100 group cursor-pointer max-w-xl" onClick={() => setVideoOpen(true)}>
+                <img
+                  src="https://images.unsplash.com/photo-1556761175-b413da4baf72?w=800&h=450&fit=crop"
+                  alt="فيديو تعريفي R SOUQ"
+                  className="w-full h-56 sm:h-64 object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/20 to-transparent" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
+                    <Play className="w-7 h-7 text-violet-700 fill-violet-700 mr-[-2px]" />
+                  </div>
+                </div>
+                <div className="absolute bottom-4 right-4 left-4 text-white">
+                  <p className="font-bold text-sm">رسالة من فريق R SOUQ</p>
+                  <p className="text-white/80 text-xs">شاهد كيف نبني شراكة استثمارية حقيقية</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-6 mt-7 text-sm">
+                <div className="flex items-center gap-2">
+                  <Shield className="w-5 h-5" style={{ color: '#7b2d8b' }} />
+                  <span className="font-semibold text-slate-700">عقود رسمية</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <HeartHandshake className="w-5 h-5" style={{ color: '#7b2d8b' }} />
+                  <span className="font-semibold text-slate-700">دعم محلي</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <BarChart3 className="w-5 h-5" style={{ color: '#7b2d8b' }} />
+                  <span className="font-semibold text-slate-700">شفافية كاملة</span>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Left side (Lead form) */}
+            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }}>
+              <LeadForm />
+            </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* ── Features Bar ── */}
-      <section id="features" className="py-14 bg-white">
+      {/* ── Value Proposition ── */}
+      <section id="features" className="py-16 lg:py-20 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 text-center">
-            {features.map((f, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }} className="flex flex-col items-center gap-3">
-                <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm" style={{ background: '#f3e5f5' }}>
-                  <f.icon className="w-6 h-6" style={{ color: '#7b2d8b' }} />
+          <div className="text-center mb-12">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">لماذا تختار R SOUQ؟</h2>
+            <p className="text-slate-500 max-w-2xl mx-auto">منظومة موثوقة تجمع بين الخبرة التشغيلية والتواجد المحلي لضمان نجاح استثمارك</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {FEATURES.map((f, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08 }}
+                className="bg-white rounded-2xl border border-slate-100 p-6 hover:shadow-lg hover:border-purple-200 transition-all text-center"
+              >
+                <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: 'linear-gradient(135deg, #f3e5f5, #ede7f6)' }}>
+                  <f.icon className="w-7 h-7" style={{ color: '#7b2d8b' }} />
                 </div>
-                <p className="font-bold text-sm text-slate-800">{f.title}</p>
-                <p className="text-xs text-slate-500 leading-relaxed">{f.desc}</p>
+                <h3 className="font-extrabold text-slate-800 mb-2 text-base">{f.title}</h3>
+                <p className="text-slate-500 text-sm leading-relaxed">{f.desc}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Stats Banner ── */}
-      <section className="py-10" style={{ background: 'linear-gradient(135deg, #f3e5f5 0%, #ede7f6 100%)' }}>
-        <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {stats.map((s, i) => (
-              <motion.div key={i} initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }} className="bg-white rounded-2xl p-5 flex items-center gap-4 shadow-sm">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style={{ background: '#ede7f6' }}>
-                  <s.icon className="w-5 h-5" style={{ color: '#7b2d8b' }} />
-                </div>
-                <div>
-                  <p className="text-xl font-extrabold" style={{ color: '#6a1b9a' }}>{s.value}</p>
-                  <p className="text-xs text-slate-500">{s.label}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── How it works ── */}
-      <section className="py-20 bg-slate-50 relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-10 right-10 w-64 h-64 bg-purple-100 rounded-full opacity-40 blur-3xl" />
-          <div className="absolute bottom-10 left-10 w-64 h-64 bg-indigo-100 rounded-full opacity-40 blur-3xl" />
-        </div>
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 relative">
+      {/* ── How It Works ── */}
+      <section id="how" className="py-16 lg:py-20 bg-slate-50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-14">
-            <h2 className="text-3xl font-extrabold mb-3">{t.land_how_title}</h2>
-            <p className="text-slate-500">{t.land_how_sub}</p>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">كيف نعمل؟</h2>
+            <p className="text-slate-500">أربع خطوات بسيطة تفصلك عن انطلاق متجرك الإلكتروني</p>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {steps.map((item, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                className="bg-white rounded-2xl p-7 shadow-sm border border-purple-100 text-center relative overflow-hidden">
-                <div className="absolute top-3 left-4 text-6xl font-extrabold text-purple-50 select-none">{item.step}</div>
-                <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4 relative" style={{ background: '#f3e5f5' }}>
-                  <item.icon className="w-7 h-7" style={{ color: '#7b2d8b' }} />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+            {/* Connecting line */}
+            <div className="hidden lg:block absolute top-12 right-0 left-0 h-0.5 bg-purple-200 -z-0" />
+            {STEPS.map((s, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="relative bg-white rounded-2xl border border-slate-100 p-6 text-center z-10 hover:shadow-lg transition"
+              >
+                <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-extrabold text-lg shadow-lg" style={{ background: 'linear-gradient(135deg, #6a1b9a, #7b2d8b)' }}>
+                  {s.num}
                 </div>
-                <h3 className="text-lg font-bold mt-2 mb-3">{item.title}</h3>
-                <p className="text-slate-500 text-sm leading-relaxed">{item.desc}</p>
+                <h3 className="font-extrabold text-slate-800 mb-2">{s.title}</h3>
+                <p className="text-slate-500 text-sm leading-relaxed">{s.desc}</p>
               </motion.div>
             ))}
-          </div>
-
-        </div>
-
-        {/* ── Partners Marquee ── */}
-        <div className="mt-16 pt-10 border-t border-slate-200">
-          <div className="text-center mb-8">
-            <h3 className="text-xl font-extrabold text-slate-800">{t.land_partners_title}</h3>
-            <p className="text-sm text-slate-500 mt-1">{t.land_partners_sub}</p>
-          </div>
-          <div style={{ overflow: 'hidden', width: '100%' }}>
-            <div style={{
-              display: 'flex',
-              animation: 'marquee 50s linear infinite',
-              willChange: 'transform',
-            }}>
-              {[...PARTNERS, ...PARTNERS].map((p, i) => (
-                <div key={i} style={{
-                  flexShrink: 0,
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: '12px 16px',
-                  margin: '0 12px',
-                  borderRadius: '16px',
-                  border: '1px solid #e2e8f0',
-                  background: 'white',
-                }}>
-                  <img src={p.logo} alt={p.name} style={{ height: '64px', width: '128px', objectFit: 'contain' }} />
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </section>
 
-
-
-      {/* ── Campaign CTA ── */}
-      <section className="py-16 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #6a1b9a 0%, #7b2d8b 50%, #9c27b0 100%)' }}>
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl translate-x-1/4 -translate-y-1/4" />
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl -translate-x-1/4 translate-y-1/4" />
-        </div>
-        <div className="max-w-3xl mx-auto px-4 text-center relative">
-          <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5 bg-white/10 backdrop-blur">
-            <TrendingUp className="w-8 h-8 text-white" />
+      {/* ── Local Presence & Social Proof ── */}
+      <section id="proof" className="py-16 lg:py-20 bg-white">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="grid md:grid-cols-5 gap-8 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="md:col-span-2 flex justify-center"
+            >
+              <div className="relative">
+                <div className="w-48 h-48 rounded-full overflow-hidden border-4 border-purple-100 shadow-xl">
+                  <img
+                    src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop"
+                    alt="أحمد قشطة"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="absolute -bottom-2 -right-2 bg-white rounded-xl shadow-lg px-3 py-2 border border-purple-100">
+                  <p className="text-xs font-bold" style={{ color: '#6a1b9a' }}>📍 السعودية</p>
+                </div>
+              </div>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="md:col-span-3"
+            >
+              <Quote className="w-10 h-10 mb-4" style={{ color: '#d8b4fe' }} />
+              <p className="text-xl sm:text-2xl font-bold text-slate-800 leading-relaxed mb-5">
+                «هدفنا ليس مجرد تقديم متجر إلكتروني، بل بناء شراكة استثمارية حقيقية قائمة على الشفافية والنتائج الملموسة»
+              </p>
+              <div className="border-t border-slate-100 pt-4">
+                <p className="font-extrabold text-slate-900">أحمد قشطة</p>
+                <p className="text-sm text-slate-500">ممثل تطوير الأعمال والشراكات — R SOUQ في المملكة العربية السعودية</p>
+              </div>
+            </motion.div>
           </div>
-          <h2 className="text-2xl font-extrabold text-white mb-3">{t.land_cta_title}</h2>
-          <p className="text-white/70 mb-8">{t.land_cta_sub}</p>
-          <Link to="/seller/dashboard">
-            <Button className="rounded-full font-bold px-10 py-6 text-base gap-2 bg-white hover:bg-white/90" style={{ color: '#7b2d8b' }}>
-              <Zap className="w-5 h-5" /> {t.land_cta_btn}
-            </Button>
-          </Link>
+        </div>
+      </section>
+
+      {/* ── FAQ ── */}
+      <section id="faq" className="py-16 lg:py-20 bg-slate-50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">الأسئلة الشائعة</h2>
+            <p className="text-slate-500">كل ما تحتاج معرفته قبل بدء شراكتك معنا</p>
+          </div>
+          <FAQ />
+        </div>
+      </section>
+
+      {/* ── Final CTA ── */}
+      <section className="py-14 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #6a1b9a 0%, #7b2d8b 50%, #9c27b0 100%)' }}>
+        <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(white 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+        <div className="max-w-3xl mx-auto px-4 text-center relative">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-3">جاهز لبدء شراكتك الاستثمارية؟</h2>
+          <p className="text-white/80 mb-7">سجّل بياناتك الآن واحجز جلستك الاستشارية المجانية مع فريق R SOUQ</p>
+          <button
+            onClick={scrollToForm}
+            className="inline-flex items-center gap-2 bg-white hover:bg-white/90 font-extrabold px-8 py-3.5 rounded-full text-sm transition shadow-xl"
+            style={{ color: '#7b2d8b' }}
+          >
+            سجّل الآن <ArrowLeft className="w-4 h-4" />
+          </button>
         </div>
       </section>
 
       {/* ── Footer ── */}
-      <footer className="py-10 text-center" style={{ background: '#4a1260' }}>
-        <div className="flex items-center justify-center gap-2 mb-3">
-          <div className="w-9 h-9 flex items-center justify-center">
-            <svg viewBox="0 0 64 48" fill="none" className="w-9 h-9">
-              <rect x="2" y="14" width="36" height="24" rx="3" fill="white"/>
-              <path d="M38 20 L38 38 L58 38 L58 26 L50 20 Z" fill="white"/>
-              <path d="M40 21.5 L40 28 L54 28 L54 26 L48 21.5 Z" fill="#9c27b0" opacity="0.4"/>
-              <circle cx="14" cy="38" r="5" fill="white" stroke="#9c27b0" strokeWidth="2"/>
-              <circle cx="14" cy="38" r="2" fill="#9c27b0"/>
-              <circle cx="48" cy="38" r="5" fill="white" stroke="#9c27b0" strokeWidth="2"/>
-              <circle cx="48" cy="38" r="2" fill="#9c27b0"/>
-            </svg>
+      <footer className="py-8 text-center" style={{ background: '#3b0d52' }}>
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="flex items-center justify-center gap-2.5 mb-5">
+            <img src={LOGO_URL} alt="R SOUQ" className="h-9 w-9 object-contain rounded-lg" />
+            <span className="font-extrabold text-lg text-white">R SOUQ</span>
           </div>
-          <span className="font-extrabold text-lg text-white">R souq</span>
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mb-5 text-sm">
+            <Link to="/privacy" className="text-slate-400 hover:text-white transition">سياسة الخصوصية</Link>
+            <Link to="/terms" className="text-slate-400 hover:text-white transition">الشروط والأحكام</Link>
+            <Link to="/contact" className="text-slate-400 hover:text-white transition">تواصل معنا</Link>
+            <Link to="/shop" className="text-slate-400 hover:text-white transition">المتجر</Link>
+          </div>
+          <p className="text-slate-500 text-xs">جميع الحقوق محفوظة لـ R SOUQ / TOYLII LLC</p>
         </div>
-        <div className="flex items-center justify-center gap-6 mb-4">
-          <Link to="/shop" className="text-slate-400 hover:text-white text-sm transition">{t.land_footer_shop}</Link>
-          <Link to="/seller/register" className="text-slate-400 hover:text-white text-sm transition">{t.land_footer_seller}</Link>
-          <Link to="/seller/dashboard" className="text-slate-400 hover:text-white text-sm transition">{t.land_footer_dashboard}</Link>
-        </div>
-        <p className="text-slate-500 text-sm">{t.land_footer_rights}</p>
       </footer>
+
+      {/* ── Sticky Mobile CTA ── */}
+      <div className="md:hidden fixed bottom-0 inset-x-0 z-50 bg-white border-t border-slate-200 shadow-[0_-4px_12px_rgba(0,0,0,0.08)] p-3">
+        <button
+          onClick={scrollToForm}
+          className="w-full h-12 rounded-xl text-white font-bold text-sm transition shadow-md flex items-center justify-center gap-2"
+          style={{ background: 'linear-gradient(135deg, #6a1b9a, #7b2d8b)' }}
+        >
+          سجّل الآن واطلب استشارتك <ChevronLeft className="w-4 h-4" />
+        </button>
+      </div>
+      {/* Spacer so content not hidden behind mobile bar */}
+      <div className="md:hidden h-20" />
+
+      {/* ── Video Modal ── */}
+      {videoOpen && (
+        <div
+          className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setVideoOpen(false)}
+        >
+          <div className="relative w-full max-w-3xl" onClick={(e) => e.stopPropagation()}>
+            <button
+              onClick={() => setVideoOpen(false)}
+              className="absolute -top-10 left-0 text-white hover:opacity-80 transition flex items-center gap-1 text-sm font-semibold"
+            >
+              إغلاق <span className="text-xl">×</span>
+            </button>
+            <div className="aspect-video bg-slate-900 rounded-2xl overflow-hidden flex items-center justify-center">
+              <div className="text-center text-white/60 px-6">
+                <Play className="w-14 h-14 mx-auto mb-3 opacity-50" />
+                <p className="text-sm">سيتم إضافة فيديو الفنان أحمد قشطة قريباً</p>
+                <p className="text-xs text-white/40 mt-1">رابط الفيديو الرسمي سيُحدّث هنا</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
