@@ -107,8 +107,7 @@ export default function Landing() {
                 منظومة تجارة إلكترونية متكاملة في السعودية
               </span>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 leading-tight mb-4">
-                توسّع في عالم التجارة الإلكترونية في السعودية
-                <span className="block mt-1" style={{ color: '#6a1b9a' }}>بثقة وشفافية كاملة</span>
+                ابدأ البيع اليوم!
               </h1>
               <p className="text-slate-600 text-base sm:text-lg leading-relaxed mb-7 max-w-xl">
                 منظومة تشغيلية متكاملة تدير متجرك من التوريد وحتى الشحن والتسويق — بتواجد ومتابعة محلية داخل المملكة.
