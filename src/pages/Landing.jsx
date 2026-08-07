@@ -116,8 +116,8 @@ export default function Landing() {
               {/* Video player */}
               <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-purple-100 group cursor-pointer max-w-xl" onClick={() => setVideoOpen(true)}>
                 <img
-                  src="https://images.unsplash.com/photo-1556761175-b413da4baf72?w=800&h=450&fit=crop"
-                  alt="فيديو تعريفي R SOUQ"
+                  src="https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/5b5ae0645_ChatGPTImageAug7202602_16_27PM.png"
+                  alt="مكاتب R SOUQ - فريقنا يعمل على نجاحك"
                   className="w-full h-56 sm:h-64 object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/20 to-transparent" />
