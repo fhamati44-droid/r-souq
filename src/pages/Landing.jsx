@@ -3,12 +3,13 @@ import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import {
   Shield, Package, HeartHandshake, BarChart3, Play, Phone,
-  ArrowLeft, ChevronLeft, User, LogOut, Quote,
+  ArrowLeft, ChevronLeft, User, LogOut,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import LeadForm from '@/components/landing/LeadForm';
 import FAQ from '@/components/landing/FAQ';
+import Testimonials from '@/components/landing/Testimonials';
 
 const LOGO_URL = 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/e5966bc5d_WhatsAppImage2026-05-05at110058AM1.jpeg';
 
@@ -216,43 +217,12 @@ export default function Landing() {
 
       {/* ── Local Presence & Social Proof ── */}
       <section id="proof" className="py-16 lg:py-20 bg-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <div className="grid md:grid-cols-5 gap-8 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="md:col-span-2 flex justify-center"
-            >
-              <div className="relative">
-                <div className="w-48 h-48 rounded-full overflow-hidden border-4 border-purple-100 shadow-xl">
-                  <img
-                    src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop"
-                    alt="أحمد قشطة"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="absolute -bottom-2 -right-2 bg-white rounded-xl shadow-lg px-3 py-2 border border-purple-100">
-                  <p className="text-xs font-bold" style={{ color: '#6a1b9a' }}>📍 السعودية</p>
-                </div>
-              </div>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="md:col-span-3"
-            >
-              <Quote className="w-10 h-10 mb-4" style={{ color: '#d8b4fe' }} />
-              <p className="text-xl sm:text-2xl font-bold text-slate-800 leading-relaxed mb-5">
-                «هدفنا ليس مجرد تقديم متجر إلكتروني، بل بناء شراكة استثمارية حقيقية قائمة على الشفافية والنتائج الملموسة»
-              </p>
-              <div className="border-t border-slate-100 pt-4">
-                <p className="font-extrabold text-slate-900">أحمد قشطة</p>
-                <p className="text-sm text-slate-500">ممثل تطوير الأعمال والشراكات — R SOUQ في المملكة العربية السعودية</p>
-              </div>
-            </motion.div>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">المصداقية والتواجد المحلي</h2>
+            <p className="text-slate-500">فريق متواجد داخل المملكة يبني شراكة حقيقية معك</p>
           </div>
+          <Testimonials />
         </div>
       </section>
 
