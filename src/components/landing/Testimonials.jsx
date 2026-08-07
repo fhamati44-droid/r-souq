@@ -48,9 +48,7 @@ export default function Testimonials() {
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="absolute -bottom-2 -right-2 bg-white rounded-xl shadow-lg px-3 py-2 border border-purple-100">
-              <p className="text-xs font-bold" style={{ color: '#6a1b9a' }}>📍 {person.location}</p>
-            </div>
+
           </div>
         </motion.div>
         <div className="md:col-span-3">
