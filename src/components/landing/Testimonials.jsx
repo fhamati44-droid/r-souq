@@ -17,6 +17,13 @@ const PEOPLE = [
     photo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/fbff28971_WhatsAppImage2026-08-07at1221271.jpeg',
     quote: 'نهتم بأدق التفاصيل ونؤمن أن الخدمة المميزة هي أساس بناء الثقة مع شركائنا، لأن نجاح شراكتنا يبدأ من اهتمامنا بك وبعملائك.',
   },
+  {
+    name: 'فادي حماتي',
+    role: 'شريك ومؤسس — Rsouq',
+    location: 'السعودية',
+    photo: 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/2160f2c3e_WhatsAppImage2026-08-07at122127.jpeg',
+    quote: 'التجارة قبل كل شيء علاقة بين الناس، وعشان كذا إحنا معكم قلبًا وقالبًا، نهتم بنجاحكم، ونساندكم في كل خطوة، ونبني معكم شراكة أساسها الثقة والاستمرارية.',
+  },
 ];
 
 export default function Testimonials() {
