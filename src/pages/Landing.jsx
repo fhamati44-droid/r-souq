@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import LeadForm from '@/components/landing/LeadForm';
 import FAQ from '@/components/landing/FAQ';
 import Testimonials from '@/components/landing/Testimonials';
+import FacilityGallery from '@/components/landing/FacilityGallery';
 
 const LOGO_URL = 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/e5966bc5d_WhatsAppImage2026-05-05at110058AM1.jpeg';
 
@@ -159,6 +160,13 @@ export default function Landing() {
       {/* ── Value Proposition ── */}
       <section id="features" className="py-16 lg:py-20 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="rounded-3xl overflow-hidden shadow-xl border border-purple-100 mb-12">
+            <img
+              src="https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/4daf86c3b_ChatGPTImageAug7202602_19_33PM.png"
+              alt="مكاتب R SOUQ - فريق العمل"
+              className="w-full h-56 sm:h-72 lg:h-80 object-cover"
+            />
+          </div>
           <div className="text-center mb-12">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">لماذا تختار R SOUQ؟</h2>
             <p className="text-slate-500 max-w-2xl mx-auto">منظومة موثوقة تجمع بين الخبرة التشغيلية والتواجد المحلي لضمان نجاح استثمارك</p>
@@ -187,6 +195,13 @@ export default function Landing() {
       {/* ── How It Works ── */}
       <section id="how" className="py-16 lg:py-20 bg-slate-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="rounded-3xl overflow-hidden shadow-xl border border-purple-100 mb-14">
+            <img
+              src="https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/c6c26f226_ChatGPTImageAug7202602_04_28PM.png"
+              alt="منظومة R SOUQ اللوجستية - من التخزين حتى التوصيل"
+              className="w-full h-56 sm:h-72 lg:h-80 object-cover"
+            />
+          </div>
           <div className="text-center mb-14">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">كيف نعمل؟</h2>
             <p className="text-slate-500">أربع خطوات بسيطة تفصلك عن انطلاق متجرك الإلكتروني</p>
@@ -222,12 +237,25 @@ export default function Landing() {
             <p className="text-slate-500">فريق متواجد داخل المملكة يبني شراكة حقيقية معك</p>
           </div>
           <Testimonials />
+
+          <div className="mt-14">
+            <h3 className="text-center text-lg font-extrabold text-slate-800 mb-2">منشآتنا الحقيقية على أرض الواقع</h3>
+            <p className="text-center text-slate-500 text-sm mb-7">صور من مكاتبنا ومستودعاتنا داخل المملكة</p>
+            <FacilityGallery />
+          </div>
         </div>
       </section>
 
       {/* ── FAQ ── */}
       <section id="faq" className="py-16 lg:py-20 bg-slate-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="rounded-3xl overflow-hidden shadow-xl border border-purple-100 mb-12">
+            <img
+              src="https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/0829af7e5_ChatGPTImageJun18202610_28_52AM.png"
+              alt="مكاتب R SOUQ - بيئة العمل"
+              className="w-full h-56 sm:h-72 lg:h-80 object-cover"
+            />
+          </div>
           <div className="text-center mb-12">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">الأسئلة الشائعة</h2>
             <p className="text-slate-500">كل ما تحتاج معرفته قبل بدء شراكتك معنا</p>
