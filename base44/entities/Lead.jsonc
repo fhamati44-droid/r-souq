@@ -16,6 +16,39 @@
         "supplier"
       ]
     },
+    "has_experience": {
+      "type": "string",
+      "enum": [
+        "yes",
+        "no"
+      ]
+    },
+    "experience_details": {
+      "type": "string"
+    },
+    "management_preference": {
+      "type": "string",
+      "enum": [
+        "self",
+        "team"
+      ]
+    },
+    "investment_goal": {
+      "type": "string",
+      "enum": [
+        "additional_income",
+        "main_project",
+        "expand"
+      ]
+    },
+    "budget_range": {
+      "type": "string",
+      "enum": [
+        "50k",
+        "100k",
+        "100k_160k"
+      ]
+    },
     "status": {
       "type": "string",
       "enum": [
