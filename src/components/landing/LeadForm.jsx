@@ -82,6 +82,15 @@ export default function LeadForm() {
           budget_range: budget,
         });
       }
+      // Google Tag Manager: push lead event to dataLayer
+      if (typeof window !== 'undefined') {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: 'rsouq_lead',
+          interest_type: interest,
+          budget_range: budget,
+        });
+      }
       setDone(true);
       toast.success('تم استلام بياناتك بنجاح! سنتواصل معك خلال 24 ساعة.');
     } catch (err) {
