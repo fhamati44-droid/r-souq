@@ -74,6 +74,14 @@ export default function LeadForm() {
         budget_range: budget,
         notes,
       });
+      // Meta Pixel: fire Lead conversion event for ad optimization
+      if (typeof window !== 'undefined' && window.fbq) {
+        window.fbq('track', 'Lead', {
+          content_name: 'Landing Lead Form',
+          interest_type: interest,
+          budget_range: budget,
+        });
+      }
       setDone(true);
       toast.success('تم استلام بياناتك بنجاح! سنتواصل معك خلال 24 ساعة.');
     } catch (err) {
