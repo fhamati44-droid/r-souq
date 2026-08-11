@@ -74,11 +74,27 @@ const BLOCKED_TERMS = [
   'male stripper', 'aussiebum', 'disco', 'nightclub', 'night club', 'exotic',
   'tanga', 'net stocking', 'fishnet stocking', 'open crotch', 'mesh stocking',
   'bodysuit fishnet', 'strappy bodysuit', 'transparent',
+  'catsuit', 'zentai', 'chastity', 'restraint', 'muzzle', 'puppy play',
+  'pet play', 'bdsm', 'kinky', 'gimp', 'rubber hood', 'leather hood',
+  'leather mask', 'dog mask', 'dog hood', 'bondage hood', 'ball gag',
+  'gag ball', 'spreader bar', 'flogger', 'whip', 'slave collar',
+  'strap-on', 'strapon', 'adult costume', 'roleplay costume', 'chest harness',
+  'leg harness', 'body harness', 'muscle harness', 'cage bra', 'humbler',
+  'faux leather bodysuit', 'pu leather bodysuit', 'wetlook catsuit',
+  'one-piece tight', 'shiny bodysuit', 'skin tight jumpsuit', 'full body suit',
+];
+
+const BLOCKED_CJ_CATEGORY_TERMS = [
+  'sexy', 'fetish', 'erotic', 'adult', 'lingerie', 'underwear', 'bdsm',
+  'costume', 'cosplay', 'roleplay', 'exotic', 'clubwear', 'bondage',
 ];
 
 function isDecentProduct(p) {
   const text = `${p.nameEn || ''} ${p.description || ''}`.toLowerCase();
-  return !BLOCKED_TERMS.some(term => text.includes(term));
+  if (BLOCKED_TERMS.some(term => text.includes(term))) return false;
+  const catText = `${p.oneCategoryName || ''} ${p.twoCategoryName || ''} ${p.threeCategoryName || ''}`.toLowerCase();
+  if (BLOCKED_CJ_CATEGORY_TERMS.some(term => catText.includes(term))) return false;
+  return true;
 }
 
 Deno.serve(async (req) => {

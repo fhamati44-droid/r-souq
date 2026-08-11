@@ -31,7 +31,7 @@ const CATEGORY_KEYWORDS = {
   // term — broad apparel searches on CJ surface a lot of adult/fetish wear
   // alongside normal clothing. Narrow queries mostly avoid that at the source
   // (the BLOCKED_TERMS filter below is a backup, not the only line of defense).
-  clothing: ['men t-shirt shirt', 'women dress blouse', 'kids clothing', 'jeans pants trousers', 'jacket coat hoodie'],
+  clothing: ['men casual shirt', 'women summer dress', 'kids t-shirt cotton', 'denim jeans pants', 'winter jacket parka coat'],
   home: 'home decor kitchen',
   beauty: 'beauty cosmetic skincare',
   sports: 'sports fitness outdoor',
@@ -54,11 +54,33 @@ const BLOCKED_TERMS = [
   'male stripper', 'aussiebum', 'disco', 'nightclub', 'night club', 'exotic',
   'tanga', 'net stocking', 'fishnet stocking', 'open crotch', 'mesh stocking',
   'bodysuit fishnet', 'strappy bodysuit', 'transparent',
+  // Broader adult/BDSM/roleplay vertical (mask/hood/catsuit/restraint gear
+  // that CJ's fuzzy search matches even on innocuous words like "hoodie")
+  'catsuit', 'zentai', 'chastity', 'restraint', 'muzzle', 'puppy play',
+  'pet play', 'bdsm', 'kinky', 'gimp', 'rubber hood', 'leather hood',
+  'leather mask', 'dog mask', 'dog hood', 'bondage hood', 'ball gag',
+  'gag ball', 'spreader bar', 'flogger', 'whip', 'slave collar',
+  'strap-on', 'strapon', 'adult costume', 'roleplay costume', 'chest harness',
+  'leg harness', 'body harness', 'muscle harness', 'cage bra', 'humbler',
+  'faux leather bodysuit', 'pu leather bodysuit', 'wetlook catsuit',
+  'one-piece tight', 'shiny bodysuit', 'skin tight jumpsuit', 'full body suit',
+];
+
+// Product category names as classified by CJ itself (oneCategoryName /
+// twoCategoryName / threeCategoryName) — a more reliable signal than the
+// product title, since CJ's own taxonomy will say things like "Sexy
+// Costumes" or "Fetish Wear" even when the English title doesn't.
+const BLOCKED_CJ_CATEGORY_TERMS = [
+  'sexy', 'fetish', 'erotic', 'adult', 'lingerie', 'underwear', 'bdsm',
+  'costume', 'cosplay', 'roleplay', 'exotic', 'clubwear', 'bondage',
 ];
 
 function isDecentProduct(p) {
   const text = `${p.nameEn || ''} ${p.description || ''}`.toLowerCase();
-  return !BLOCKED_TERMS.some(term => text.includes(term));
+  if (BLOCKED_TERMS.some(term => text.includes(term))) return false;
+  const catText = `${p.oneCategoryName || ''} ${p.twoCategoryName || ''} ${p.threeCategoryName || ''}`.toLowerCase();
+  if (BLOCKED_CJ_CATEGORY_TERMS.some(term => catText.includes(term))) return false;
+  return true;
 }
 
 function normalizeCJProduct(p, category) {
