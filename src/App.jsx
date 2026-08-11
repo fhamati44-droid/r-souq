@@ -31,6 +31,8 @@ import ShopHome from './pages/shop/ShopHome';
 import StoresList from './pages/shop/StoresList';
 import StoreDetail from './pages/shop/StoreDetail';
 import ShopProductDetail from './pages/shop/ProductDetail';
+import Categories from './pages/Categories';
+import Products from './pages/Products';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import Orders from './pages/Orders';
@@ -73,6 +75,8 @@ const AuthenticatedApp = () => {
       <Route path="/shop/stores" element={<StoresList />} />
       <Route path="/shop/store/:id" element={<StoreDetail />} />
       <Route path="/shop/product/:id" element={<ShopProductDetail />} />
+      <Route path="/categories" element={<Categories />} />
+      <Route path="/products" element={<Products />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/orders" element={<Orders />} />

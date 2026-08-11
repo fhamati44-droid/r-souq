@@ -10,9 +10,17 @@ export default function Categories() {
   const [counts, setCounts] = useState({});
 
   useEffect(() => {
-    base44.entities.Product.list().then(all => {
+    // Count both real sellers' products AND the CJ Dropshipping cache per
+    // category, so counts (and the /products?category=x pages they link to)
+    // reflect what a shopper will actually see — not just real listings,
+    // which are empty until real sellers start adding products.
+    Promise.all([
+      base44.entities.Product.list(),
+      base44.entities.CJProductCache.list(),
+    ]).then(([realProducts, cache]) => {
       const c = {};
-      all.forEach(p => { if (p.category) c[p.category] = (c[p.category] || 0) + 1; });
+      realProducts.forEach(p => { if (p.category) c[p.category] = (c[p.category] || 0) + 1; });
+      cache.forEach(p => { if (p.category) c[p.category] = (c[p.category] || 0) + 1; });
       setCounts(c);
     });
   }, []);
