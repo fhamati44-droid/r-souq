@@ -62,6 +62,20 @@ function mapCategory(oneCategoryName = '') {
   return 'general';
 }
 
+// Keep underwear/lingerie/etc. out of what sellers see in the Warehouse too —
+// same list used in syncCJProducts.
+const BLOCKED_TERMS = [
+  'sexy', 'lingerie', 'underwear', 'thong', 'bikini', 'panties', 'panty',
+  'g-string', 'gstring', 'erotic', 'fetish', 'stripper', 'nude', 'naked',
+  'bra ', 'bras ', 'boxer brief', 'crotchless', 'lace teddy', 'bodystocking',
+  'fishnet', 'seductive', 'temptation lingerie', 'sleepwear sexy',
+];
+
+function isDecentProduct(p) {
+  const text = `${p.nameEn || ''} ${p.description || ''}`.toLowerCase();
+  return !BLOCKED_TERMS.some(term => text.includes(term));
+}
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -94,7 +108,7 @@ Deno.serve(async (req) => {
         return Response.json({ error: data.message || 'CJ API error' }, { status: 400 });
       }
 
-      const products = data.data?.content?.[0]?.productList || [];
+      const products = (data.data?.content?.[0]?.productList || []).filter(isDecentProduct);
       return Response.json({ products, total: data.data?.totalRecords || 0, pages: data.data?.totalPages || 0 });
     }
 

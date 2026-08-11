@@ -27,7 +27,7 @@ async function getCJAccessToken() {
 
 const CATEGORY_KEYWORDS = {
   electronics: 'electronics gadget',
-  clothing: 'clothing fashion apparel',
+  clothing: 'shirts pants dresses jackets fashion clothing',
   home: 'home decor kitchen',
   beauty: 'beauty cosmetic skincare',
   sports: 'sports fitness outdoor',
@@ -36,6 +36,21 @@ const CATEGORY_KEYWORDS = {
   toys: 'toy kids baby',
   general: 'popular trending product',
 };
+
+// CJ's "clothing/apparel" search also surfaces underwear, lingerie and other
+// revealing items. Filter those out so the storefront only shows regular,
+// family-appropriate clothing — regardless of how CJ itself categorized them.
+const BLOCKED_TERMS = [
+  'sexy', 'lingerie', 'underwear', 'thong', 'bikini', 'panties', 'panty',
+  'g-string', 'gstring', 'erotic', 'fetish', 'stripper', 'nude', 'naked',
+  'bra ', 'bras ', 'boxer brief', 'crotchless', 'lace teddy', 'bodystocking',
+  'fishnet', 'seductive', 'temptation lingerie', 'sleepwear sexy',
+];
+
+function isDecentProduct(p) {
+  const text = `${p.nameEn || ''} ${p.description || ''}`.toLowerCase();
+  return !BLOCKED_TERMS.some(term => text.includes(term));
+}
 
 function normalizeCJProduct(p, category) {
   const rawPrice = p.sellPrice?.split(' -- ')?.[0] || p.sellPrice || '0';
@@ -69,6 +84,23 @@ Deno.serve(async (req) => {
     let totalSynced = 0;
     const results = {};
 
+    // One-time cleanup: remove any previously-synced cache entries (e.g. from
+    // before the decency filter existed) that shouldn't be on the storefront.
+    let removed = 0;
+    try {
+      const existingCache = await base44.asServiceRole.entities.CJProductCache.list();
+      for (const item of existingCache) {
+        const text = `${item.name || ''} ${item.name_en || ''} ${item.description || ''}`.toLowerCase();
+        const isBad = BLOCKED_TERMS.some(term => text.includes(term));
+        if (isBad) {
+          await base44.asServiceRole.entities.CJProductCache.delete(item.id);
+          removed++;
+        }
+      }
+    } catch (e) {
+      console.log('Cleanup pass failed:', e.message);
+    }
+
     for (const [category, keyword] of Object.entries(CATEGORY_KEYWORDS)) {
       try {
         // Search CJ products for this category (with retry on rate limit)
@@ -91,7 +123,7 @@ Deno.serve(async (req) => {
           continue;
         }
 
-        const cjProducts = data.data?.content?.[0]?.productList || [];
+        const cjProducts = (data.data?.content?.[0]?.productList || []).filter(isDecentProduct);
 
         // Batch translate names to Arabic using LLM
         let arabicNames = [];
@@ -146,7 +178,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    return Response.json({ success: true, totalSynced, results });
+    return Response.json({ success: true, totalSynced, removed, results });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
