@@ -69,6 +69,11 @@ const BLOCKED_TERMS = [
   'g-string', 'gstring', 'erotic', 'fetish', 'stripper', 'nude', 'naked',
   'bra ', 'bras ', 'boxer brief', 'crotchless', 'lace teddy', 'bodystocking',
   'fishnet', 'seductive', 'temptation lingerie', 'sleepwear sexy',
+  'harness', 'jockstrap', 'bondage', 'clubwear', 'mesh bodysuit', 'pvc',
+  'latex', 'wetlook', 'see-through', 'see through', 'sheer', 'exotic dancewear',
+  'male stripper', 'aussiebum', 'disco', 'nightclub', 'night club', 'exotic',
+  'tanga', 'net stocking', 'fishnet stocking', 'open crotch', 'mesh stocking',
+  'bodysuit fishnet', 'strappy bodysuit', 'transparent',
 ];
 
 function isDecentProduct(p) {

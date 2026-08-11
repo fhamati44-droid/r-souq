@@ -27,7 +27,11 @@ async function getCJAccessToken() {
 
 const CATEGORY_KEYWORDS = {
   electronics: 'electronics gadget',
-  clothing: 'shirts pants dresses jackets fashion clothing',
+  // Several specific, everyday queries instead of one broad "clothing/apparel"
+  // term — broad apparel searches on CJ surface a lot of adult/fetish wear
+  // alongside normal clothing. Narrow queries mostly avoid that at the source
+  // (the BLOCKED_TERMS filter below is a backup, not the only line of defense).
+  clothing: ['men t-shirt shirt', 'women dress blouse', 'kids clothing', 'jeans pants trousers', 'jacket coat hoodie'],
   home: 'home decor kitchen',
   beauty: 'beauty cosmetic skincare',
   sports: 'sports fitness outdoor',
@@ -45,6 +49,11 @@ const BLOCKED_TERMS = [
   'g-string', 'gstring', 'erotic', 'fetish', 'stripper', 'nude', 'naked',
   'bra ', 'bras ', 'boxer brief', 'crotchless', 'lace teddy', 'bodystocking',
   'fishnet', 'seductive', 'temptation lingerie', 'sleepwear sexy',
+  'harness', 'jockstrap', 'bondage', 'clubwear', 'mesh bodysuit', 'pvc',
+  'latex', 'wetlook', 'see-through', 'see through', 'sheer', 'exotic dancewear',
+  'male stripper', 'aussiebum', 'disco', 'nightclub', 'night club', 'exotic',
+  'tanga', 'net stocking', 'fishnet stocking', 'open crotch', 'mesh stocking',
+  'bodysuit fishnet', 'strappy bodysuit', 'transparent',
 ];
 
 function isDecentProduct(p) {
@@ -101,10 +110,20 @@ Deno.serve(async (req) => {
       console.log('Cleanup pass failed:', e.message);
     }
 
-    for (const [category, keyword] of Object.entries(CATEGORY_KEYWORDS)) {
+    // Flatten into (category, keyword) pairs — categories with several safe
+    // sub-keywords (like clothing) get one pass per sub-keyword, each pulling
+    // fewer items so the total per category stays similar to before.
+    const entries = [];
+    for (const [category, kw] of Object.entries(CATEGORY_KEYWORDS)) {
+      const kwList = Array.isArray(kw) ? kw : [kw];
+      const size = Math.max(4, Math.ceil(20 / kwList.length));
+      for (const keyword of kwList) entries.push({ category, keyword, size });
+    }
+
+    for (const { category, keyword, size } of entries) {
       try {
         // Search CJ products for this category (with retry on rate limit)
-        const params = new URLSearchParams({ page: '1', size: '20', keyWord: keyword });
+        const params = new URLSearchParams({ page: '1', size: String(size), keyWord: keyword });
         let data = null;
         for (let attempt = 0; attempt < 3; attempt++) {
           const res = await fetch(`${CJ_BASE_URL}/product/listV2?${params}`, { headers });
@@ -118,7 +137,8 @@ Deno.serve(async (req) => {
         }
 
         if (!data || !data.result) {
-          results[category] = { error: data?.message || 'CJ API error', synced: 0 };
+          results[category] = results[category] || { synced: 0, total: 0 };
+          results[category].error = data?.message || 'CJ API error';
           await new Promise(r => setTimeout(r, 2500));
           continue;
         }
@@ -169,11 +189,14 @@ Deno.serve(async (req) => {
           }
         }
 
-        results[category] = { synced, total: cjProducts.length };
-        // Delay between categories to avoid CJ rate limiting
+        results[category] = results[category] || { synced: 0, total: 0 };
+        results[category].synced += synced;
+        results[category].total += cjProducts.length;
+        // Delay between requests to avoid CJ rate limiting
         await new Promise(r => setTimeout(r, 2500));
       } catch (e) {
-        results[category] = { error: e.message, synced: 0 };
+        results[category] = results[category] || { synced: 0, total: 0 };
+        results[category].error = e.message;
         await new Promise(r => setTimeout(r, 2500));
       }
     }
