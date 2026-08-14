@@ -41,14 +41,14 @@ export default function Testimonials() {
           className="md:col-span-2 flex justify-center"
         >
           <div className="relative">
-            <div className="w-48 h-48 rounded-full overflow-hidden border-4 border-purple-100 shadow-xl">
+            <div className="absolute -inset-3 rounded-full blur-2xl opacity-30 rsouq-glow-magenta" />
+            <div className="relative w-48 h-48 rounded-full overflow-hidden border-4 shadow-xl" style={{ borderColor: '#C4349C' }}>
               <img
                 src={person.photo}
                 alt={person.name}
                 className="w-full h-full object-cover"
               />
             </div>
-
           </div>
         </motion.div>
         <div className="md:col-span-3">
@@ -60,24 +60,24 @@ export default function Testimonials() {
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.35 }}
             >
-              <Quote className="w-10 h-10 mb-4" style={{ color: '#d8b4fe' }} />
+              <Quote className="w-10 h-10 mb-4" style={{ color: '#C4349C' }} />
               <p className="text-xl sm:text-2xl font-bold text-slate-800 leading-relaxed mb-5">
                 «{person.quote}»
               </p>
-              <div className="border-t border-slate-100 pt-4">
+              <div className="border-t pt-4" style={{ borderColor: '#e9ddec' }}>
                 <p className="font-extrabold text-slate-900">{person.name}</p>
                 <p className="text-sm text-slate-500">{person.role}</p>
               </div>
             </motion.div>
           </AnimatePresence>
 
-          {/* People selector */}
           <div className="flex items-center gap-3 mt-6">
             {PEOPLE.map((p, i) => (
               <button
                 key={i}
                 onClick={() => setActive(i)}
-                className={`relative w-12 h-12 rounded-full overflow-hidden border-2 transition ${i === active ? 'border-violet-500 shadow-md scale-105' : 'border-slate-200 opacity-60 hover:opacity-100'}`}
+                className={`relative w-12 h-12 rounded-full overflow-hidden border-2 transition ${i === active ? 'shadow-md scale-105' : 'opacity-60 hover:opacity-100'}`}
+                style={{ borderColor: i === active ? '#C4349C' : '#e2d5e6' }}
                 aria-label={p.name}
               >
                 <img src={p.photo} alt={p.name} className="w-full h-full object-cover" />

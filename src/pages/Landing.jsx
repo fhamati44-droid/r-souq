@@ -2,31 +2,47 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import {
-  Shield, Package, HeartHandshake, BarChart3, Play, Phone,
-  ArrowLeft, ChevronLeft, User, LogOut } from
-'lucide-react';
+  Shield, Package, HeartHandshake, BarChart3, Play,
+  ArrowLeft, ChevronLeft, User, LogOut, Sparkles
+} from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import LeadForm from '@/components/landing/LeadForm';
 import FAQ from '@/components/landing/FAQ';
 import Testimonials from '@/components/landing/Testimonials';
 import FacilityGallery from '@/components/landing/FacilityGallery';
+import Ecosystem from '@/components/landing/Ecosystem';
+import PhoneMockup from '@/components/landing/PhoneMockup';
 
 const LOGO_URL = 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/e5966bc5d_WhatsAppImage2026-05-05at110058AM1.jpeg';
 
-const FEATURES = [
-{ icon: Shield, title: 'شفافية وأمان كامل', desc: 'جميع الاتفاقيات والمدفوعات تتم حصراً عبر الحسابات الرسمية للشركة، مما يضمن حقوقك القانونية والمالية.' },
-{ icon: Package, title: 'إدارة تشغيلية شاملة', desc: 'نتكفل بالتخزين، التجهيز، الشحن، وكافة الخدمات اللوجستية — لتتفرغ أنت للإدارة الاستراتيجية لأعمالك.' },
-{ icon: HeartHandshake, title: 'تواجد ومتابعة محلية', desc: 'فريق متواجد داخل المملكة لمتابعة أعمالك خطوة بخطوة، مع دعم مباشر وسريع عند الحاجة.' },
-{ icon: BarChart3, title: 'متابعة الأداء والنمو', desc: 'لوحة تحكم شفافة تمكّنك من متابعة المبيعات والأرباح والنتائج بوضوح تام في أي وقت.' }];
+const GRAD_CTA = 'linear-gradient(135deg, #C4349C, #872A8E)';
+const C = {
+  bg: '#160B19',
+  bg2: '#241028',
+  bg3: '#1C0C20',
+  purple: '#7A287F',
+  magenta: '#C4349C',
+  accent: '#E34CB7',
+  pink: '#F07AC9',
+  text2: '#D8CDD9',
+  muted: '#9D8E9F',
+  light: '#F8F5F8',
+};
 
+const FEATURES = [
+  { icon: Shield, title: 'شفافية وأمان كامل', desc: 'جميع الاتفاقيات والمدفوعات تتم حصراً عبر الحسابات الرسمية للشركة، مما يضمن حقوقك القانونية والمالية.' },
+  { icon: Package, title: 'إدارة تشغيلية شاملة', desc: 'نتكفل بالتخزين، التجهيز، الشحن، وكافة الخدمات اللوجستية — لتتفرغ أنت للإدارة الاستراتيجية لأعمالك.' },
+  { icon: HeartHandshake, title: 'تواجد ومتابعة محلية', desc: 'فريق متواجد داخل المملكة لمتابعة أعمالك خطوة بخطوة، مع دعم مباشر وسريع عند الحاجة.' },
+  { icon: BarChart3, title: 'متابعة الأداء والنمو', desc: 'لوحة تحكم شفافة تمكّنك من متابعة المبيعات والأرباح والنتائج بوضوح تام في أي وقت.' },
+];
 
 const STEPS = [
-{ num: '1', title: 'تسجيل البيانات', desc: 'املأ نموذج التسجيل ببياناتك الأساسية لتصل مباشرةً لفريق تطوير الأعمال.' },
-{ num: '2', title: 'التواصل والتنسيق', desc: 'يتواصل معك فريقنا خلال 24 ساعة لترتيب جلسة استشارية رسمية ومناقشة التفاصيل.' },
-{ num: '3', title: 'تجهيز المتجر والمنتجات', desc: 'نبدأ بإعداد متجرك الإلكتروني وتوفير المنتجات وتجهيز كافة العمليات التشغيلية.' },
-{ num: '4', title: 'الانطلاق ومتابعة الأرباح', desc: 'تنطلق أعمالك رسمياً مع متابعة مستمرة وتقارير دورية لضمان تحقيق أفضل النتائج.' }];
-
+  { num: '01', title: 'تسجيل البيانات', desc: 'املأ نموذج التسجيل ببياناتك الأساسية لتصل مباشرةً لفريق تطوير الأعمال.' },
+  { num: '02', title: 'التواصل والتنسيق', desc: 'يتواصل معك فريقنا خلال 24 ساعة لترتيب جلسة استشارية رسمية ومناقشة التفاصيل.' },
+  { num: '03', title: 'تجهيز المتجر والمنتجات', desc: 'نبدأ بإعداد متجرك الإلكتروني وتوفير المنتجات وتجهيز كافة العمليات التشغيلية.' },
+  { num: '04', title: 'الانطلاق ومتابعة الأرباح', desc: 'تنطلق أعمالك رسمياً مع متابعة مستمرة وتقارير دورية لضمان تحقيق أفضل النتائج.' },
+];
 
 export default function Landing() {
   const [user, setUser] = useState(null);
@@ -49,45 +65,67 @@ export default function Landing() {
     document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
+  const SectionHeading = ({ eyebrow, title, desc, light = false }) => (
+    <div className="text-center mb-12 max-w-2xl mx-auto">
+      {eyebrow && (
+        <span
+          className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full mb-4"
+          style={{
+            background: light ? 'rgba(122,40,127,0.08)' : 'rgba(196,52,156,0.12)',
+            color: C.magenta,
+            border: `1px solid ${light ? 'rgba(122,40,127,0.15)' : 'rgba(196,52,156,0.25)'}`,
+          }}
+        >
+          <Sparkles className="w-3.5 h-3.5" /> {eyebrow}
+        </span>
+      )}
+      <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold mb-3" style={{ color: light ? '#1a0d1e' : '#fff' }}>
+        {title}
+      </h2>
+      <p style={{ color: light ? '#6b5a6e' : C.text2 }} className="leading-relaxed">{desc}</p>
+    </div>
+  );
+
   return (
-    <div className="min-h-screen bg-white" dir="rtl" style={{ fontFamily: "'Cairo', 'Tajawal', sans-serif" }}>
+    <div className="min-h-screen" dir="rtl" style={{ fontFamily: "'IBM Plex Sans Arabic', 'Tajawal', 'Cairo', sans-serif", background: C.bg, color: '#fff' }}>
 
       {/* ── Navbar ── */}
-      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 shadow-sm">
+      <nav className="sticky top-0 z-50 backdrop-blur-md border-b" style={{ background: 'rgba(22,11,25,0.85)', borderColor: 'rgba(255,255,255,0.06)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
           <div className="flex items-center gap-2.5">
             <img src={LOGO_URL} alt="R SOUQ" className="h-10 w-10 object-contain rounded-xl" />
             <div className="flex flex-col leading-none">
-              <span className="text-lg font-extrabold tracking-tight capitalize" style={{ color: '#6a1b9a' }}>R SOUQ</span>
-              <span className="text-[10px] text-slate-400 font-medium">rsouq.com</span>
+              <span className="text-lg font-extrabold tracking-tight" style={{ color: '#fff' }}>R SOUQ</span>
+              <span className="text-[10px] font-medium" style={{ color: C.muted }}>rsouq.com</span>
             </div>
           </div>
 
-          <div className="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
-            <a href="#features" className="hover:text-violet-700 transition">المميزات</a>
-            <a href="#how" className="hover:text-violet-700 transition">كيف نعمل</a>
-            <a href="#proof" className="hover:text-violet-700 transition">المصداقية</a>
-            <a href="#faq" className="hover:text-violet-700 transition">الأسئلة الشائعة</a>
+          <div className="hidden md:flex items-center gap-7 text-sm font-semibold" style={{ color: C.text2 }}>
+            <a href="#features" className="hover:text-white transition">المميزات</a>
+            <a href="#how" className="hover:text-white transition">كيف نعمل</a>
+            <a href="#ecosystem" className="hover:text-white transition">المنظومة</a>
+            <a href="#proof" className="hover:text-white transition">المصداقية</a>
+            <a href="#faq" className="hover:text-white transition">الأسئلة الشائعة</a>
           </div>
 
           <div className="flex items-center gap-2">
-            {authChecked && user &&
-            <div className="hidden sm:flex items-center gap-2">
+            {authChecked && user && (
+              <div className="hidden sm:flex items-center gap-2">
                 <Link to="/seller/dashboard">
-                  <Button size="sm" variant="ghost" className="rounded-full gap-1.5 font-bold text-slate-600">
+                  <Button size="sm" variant="ghost" className="rounded-full gap-1.5 font-bold" style={{ color: C.text2 }}>
                     <User className="w-3.5 h-3.5" /> {user.full_name?.split(' ')[0] || 'لوحتي'}
                   </Button>
                 </Link>
-                <button onClick={() => base44.auth.logout('/')} className="p-2 rounded-full hover:bg-slate-100 transition text-slate-500">
+                <button onClick={() => base44.auth.logout('/')} className="p-2 rounded-full hover:bg-white/5 transition" style={{ color: C.muted }}>
                   <LogOut className="w-4 h-4" />
                 </button>
               </div>
-            }
+            )}
             <button
               onClick={scrollToForm}
-              className="rounded-full font-bold px-5 py-2.5 text-sm text-white shadow-md transition hover:opacity-90"
-              style={{ background: 'linear-gradient(135deg, #6a1b9a, #7b2d8b)' }}>
-              
+              className="rounded-xl font-bold px-5 py-2.5 text-sm text-white shadow-md transition hover:-translate-y-0.5"
+              style={{ background: GRAD_CTA }}
+            >
               احجز استشارتك
             </button>
           </div>
@@ -95,150 +133,191 @@ export default function Landing() {
       </nav>
 
       {/* ── Hero ── */}
-      <section className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #faf5ff 0%, #f3e8ff 50%, #ede9fe 100%)' }}>
-        <div className="absolute top-0 left-0 w-96 h-96 bg-purple-300 rounded-full opacity-20 blur-3xl -translate-x-1/3 -translate-y-1/3 pointer-events-none" />
-        <div className="absolute bottom-0 right-0 w-80 h-80 bg-violet-300 rounded-full opacity-20 blur-3xl translate-x-1/3 translate-y-1/3 pointer-events-none" />
+      <section className="relative overflow-hidden" style={{ background: C.bg }}>
+        {/* ambient glows */}
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full blur-3xl opacity-25 pointer-events-none" style={{ background: 'radial-gradient(circle, #C4349C, transparent 70%)' }} />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full blur-3xl opacity-20 pointer-events-none" style={{ background: 'radial-gradient(circle, #7A287F, transparent 70%)' }} />
+        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-14 lg:py-20 relative">
-          <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
-            {/* Right side (content in RTL) */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16 lg:py-24 relative">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            {/* text */}
             <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
-              <span className="inline-flex items-center gap-1.5 text-xs font-bold bg-white text-violet-700 px-3 py-1.5 rounded-full mb-5 shadow-sm border border-purple-100">
-                <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#7b2d8b' }} />
+              <span
+                className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full mb-6"
+                style={{ background: 'rgba(196,52,156,0.12)', color: C.pink, border: '1px solid rgba(196,52,156,0.25)' }}
+              >
+                <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: C.magenta }} />
                 منظومة تجارة إلكترونية متكاملة في السعودية
               </span>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 leading-tight mb-4">
-                ابدأ البيع اليوم!
+
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-[1.25] mb-5" style={{ color: '#fff' }}>
+                تبغى تدخل التجارة الإلكترونية؟
+                <br />
+                <span style={{ color: C.magenta }}>لا تبدأ</span> <span style={{ color: '#fff' }}>من الصفر.</span>
               </h1>
-              <p className="text-slate-600 text-base sm:text-lg leading-relaxed mb-7 max-w-xl">
+
+              <p className="text-base sm:text-lg leading-relaxed mb-8 max-w-xl" style={{ color: C.text2 }}>
                 منظومة تشغيلية متكاملة تدير متجرك من التوريد وحتى الشحن والتسويق — بتواجد ومتابعة محلية داخل المملكة.
               </p>
 
-              {/* Video player */}
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-purple-100 group cursor-pointer max-w-xl" onClick={() => setVideoOpen(true)}>
-                <img
-                  src="https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/5b5ae0645_ChatGPTImageAug7202602_16_27PM.png"
-                  alt="مكاتب R SOUQ - فريقنا يعمل على نجاحك"
-                  className="w-full h-56 sm:h-64 object-cover" />
-                
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/20 to-transparent" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
-                    <Play className="w-7 h-7 text-violet-700 fill-violet-700 mr-[-2px]" />
-                  </div>
-                </div>
-                <div className="absolute bottom-4 right-4 left-4 text-white">
-                  <p className="font-bold text-sm">رسالة من فريق R SOUQ</p>
-                  <p className="text-white/80 text-xs">شاهد كيف نبني شراكة استثمارية حقيقية</p>
-                </div>
+              <div className="flex flex-wrap items-center gap-3 mb-9">
+                <button
+                  onClick={scrollToForm}
+                  className="px-7 py-3.5 rounded-xl text-white font-bold text-sm shadow-lg transition hover:-translate-y-0.5 flex items-center gap-2"
+                  style={{ background: GRAD_CTA, minHeight: '52px' }}
+                >
+                  ابدأ الآن <ArrowLeft className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setVideoOpen(true)}
+                  className="px-6 py-3.5 rounded-xl font-bold text-sm transition hover:bg-white/5 flex items-center gap-2"
+                  style={{ border: '1px solid rgba(196,52,156,0.4)', color: '#fff', minHeight: '52px' }}
+                >
+                  <Play className="w-4 h-4" style={{ color: C.magenta }} /> شاهد كيف نعمل
+                </button>
               </div>
 
-              <div className="flex items-center gap-6 mt-7 text-sm">
+              <div className="flex flex-wrap items-center gap-6 text-sm" style={{ color: C.text2 }}>
                 <div className="flex items-center gap-2">
-                  <Shield className="w-5 h-5" style={{ color: '#7b2d8b' }} />
-                  <span className="font-semibold text-slate-700">عقود رسمية</span>
+                  <Shield className="w-5 h-5" style={{ color: C.magenta }} />
+                  <span className="font-semibold">عقود رسمية</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <HeartHandshake className="w-5 h-5" style={{ color: '#7b2d8b' }} />
-                  <span className="font-semibold text-slate-700">دعم محلي</span>
+                  <HeartHandshake className="w-5 h-5" style={{ color: C.magenta }} />
+                  <span className="font-semibold">دعم محلي</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <BarChart3 className="w-5 h-5" style={{ color: '#7b2d8b' }} />
-                  <span className="font-semibold text-slate-700">شفافية كاملة</span>
+                  <BarChart3 className="w-5 h-5" style={{ color: C.magenta }} />
+                  <span className="font-semibold">شفافية كاملة</span>
                 </div>
               </div>
             </motion.div>
 
-            {/* Left side (Lead form) */}
-            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }}>
-              <LeadForm />
+            {/* phone mockup */}
+            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }} className="flex justify-center lg:justify-start">
+              <PhoneMockup />
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* ── Value Proposition ── */}
-      <section id="features" className="py-16 lg:py-20 bg-white">
+      {/* ── Lead Form band ── */}
+      <section className="relative overflow-hidden pb-16 lg:pb-20" style={{ background: C.bg }}>
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] rounded-full blur-3xl opacity-20 pointer-events-none" style={{ background: 'radial-gradient(circle, #7A287F, transparent 70%)' }} />
+        <div className="max-w-lg mx-auto px-4 sm:px-6 relative">
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
+            <LeadForm />
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── Value Proposition (light) ── */}
+      <section id="features" className="py-20 lg:py-28" style={{ background: C.light }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="rounded-3xl overflow-hidden shadow-xl border border-purple-100 mb-12">
+          <div className="rounded-3xl overflow-hidden shadow-xl mb-14" style={{ border: '1px solid #e9ddec' }}>
             <img
               src="https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/4daf86c3b_ChatGPTImageAug7202602_19_33PM.png"
               alt="مكاتب R SOUQ - فريق العمل"
-              className="w-full h-56 sm:h-72 lg:h-80 object-cover"
+              className="w-full h-52 sm:h-64 lg:h-72 object-cover"
             />
           </div>
-          <div className="text-center mb-12">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">لماذا تختار R SOUQ؟</h2>
-            <p className="text-slate-500 max-w-2xl mx-auto">منظومة موثوقة تجمع بين الخبرة التشغيلية والتواجد المحلي لضمان نجاح استثمارك</p>
-          </div>
+          <SectionHeading
+            light
+            eyebrow="لماذا R SOUQ"
+            title="لماذا تختار R SOUQ؟"
+            desc="منظومة موثوقة تجمع بين الخبرة التشغيلية والتواجد المحلي لضمان نجاح استثمارك"
+          />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {FEATURES.map((f, i) =>
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.08 }}
-              className="bg-white rounded-2xl border border-slate-100 p-6 hover:shadow-lg hover:border-purple-200 transition-all text-center">
-              
-                <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: 'linear-gradient(135deg, #f3e5f5, #ede7f6)' }}>
-                  <f.icon className="w-7 h-7" style={{ color: '#7b2d8b' }} />
+            {FEATURES.map((f, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08 }}
+                className="bg-white rounded-2xl p-6 hover:-translate-y-1 transition-all text-center shadow-sm hover:shadow-lg"
+                style={{ border: '1px solid #efe4f1' }}
+              >
+                <div
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4"
+                  style={{ background: 'linear-gradient(135deg, rgba(122,40,127,0.12), rgba(196,52,156,0.12))' }}
+                >
+                  <f.icon className="w-7 h-7" style={{ color: C.purple }} />
                 </div>
                 <h3 className="font-extrabold text-slate-800 mb-2 text-base">{f.title}</h3>
                 <p className="text-slate-500 text-sm leading-relaxed">{f.desc}</p>
               </motion.div>
-            )}
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ── How It Works ── */}
-      <section id="how" className="py-16 lg:py-20 bg-slate-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="rounded-3xl overflow-hidden shadow-xl border border-purple-100 mb-14">
-            <img
-              src="https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/c6c26f226_ChatGPTImageAug7202602_04_28PM.png"
-              alt="منظومة R SOUQ اللوجستية - من التخزين حتى التوصيل"
-              className="w-full h-56 sm:h-72 lg:h-80 object-cover"
-            />
-          </div>
-          <div className="text-center mb-14">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">كيف نعمل؟</h2>
-            <p className="text-slate-500">أربع خطوات بسيطة تفصلك عن انطلاق متجرك الإلكتروني</p>
-          </div>
+      {/* ── How It Works (dark) ── */}
+      <section id="how" className="py-20 lg:py-28 relative" style={{ background: C.bg3 }}>
+        <div className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full blur-3xl opacity-15 pointer-events-none" style={{ background: 'radial-gradient(circle, #C4349C, transparent 70%)' }} />
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
+          <SectionHeading
+            eyebrow="كيف نعمل"
+            title="كيف نعمل؟"
+            desc="أربع خطوات بسيطة تفصلك عن انطلاق متجرك الإلكتروني"
+          />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
-            {/* Connecting line */}
-            <div className="hidden lg:block absolute top-12 right-0 left-0 h-0.5 bg-purple-200 -z-0" />
-            {STEPS.map((s, i) =>
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="relative bg-white rounded-2xl border border-slate-100 p-6 text-center z-10 hover:shadow-lg transition">
-              
-                <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-extrabold text-lg shadow-lg" style={{ background: 'linear-gradient(135deg, #6a1b9a, #7b2d8b)' }}>
+            <div className="hidden lg:block absolute top-12 right-0 left-0 h-px -z-0" style={{ background: 'linear-gradient(to left, transparent, rgba(196,52,156,0.4), transparent)' }} />
+            {STEPS.map((s, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="relative rounded-2xl p-6 text-center z-10 hover:-translate-y-1 transition-all rsouq-card-glass"
+              >
+                <div
+                  className="absolute -top-5 right-1/2 translate-x-1/2 text-3xl font-extrabold"
+                  style={{ color: 'rgba(196,52,156,0.25)' }}
+                >
                   {s.num}
                 </div>
-                <h3 className="font-extrabold text-slate-800 mb-2">{s.title}</h3>
-                <p className="text-slate-500 text-sm leading-relaxed">{s.desc}</p>
+                <div
+                  className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 mt-3 text-white font-extrabold shadow-lg"
+                  style={{ background: GRAD_CTA }}
+                >
+                  {i + 1}
+                </div>
+                <h3 className="font-extrabold text-white mb-2">{s.title}</h3>
+                <p className="text-sm leading-relaxed" style={{ color: C.text2 }}>{s.desc}</p>
               </motion.div>
-            )}
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ── Local Presence & Social Proof ── */}
-      <section id="proof" className="py-16 lg:py-20 bg-white">
+      {/* ── Ecosystem (dark) ── */}
+      <section id="ecosystem" className="py-20 lg:py-28 relative" style={{ background: C.bg }}>
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full blur-3xl opacity-15 pointer-events-none" style={{ background: 'radial-gradient(circle, #7A287F, transparent 70%)' }} />
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
+          <SectionHeading
+            eyebrow="منظومة R SOUQ"
+            title="أكثر من مجرد موقع — منظومة متكاملة"
+            desc="R SOUQ ليست أداة لإنشاء المتاجر فقط، بل منظومة كاملة تدور حول نجاح متجرك"
+          />
+          <Ecosystem />
+        </div>
+      </section>
+
+      {/* ── Social Proof (light) ── */}
+      <section id="proof" className="py-20 lg:py-28" style={{ background: C.light }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">المصداقية والتواجد المحلي</h2>
-            <p className="text-slate-500">فريق متواجد داخل المملكة يبني شراكة حقيقية معك</p>
-          </div>
+          <SectionHeading
+            light
+            eyebrow="المصداقية"
+            title="المصداقية والتواجد المحلي"
+            desc="فريق متواجد داخل المملكة يبني شراكة حقيقية معك"
+          />
           <Testimonials />
 
-          <div className="mt-14">
+          <div className="mt-16">
             <h3 className="text-center text-lg font-extrabold text-slate-800 mb-2">منشآتنا الحقيقية على أرض الواقع</h3>
             <p className="text-center text-slate-500 text-sm mb-7">صور من مكاتبنا ومستودعاتنا داخل المملكة</p>
             <FacilityGallery />
@@ -246,42 +325,37 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── FAQ ── */}
-      <section id="faq" className="py-16 lg:py-20 bg-slate-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="rounded-3xl overflow-hidden shadow-xl border border-purple-100 mb-12">
-            <img
-              src="https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/0829af7e5_ChatGPTImageJun18202610_28_52AM.png"
-              alt="مكاتب R SOUQ - بيئة العمل"
-              className="w-full h-56 sm:h-72 lg:h-80 object-cover"
-            />
-          </div>
-          <div className="text-center mb-12">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">الأسئلة الشائعة</h2>
-            <p className="text-slate-500">كل ما تحتاج معرفته قبل بدء شراكتك معنا</p>
-          </div>
+      {/* ── FAQ (dark) ── */}
+      <section id="faq" className="py-20 lg:py-28 relative" style={{ background: C.bg3 }}>
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full blur-3xl opacity-15 pointer-events-none" style={{ background: 'radial-gradient(circle, #C4349C, transparent 70%)' }} />
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
+          <SectionHeading
+            eyebrow="الأسئلة الشائعة"
+            title="كل ما تحتاج معرفته"
+            desc="إجابات واضحة قبل بدء شراكتك معنا"
+          />
           <FAQ />
         </div>
       </section>
 
       {/* ── Final CTA ── */}
-      <section className="py-14 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #6a1b9a 0%, #7b2d8b 50%, #9c27b0 100%)' }}>
+      <section className="py-16 lg:py-20 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #7A287F 0%, #C4349C 60%, #872A8E 100%)' }}>
         <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(white 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
         <div className="max-w-3xl mx-auto px-4 text-center relative">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-3">جاهز لبدء شراكتك الاستثمارية؟</h2>
-          <p className="text-white/80 mb-7">سجّل بياناتك الآن واحجز جلستك الاستشارية المجانية مع فريق R SOUQ</p>
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white mb-3">جاهز لبدء شراكتك الاستثمارية؟</h2>
+          <p className="text-white/85 mb-8">سجّل بياناتك الآن واحجز جلستك الاستشارية المجانية مع فريق R SOUQ</p>
           <button
             onClick={scrollToForm}
-            className="inline-flex items-center gap-2 bg-white hover:bg-white/90 font-extrabold px-8 py-3.5 rounded-full text-sm transition shadow-xl"
-            style={{ color: '#7b2d8b' }}>
-            
+            className="inline-flex items-center gap-2 bg-white font-extrabold px-8 py-3.5 rounded-xl text-sm transition shadow-xl hover:-translate-y-0.5"
+            style={{ color: C.purple }}
+          >
             سجّل الآن <ArrowLeft className="w-4 h-4" />
           </button>
         </div>
       </section>
 
       {/* ── Footer ── */}
-      <footer className="py-8 text-center" style={{ background: '#3b0d52' }}>
+      <footer className="py-10 text-center" style={{ background: '#0E0612' }}>
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex items-center justify-center gap-2.5 mb-5">
             <img src={LOGO_URL} alt="R SOUQ" className="h-9 w-9 object-contain rounded-lg" />
@@ -293,48 +367,47 @@ export default function Landing() {
             <Link to="/contact" className="text-slate-400 hover:text-white transition">تواصل معنا</Link>
             <Link to="/shop" className="text-slate-400 hover:text-white transition">المتجر</Link>
           </div>
-          <p className="text-slate-500 text-xs">جميع الحقوق محفوظة لـ R SOUQ / TOYLII LLC</p>
+          <p className="text-slate-600 text-xs">جميع الحقوق محفوظة لـ R SOUQ / TOYLII LLC</p>
         </div>
       </footer>
 
       {/* ── Sticky Mobile CTA ── */}
-      <div className="md:hidden fixed bottom-0 inset-x-0 z-50 bg-white border-t border-slate-200 shadow-[0_-4px_12px_rgba(0,0,0,0.08)] p-3">
+      <div className="md:hidden fixed bottom-0 inset-x-0 z-50 p-3" style={{ background: 'rgba(22,11,25,0.95)', backdropFilter: 'blur(8px)', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
         <button
           onClick={scrollToForm}
           className="w-full h-12 rounded-xl text-white font-bold text-sm transition shadow-md flex items-center justify-center gap-2"
-          style={{ background: 'linear-gradient(135deg, #6a1b9a, #7b2d8b)' }}>
-          
+          style={{ background: GRAD_CTA }}
+        >
           سجّل الآن واطلب استشارتك <ChevronLeft className="w-4 h-4" />
         </button>
       </div>
-      {/* Spacer so content not hidden behind mobile bar */}
       <div className="md:hidden h-20" />
 
       {/* ── Video Modal ── */}
-      {videoOpen &&
-      <div
-        className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
-        onClick={() => setVideoOpen(false)}>
-        
+      {videoOpen && (
+        <div
+          className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setVideoOpen(false)}
+        >
           <div className="relative w-full max-w-3xl" onClick={(e) => e.stopPropagation()}>
             <button
-            onClick={() => setVideoOpen(false)}
-            className="absolute -top-10 left-0 text-white hover:opacity-80 transition flex items-center gap-1 text-sm font-semibold">
-            
+              onClick={() => setVideoOpen(false)}
+              className="absolute -top-10 left-0 text-white hover:opacity-80 transition flex items-center gap-1 text-sm font-semibold"
+            >
               إغلاق <span className="text-xl">×</span>
             </button>
             <div className="aspect-video bg-slate-900 rounded-2xl overflow-hidden">
               <iframe
-              src="https://www.youtube.com/embed/Q8wtEIMebaI?autoplay=1"
-              title="فيديو تعريفي R SOUQ"
-              className="w-full h-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen />
-            
+                src="https://www.youtube.com/embed/Q8wtEIMebaI?autoplay=1"
+                title="فيديو تعريفي R SOUQ"
+                className="w-full h-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
             </div>
           </div>
         </div>
-      }
-    </div>);
-
+      )}
+    </div>
+  );
 }

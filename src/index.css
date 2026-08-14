@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Tajawal:wght@400;500;700;800;900&family=Cairo:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
 
 @layer base {
   :root {
@@ -86,11 +86,11 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Cairo', 'Inter', sans-serif;
+    font-family: 'IBM Plex Sans Arabic', 'Tajawal', 'Cairo', 'Inter', sans-serif;
   }
 
   [lang="ar"] body, [dir="rtl"] {
-    font-family: 'Cairo', sans-serif;
+    font-family: 'IBM Plex Sans Arabic', 'Tajawal', 'Cairo', sans-serif;
   }
 
   [lang="en"] body, [lang="de"] body {
@@ -114,4 +114,21 @@
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* RSouq premium utilities */
+@keyframes rsouq-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.animate-float { animation: rsouq-float 6s ease-in-out infinite; }
+
+.rsouq-card-glass {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+}
+
+.rsouq-glow-magenta {
+  background: radial-gradient(circle at center, rgba(196, 52, 156, 0.35), transparent 70%);
 }

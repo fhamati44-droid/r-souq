@@ -18,16 +18,23 @@ const FAQ_ITEMS = [
 
 function FAQItem({ item, isOpen, onToggle }) {
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+    <div
+      className="rounded-2xl overflow-hidden transition"
+      style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+    >
       <button
         onClick={onToggle}
-        className="w-full flex items-center justify-between gap-4 px-5 py-4 text-right transition hover:bg-slate-50"
+        className="w-full flex items-center justify-between gap-4 px-5 py-4 text-right transition"
+        style={{ background: isOpen ? 'rgba(196,52,156,0.06)' : 'transparent' }}
       >
-        <span className="font-bold text-slate-800 text-sm">{item.q}</span>
-        <ChevronDown className={`w-5 h-5 shrink-0 transition-transform ${isOpen ? 'rotate-180' : ''}`} style={{ color: '#7b2d8b' }} />
+        <span className="font-bold text-white text-sm">{item.q}</span>
+        <ChevronDown
+          className={`w-5 h-5 shrink-0 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+          style={{ color: '#C4349C' }}
+        />
       </button>
       {isOpen && (
-        <div className="px-5 pb-4 text-sm text-slate-500 leading-relaxed border-t border-slate-100 pt-3">
+        <div className="px-5 pb-4 text-sm leading-relaxed border-t pt-3" style={{ color: '#D8CDD9', borderColor: 'rgba(255,255,255,0.08)' }}>
           {item.a}
         </div>
       )}
