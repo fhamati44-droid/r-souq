@@ -195,7 +195,7 @@ export default function Landing() {
             </motion.div>
 
             {/* phone mockup */}
-            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }} className="flex justify-center lg:justify-start">
+            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }} className="flex justify-center">
               <PhoneMockup />
             </motion.div>
           </div>

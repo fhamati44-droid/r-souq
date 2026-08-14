@@ -17,13 +17,13 @@ export default function PhoneMockup() {
       <div className="relative animate-float">
         {/* phone frame */}
         <div
-          className="relative w-[290px] sm:w-[330px] mx-auto rounded-[2.8rem] p-3 shadow-2xl"
+          className="relative w-[270px] sm:w-[320px] lg:w-[360px] mx-auto rounded-[2.8rem] p-3 shadow-2xl"
           style={{ background: 'linear-gradient(160deg, #2a1030, #160B19)', border: '1px solid rgba(255,255,255,0.14)' }}
         >
           {/* notch */}
           <div className="absolute top-3 left-1/2 -translate-x-1/2 w-24 h-5 rounded-b-2xl z-20" style={{ background: '#160B19' }} />
           {/* screen */}
-          <div className="relative rounded-[2.2rem] overflow-hidden h-[580px] sm:h-[620px]" style={{ background: '#F8F5F8' }}>
+          <div className="relative rounded-[2.2rem] overflow-hidden h-[540px] sm:h-[610px] lg:h-[660px]" style={{ background: '#F8F5F8' }}>
             {/* status bar */}
             <div className="flex items-center justify-between px-5 pt-3 pb-1 text-[10px] font-bold text-slate-800">
               <span>9:41</span>
@@ -65,7 +65,7 @@ export default function PhoneMockup() {
               ))}
             </div>
             {/* product grid */}
-            <div className="px-4 grid grid-cols-2 gap-2">
+            <div className="px-4 grid grid-cols-2 gap-2 pb-14">
               {PRODUCTS.map((p) => (
                 <div key={p.name} className="rounded-xl bg-white shadow-sm overflow-hidden">
                   <div className="aspect-square overflow-hidden">
