@@ -1,0 +1,37 @@
+{
+  "name": "Sync Lead to Call Center",
+  "description": "When a new Lead is created (e.g. from the landing page questionnaire), forwards the lead's details to the external call center CRM at call-center.rsouq.com.",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "entity",
+      "events": [
+        "create"
+      ],
+      "entity_name": "Lead"
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "sync_lead_to_call_center",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "syncLeadToCallCenter",
+            "args": {}
+          },
+          "then": "end"
+        }
+      }
+    ]
+  },
+  "x-base44-migrated-from-automation": {
+    "legacy_payload_function": "syncLeadToCallCenter"
+  }
+}
