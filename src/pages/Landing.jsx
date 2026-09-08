@@ -328,9 +328,9 @@ export default function Landing() {
                 <Link to="/academy" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-white font-bold text-sm shadow-lg transition hover:-translate-y-0.5" style={{ background: GRAD_CTA, minHeight: '52px' }}>
                   الأكاديمية <ArrowLeft className="w-4 h-4" />
                 </Link>
-                <Link to="/academy/instructor" className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm transition hover:bg-white/5" style={{ border: '1px solid rgba(196,52,156,0.4)', color: '#fff', minHeight: '52px' }}>
+                <a href="https://youtube.com/shorts/2d5MCLMJy48" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm transition hover:bg-white/5" style={{ border: '1px solid rgba(196,52,156,0.4)', color: '#fff', minHeight: '52px' }}>
                   <Play className="w-4 h-4" style={{ color: C.magenta }} /> شاهد كلام المستشار
-                </Link>
+                </a>
               </div>
             </motion.div>
             <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="flex justify-center">
