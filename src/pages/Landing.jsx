@@ -48,7 +48,7 @@ const STEPS = [
 export default function Landing() {
   const [user, setUser] = useState(null);
   const [authChecked, setAuthChecked] = useState(false);
-  const [videoOpen, setVideoOpen] = useState(false);
+  const [activeVideo, setActiveVideo] = useState(null);
 
   useEffect(() => {
     base44.auth.isAuthenticated().then(async (authed) => {
@@ -172,7 +172,7 @@ export default function Landing() {
                   ابدأ الآن <ArrowLeft className="w-4 h-4" />
                 </button>
                 <button
-                  onClick={() => setVideoOpen(true)}
+                  onClick={() => setActiveVideo('https://www.youtube.com/embed/Q8wtEIMebaI?autoplay=1')}
                   className="px-6 py-3.5 rounded-xl font-bold text-sm transition hover:bg-white/5 flex items-center gap-2"
                   style={{ border: '1px solid rgba(196,52,156,0.4)', color: '#fff', minHeight: '52px' }}
                 >
@@ -328,9 +328,13 @@ export default function Landing() {
                 <Link to="/academy" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-white font-bold text-sm shadow-lg transition hover:-translate-y-0.5" style={{ background: GRAD_CTA, minHeight: '52px' }}>
                   الأكاديمية <ArrowLeft className="w-4 h-4" />
                 </Link>
-                <a href="https://youtube.com/shorts/2d5MCLMJy48" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm transition hover:bg-white/5" style={{ border: '1px solid rgba(196,52,156,0.4)', color: '#fff', minHeight: '52px' }}>
+                <button
+                  onClick={() => setActiveVideo('https://www.youtube.com/embed/2d5MCLMJy48?autoplay=1')}
+                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm transition hover:bg-white/5"
+                  style={{ border: '1px solid rgba(196,52,156,0.4)', color: '#fff', minHeight: '52px' }}
+                >
                   <Play className="w-4 h-4" style={{ color: C.magenta }} /> شاهد كلام المستشار
-                </a>
+                </button>
               </div>
             </motion.div>
             <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="flex justify-center">
@@ -427,22 +431,22 @@ export default function Landing() {
       <div className="md:hidden h-20" />
 
       {/* ── Video Modal ── */}
-      {videoOpen && (
+      {activeVideo && (
         <div
           className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
-          onClick={() => setVideoOpen(false)}
+          onClick={() => setActiveVideo(null)}
         >
           <div className="relative w-full max-w-3xl" onClick={(e) => e.stopPropagation()}>
             <button
-              onClick={() => setVideoOpen(false)}
+              onClick={() => setActiveVideo(null)}
               className="absolute -top-10 left-0 text-white hover:opacity-80 transition flex items-center gap-1 text-sm font-semibold"
             >
               إغلاق <span className="text-xl">×</span>
             </button>
             <div className="aspect-video bg-slate-900 rounded-2xl overflow-hidden">
               <iframe
-                src="https://www.youtube.com/embed/Q8wtEIMebaI?autoplay=1"
-                title="فيديو تعريفي R SOUQ"
+                src={activeVideo}
+                title="فيديو R SOUQ"
                 className="w-full h-full"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
