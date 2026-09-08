@@ -1,0 +1,43 @@
+{
+  "name": "AcademyCourse",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "image": {
+      "type": "string"
+    },
+    "instructor_id": {
+      "type": "string"
+    },
+    "access_type": {
+      "type": "string",
+      "enum": [
+        "free",
+        "merchant",
+        "paid"
+      ],
+      "default": "free"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "published",
+        "archived"
+      ],
+      "default": "draft"
+    }
+  },
+  "required": [
+    "title",
+    "slug"
+  ]
+}

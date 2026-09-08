@@ -1,0 +1,126 @@
+{
+  "name": "MerchantApplication",
+  "type": "object",
+  "properties": {
+    "full_name": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "age": {
+      "type": "number"
+    },
+    "current_store": {
+      "type": "string",
+      "enum": [
+        "no",
+        "physical",
+        "online"
+      ]
+    },
+    "has_products": {
+      "type": "string",
+      "enum": [
+        "no",
+        "some",
+        "yes"
+      ]
+    },
+    "experience": {
+      "type": "string",
+      "enum": [
+        "none",
+        "some",
+        "experienced"
+      ]
+    },
+    "interested_category": {
+      "type": "string"
+    },
+    "reason": {
+      "type": "string"
+    },
+    "weekly_availability": {
+      "type": "string",
+      "enum": [
+        "under_5",
+        "5_10",
+        "10_20",
+        "20_plus"
+      ]
+    },
+    "twelve_month_goal": {
+      "type": "string"
+    },
+    "budget_range": {
+      "type": "string",
+      "enum": [
+        "under_10k",
+        "10k_25k",
+        "25k_50k",
+        "50k_plus"
+      ]
+    },
+    "expected_start_date": {
+      "type": "string",
+      "enum": [
+        "immediately",
+        "1_month",
+        "1_3_months",
+        "later"
+      ]
+    },
+    "decision_maker": {
+      "type": "string",
+      "enum": [
+        "yes",
+        "partner",
+        "no"
+      ]
+    },
+    "source": {
+      "type": "string"
+    },
+    "utm_source": {
+      "type": "string"
+    },
+    "utm_medium": {
+      "type": "string"
+    },
+    "utm_campaign": {
+      "type": "string"
+    },
+    "utm_content": {
+      "type": "string"
+    },
+    "utm_term": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "new",
+        "contacted",
+        "qualified",
+        "meeting_booked",
+        "proposal_sent",
+        "won",
+        "not_suitable",
+        "follow_up"
+      ],
+      "default": "new"
+    }
+  },
+  "required": [
+    "full_name",
+    "phone",
+    "email"
+  ]
+}

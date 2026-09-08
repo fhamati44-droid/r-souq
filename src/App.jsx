@@ -18,6 +18,7 @@ import AboutUs from './pages/AboutUs';
 import Blog from './pages/Blog';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import RefundPolicy from './pages/RefundPolicy';
+import StartYourStore from './pages/StartYourStore';
 
 // Admin
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -80,6 +81,7 @@ const AuthenticatedApp = () => {
       <Route path="/cart" element={<Cart />} />
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/orders" element={<Orders />} />
+      <Route path="/start-your-store" element={<StartYourStore />} />
 
       <Route path="/contact" element={<ContactUs />} />
       <Route path="/terms" element={<TermsOfUse />} />

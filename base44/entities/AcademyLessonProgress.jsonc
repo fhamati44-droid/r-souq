@@ -1,0 +1,27 @@
+{
+  "name": "AcademyLessonProgress",
+  "type": "object",
+  "properties": {
+    "enrollment_id": {
+      "type": "string"
+    },
+    "lesson_id": {
+      "type": "string"
+    },
+    "completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "enrollment_id",
+    "lesson_id"
+  ]
+}

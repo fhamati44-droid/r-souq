@@ -1,0 +1,31 @@
+{
+  "name": "Instructor",
+  "type": "object",
+  "properties": {
+    "full_name": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "biography": {
+      "type": "string"
+    },
+    "profile_image": {
+      "type": "string"
+    },
+    "instagram_url": {
+      "type": "string"
+    },
+    "logo": {
+      "type": "string"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "full_name"
+  ]
+}
