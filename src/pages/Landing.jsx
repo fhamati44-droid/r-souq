@@ -324,9 +324,14 @@ export default function Landing() {
               <p className="text-base leading-relaxed mb-8 max-w-lg" style={{ color: C.text2 }}>
                 برنامج تعليمي عملي يأخذك من الفكرة وحتى أول طلب في متجرك — بقيادة مستشار متخصص في التجارة الإلكترونية داخل السوق السعودي.
               </p>
-              <Link to="/academy" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-white font-bold text-sm shadow-lg transition hover:-translate-y-0.5" style={{ background: GRAD_CTA, minHeight: '52px' }}>
-                الأكاديمية <ArrowLeft className="w-4 h-4" />
-              </Link>
+              <div className="flex flex-wrap items-center gap-3">
+                <Link to="/academy" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-white font-bold text-sm shadow-lg transition hover:-translate-y-0.5" style={{ background: GRAD_CTA, minHeight: '52px' }}>
+                  الأكاديمية <ArrowLeft className="w-4 h-4" />
+                </Link>
+                <Link to="/academy/instructor" className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm transition hover:bg-white/5" style={{ border: '1px solid rgba(196,52,156,0.4)', color: '#fff', minHeight: '52px' }}>
+                  <Play className="w-4 h-4" style={{ color: C.magenta }} /> شاهد كلام المستشار
+                </Link>
+              </div>
             </motion.div>
             <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="flex justify-center">
               <div className="rsouq-card-glass rounded-3xl p-5 w-full max-w-xs" style={{ boxShadow: '0 30px 80px rgba(122,40,127,0.35)' }}>
