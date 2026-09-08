@@ -19,6 +19,10 @@ import Blog from './pages/Blog';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import RefundPolicy from './pages/RefundPolicy';
 import StartYourStore from './pages/StartYourStore';
+import Academy from './pages/academy/Academy';
+import AcademyInstructor from './pages/academy/Instructor';
+import AcademyDashboard from './pages/academy/StudentDashboard';
+import AcademyLesson from './pages/academy/LessonViewer';
 
 // Admin
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -82,6 +86,10 @@ const AuthenticatedApp = () => {
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/orders" element={<Orders />} />
       <Route path="/start-your-store" element={<StartYourStore />} />
+      <Route path="/academy" element={<Academy />} />
+      <Route path="/academy/instructor" element={<AcademyInstructor />} />
+      <Route path="/academy/dashboard" element={<AcademyDashboard />} />
+      <Route path="/academy/lesson/:lessonId" element={<AcademyLesson />} />
 
       <Route path="/contact" element={<ContactUs />} />
       <Route path="/terms" element={<TermsOfUse />} />
