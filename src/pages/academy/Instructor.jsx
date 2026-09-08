@@ -6,6 +6,7 @@ import { base44 } from '@/api/base44Client';
 
 const PURPLE = '#7A287F';
 const GRAD = 'linear-gradient(135deg, #7A287F, #C4349C)';
+const CONSULTANT_IMG = 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/ab374614f_775279432_1571479978007436_1399348346080758088_n.jpg';
 
 const EXPERTISE = ['(تُحدّد لاحقاً)', '(تُحدّد لاحقاً)', '(تُحدّد لاحقاً)'];
 const PROGRAMS = ['مسار ابدأ تجارتك', 'برنامج تاجر R SOUQ'];
@@ -32,16 +33,16 @@ export default function Instructor() {
           <div className="bg-white rounded-3xl border border-slate-100 overflow-hidden">
             <div className="p-6 sm:p-8 grid sm:grid-cols-3 gap-6">
               <div className="sm:col-span-1 flex flex-col items-center text-center">
-                <div className="w-36 h-36 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center mb-4">
-                  <GraduationCap className="w-14 h-14 text-slate-300" />
+                <div className="w-40 h-40 rounded-2xl overflow-hidden bg-white border border-slate-200 flex items-center justify-center mb-4">
+                  <img src={CONSULTANT_IMG} alt="المستشار محمد خليل العطية" className="w-full h-full object-contain" />
                 </div>
-                <h1 className="text-xl font-extrabold text-slate-800">—</h1>
+                <h1 className="text-xl font-extrabold text-slate-800">محمد خليل العطية</h1>
                 <p className="text-sm text-slate-500">المستشار التدريبي</p>
               </div>
 
               <div className="sm:col-span-2">
-                <h2 className="text-lg font-extrabold text-slate-800 mb-1">المسمى المهني</h2>
-                <p className="text-slate-500 text-sm mb-5">سيتم تحديث الاسم الكامل والمسمى المهني والنبذة التعريفية قريباً بمجرد تزويدنا بالبيانات الرسمية.</p>
+                <h2 className="text-lg font-extrabold text-slate-800 mb-1">مستشار تجارة إلكترونية</h2>
+                <p className="text-slate-500 text-sm mb-5">المستشار التدريبي والاستشاري لأكاديمية R SOUQ — يقود البرنامج التعليمي العملي من الفكرة وحتى أول طلب في المتجر.</p>
 
                 <h3 className="font-bold text-slate-700 mb-2">مجالات الخبرة</h3>
                 <div className="flex flex-wrap gap-2 mb-5">
@@ -64,11 +65,10 @@ export default function Instructor() {
             </div>
 
             <div className="px-6 sm:px-8 pb-8">
-              <div className="rounded-2xl border border-dashed border-slate-200 p-5 bg-[#FCFAFC]">
-                <p className="text-xs text-slate-400 mb-1">شعار الشريك التدريبي</p>
-                <div className="h-24 flex items-center justify-center text-slate-400 text-sm">يُرفع الشعار قريباً</div>
+              <div className="rounded-2xl border border-slate-200 p-5 bg-[#FCFAFC]">
+                <p className="text-xs text-slate-400 mb-1">الشعار التعريفي للمستشار</p>
+                <img src={CONSULTANT_IMG} alt="محمد خليل العطية" className="w-full max-w-xs mx-auto rounded-xl" />
               </div>
-              <p className="text-xs text-slate-400 mt-4">ملاحظة: المعلومات المعروضة مؤقتة ولا يتم اختراع أي بيانات. سيتم تحديثها فور تزويدنا ببيانات المستشار الرسمية وشعاره.</p>
             </div>
           </div>
         </div>

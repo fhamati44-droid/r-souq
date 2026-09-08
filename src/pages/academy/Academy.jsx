@@ -7,6 +7,7 @@ import { base44 } from '@/api/base44Client';
 const PURPLE = '#7A287F';
 const GRAD = 'linear-gradient(135deg, #7A287F, #C4349C)';
 const LOGO_URL = 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/e5966bc5d_WhatsAppImage2026-05-05at110058AM1.jpeg';
+const CONSULTANT_IMG = 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/ab374614f_775279432_1571479978007436_1399348346080758088_n.jpg';
 
 const TRACK1 = {
   title: 'ابدأ تجارتك',
@@ -54,9 +55,9 @@ export default function Academy() {
             <GraduationCap className="w-3.5 h-3.5" /> أكاديمية R SOUQ
           </span>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-800 leading-[1.3] mb-4">
-            أكاديمية R SOUQ للتجارة الإلكترونية
+            أكاديمية روّاد الأعمال
           </h1>
-          <p className="text-lg font-bold mb-3" style={{ color: PURPLE }}>من المعرفة إلى متجر حقيقي يبيع</p>
+          <p className="text-lg font-bold mb-3" style={{ color: PURPLE }}>من الفكرة إلى أول طلب</p>
           <p className="text-base text-slate-600 leading-relaxed mb-8 max-w-2xl mx-auto">
             أكاديمية عملية تساعد رواد الأعمال والتجار على فهم التجارة الإلكترونية، اختيار المنتجات، بناء المتجر، إطلاق الحملات وإدارة المبيعات داخل السوق السعودي.
           </p>
@@ -162,9 +163,11 @@ export default function Academy() {
               </Link>
             </div>
             <div className="flex flex-col items-center">
-              <div className="w-40 h-40 rounded-2xl border-2 border-dashed border-slate-200 bg-white flex items-center justify-center text-center px-4">
-                <span className="text-sm text-slate-400">شعار الشريك التدريبي<br />(يُرفع قريباً)</span>
+              <div className="rounded-2xl overflow-hidden bg-white border border-slate-200 w-44">
+                <img src={CONSULTANT_IMG} alt="المستشار محمد خليل العطية" className="w-full object-contain" />
               </div>
+              <p className="text-sm font-bold text-slate-700 mt-3">المستشار محمد خليل العطية</p>
+              <p className="text-xs text-slate-400">مستشار تجارة إلكترونية</p>
             </div>
           </div>
         </div>

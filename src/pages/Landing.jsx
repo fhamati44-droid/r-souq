@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import {
-  Shield, Package, HeartHandshake, BarChart3, Play,
+  Shield, Package, HeartHandshake, BarChart3, Play, GraduationCap,
   ArrowLeft, ChevronLeft, User, LogOut, Sparkles
 } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -15,6 +15,7 @@ import Ecosystem from '@/components/landing/Ecosystem';
 import PhoneMockup from '@/components/landing/PhoneMockup';
 
 const LOGO_URL = 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/e5966bc5d_WhatsAppImage2026-05-05at110058AM1.jpeg';
+const CONSULTANT_IMG = 'https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/ab374614f_775279432_1571479978007436_1399348346080758088_n.jpg';
 
 const GRAD_CTA = 'linear-gradient(135deg, #C4349C, #872A8E)';
 const C = {
@@ -104,6 +105,7 @@ export default function Landing() {
             <a href="#features" className="hover:text-white transition">المميزات</a>
             <a href="#how" className="hover:text-white transition">كيف نعمل</a>
             <a href="#ecosystem" className="hover:text-white transition">المنظومة</a>
+            <a href="#academy" className="hover:text-white transition">الأكاديمية</a>
             <a href="#proof" className="hover:text-white transition">المصداقية</a>
             <a href="#faq" className="hover:text-white transition">الأسئلة الشائعة</a>
           </div>
@@ -303,6 +305,42 @@ export default function Landing() {
             desc="R SOUQ ليست أداة لإنشاء المتاجر فقط، بل منظومة كاملة تدور حول نجاح متجرك"
           />
           <Ecosystem />
+        </div>
+      </section>
+
+      {/* ── Academy (dark) ── */}
+      <section id="academy" className="py-20 lg:py-28 relative" style={{ background: C.bg3 }}>
+        <div className="absolute top-0 right-0 w-[450px] h-[450px] rounded-full blur-3xl opacity-15 pointer-events-none" style={{ background: 'radial-gradient(circle, #C4349C, transparent 70%)' }} />
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full mb-5" style={{ background: 'rgba(196,52,156,0.12)', color: C.pink, border: '1px solid rgba(196,52,156,0.25)' }}>
+                <GraduationCap className="w-3.5 h-3.5" /> أكاديمية R SOUQ
+              </span>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold mb-2" style={{ color: '#fff' }}>
+                أكاديمية روّاد الأعمال
+              </h2>
+              <p className="text-lg font-bold mb-4" style={{ color: C.magenta }}>من الفكرة إلى أول طلب</p>
+              <p className="text-base leading-relaxed mb-8 max-w-lg" style={{ color: C.text2 }}>
+                برنامج تعليمي عملي يأخذك من الفكرة وحتى أول طلب في متجرك — بقيادة مستشار متخصص في التجارة الإلكترونية داخل السوق السعودي.
+              </p>
+              <Link to="/academy" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-white font-bold text-sm shadow-lg transition hover:-translate-y-0.5" style={{ background: GRAD_CTA, minHeight: '52px' }}>
+                الأكاديمية <ArrowLeft className="w-4 h-4" />
+              </Link>
+            </motion.div>
+            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="flex justify-center">
+              <div className="rsouq-card-glass rounded-3xl p-5 w-full max-w-xs" style={{ boxShadow: '0 30px 80px rgba(122,40,127,0.35)' }}>
+                <div className="rounded-2xl overflow-hidden mb-4 bg-white">
+                  <img src={CONSULTANT_IMG} alt="المستشار محمد خليل العطية" className="w-full object-contain" loading="lazy" />
+                </div>
+                <div className="text-center">
+                  <p className="text-xs font-bold mb-1" style={{ color: C.magenta }}>المستشار التدريبي</p>
+                  <h3 className="text-lg font-extrabold text-white mb-1">محمد خليل العطية</h3>
+                  <p className="text-sm" style={{ color: C.muted }}>خبير في التجارة الإلكترونية</p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
