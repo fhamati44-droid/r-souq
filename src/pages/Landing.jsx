@@ -345,7 +345,7 @@ export default function Landing() {
                 <div className="text-center">
                   <p className="text-xs font-bold mb-1" style={{ color: C.magenta }}>المستشار التدريبي</p>
                   <h3 className="text-lg font-extrabold text-white mb-1">محمد خليل العطية</h3>
-                  <p className="text-sm hidden" style={{ color: C.muted }}>خبير في التجارة الإلكترونية</p>
+                  
                 </div>
               </div>
             </motion.div>
