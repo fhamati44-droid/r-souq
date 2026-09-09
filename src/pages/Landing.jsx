@@ -3,8 +3,8 @@ import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import {
   Shield, Package, HeartHandshake, BarChart3, Play, GraduationCap,
-  ArrowLeft, ChevronLeft, User, LogOut, Sparkles
-} from 'lucide-react';
+  ArrowLeft, ChevronLeft, User, LogOut, Sparkles } from
+'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import LeadForm from '@/components/landing/LeadForm';
@@ -28,22 +28,22 @@ const C = {
   pink: '#F07AC9',
   text2: '#D8CDD9',
   muted: '#9D8E9F',
-  light: '#F8F5F8',
+  light: '#F8F5F8'
 };
 
 const FEATURES = [
-  { icon: Shield, title: 'شفافية وأمان كامل', desc: 'جميع الاتفاقيات والمدفوعات تتم حصراً عبر الحسابات الرسمية للشركة، مما يضمن حقوقك القانونية والمالية.' },
-  { icon: Package, title: 'إدارة تشغيلية شاملة', desc: 'نتكفل بالتخزين، التجهيز، الشحن، وكافة الخدمات اللوجستية — لتتفرغ أنت للإدارة الاستراتيجية لأعمالك.' },
-  { icon: HeartHandshake, title: 'تواجد ومتابعة محلية', desc: 'فريق متواجد داخل المملكة لمتابعة أعمالك خطوة بخطوة، مع دعم مباشر وسريع عند الحاجة.' },
-  { icon: BarChart3, title: 'متابعة الأداء والنمو', desc: 'لوحة تحكم شفافة تمكّنك من متابعة المبيعات والأرباح والنتائج بوضوح تام في أي وقت.' },
-];
+{ icon: Shield, title: 'شفافية وأمان كامل', desc: 'جميع الاتفاقيات والمدفوعات تتم حصراً عبر الحسابات الرسمية للشركة، مما يضمن حقوقك القانونية والمالية.' },
+{ icon: Package, title: 'إدارة تشغيلية شاملة', desc: 'نتكفل بالتخزين، التجهيز، الشحن، وكافة الخدمات اللوجستية — لتتفرغ أنت للإدارة الاستراتيجية لأعمالك.' },
+{ icon: HeartHandshake, title: 'تواجد ومتابعة محلية', desc: 'فريق متواجد داخل المملكة لمتابعة أعمالك خطوة بخطوة، مع دعم مباشر وسريع عند الحاجة.' },
+{ icon: BarChart3, title: 'متابعة الأداء والنمو', desc: 'لوحة تحكم شفافة تمكّنك من متابعة المبيعات والأرباح والنتائج بوضوح تام في أي وقت.' }];
+
 
 const STEPS = [
-  { num: '01', title: 'تسجيل البيانات', desc: 'املأ نموذج التسجيل ببياناتك الأساسية لتصل مباشرةً لفريق تطوير الأعمال.' },
-  { num: '02', title: 'التواصل والتنسيق', desc: 'يتواصل معك فريقنا خلال 24 ساعة لترتيب جلسة استشارية رسمية ومناقشة التفاصيل.' },
-  { num: '03', title: 'تجهيز المتجر والمنتجات', desc: 'نبدأ بإعداد متجرك الإلكتروني وتوفير المنتجات وتجهيز كافة العمليات التشغيلية.' },
-  { num: '04', title: 'الانطلاق ومتابعة الأرباح', desc: 'تنطلق أعمالك رسمياً مع متابعة مستمرة وتقارير دورية لضمان تحقيق أفضل النتائج.' },
-];
+{ num: '01', title: 'تسجيل البيانات', desc: 'املأ نموذج التسجيل ببياناتك الأساسية لتصل مباشرةً لفريق تطوير الأعمال.' },
+{ num: '02', title: 'التواصل والتنسيق', desc: 'يتواصل معك فريقنا خلال 24 ساعة لترتيب جلسة استشارية رسمية ومناقشة التفاصيل.' },
+{ num: '03', title: 'تجهيز المتجر والمنتجات', desc: 'نبدأ بإعداد متجرك الإلكتروني وتوفير المنتجات وتجهيز كافة العمليات التشغيلية.' },
+{ num: '04', title: 'الانطلاق ومتابعة الأرباح', desc: 'تنطلق أعمالك رسمياً مع متابعة مستمرة وتقارير دورية لضمان تحقيق أفضل النتائج.' }];
+
 
 export default function Landing() {
   const [user, setUser] = useState(null);
@@ -66,26 +66,26 @@ export default function Landing() {
     document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
-  const SectionHeading = ({ eyebrow, title, desc, light = false }) => (
-    <div className="text-center mb-12 max-w-2xl mx-auto">
-      {eyebrow && (
-        <span
-          className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full mb-4"
-          style={{
-            background: light ? 'rgba(122,40,127,0.08)' : 'rgba(196,52,156,0.12)',
-            color: C.magenta,
-            border: `1px solid ${light ? 'rgba(122,40,127,0.15)' : 'rgba(196,52,156,0.25)'}`,
-          }}
-        >
+  const SectionHeading = ({ eyebrow, title, desc, light = false }) =>
+  <div className="text-center mb-12 max-w-2xl mx-auto">
+      {eyebrow &&
+    <span
+      className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full mb-4"
+      style={{
+        background: light ? 'rgba(122,40,127,0.08)' : 'rgba(196,52,156,0.12)',
+        color: C.magenta,
+        border: `1px solid ${light ? 'rgba(122,40,127,0.15)' : 'rgba(196,52,156,0.25)'}`
+      }}>
+      
           <Sparkles className="w-3.5 h-3.5" /> {eyebrow}
         </span>
-      )}
+    }
       <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold mb-3" style={{ color: light ? '#1a0d1e' : '#fff' }}>
         {title}
       </h2>
       <p style={{ color: light ? '#6b5a6e' : C.text2 }} className="leading-relaxed">{desc}</p>
-    </div>
-  );
+    </div>;
+
 
   return (
     <div className="min-h-screen" dir="rtl" style={{ fontFamily: "'IBM Plex Sans Arabic', 'Tajawal', 'Cairo', sans-serif", background: C.bg, color: '#fff' }}>
@@ -111,8 +111,8 @@ export default function Landing() {
           </div>
 
           <div className="flex items-center gap-2">
-            {authChecked && user && (
-              <div className="hidden sm:flex items-center gap-2">
+            {authChecked && user &&
+            <div className="hidden sm:flex items-center gap-2">
                 <Link to="/seller/dashboard">
                   <Button size="sm" variant="ghost" className="rounded-full gap-1.5 font-bold" style={{ color: C.text2 }}>
                     <User className="w-3.5 h-3.5" /> {user.full_name?.split(' ')[0] || 'لوحتي'}
@@ -122,12 +122,12 @@ export default function Landing() {
                   <LogOut className="w-4 h-4" />
                 </button>
               </div>
-            )}
+            }
             <button
               onClick={scrollToForm}
               className="rounded-xl font-bold px-5 py-2.5 text-sm text-white shadow-md transition hover:-translate-y-0.5"
-              style={{ background: GRAD_CTA }}
-            >
+              style={{ background: GRAD_CTA }}>
+              
               احجز استشارتك
             </button>
           </div>
@@ -147,8 +147,8 @@ export default function Landing() {
             <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
               <span
                 className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full mb-6"
-                style={{ background: 'rgba(196,52,156,0.12)', color: C.pink, border: '1px solid rgba(196,52,156,0.25)' }}
-              >
+                style={{ background: 'rgba(196,52,156,0.12)', color: C.pink, border: '1px solid rgba(196,52,156,0.25)' }}>
+                
                 <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: C.magenta }} />
                 منظومة تجارة إلكترونية متكاملة في السعودية
               </span>
@@ -167,15 +167,15 @@ export default function Landing() {
                 <button
                   onClick={scrollToForm}
                   className="px-7 py-3.5 rounded-xl text-white font-bold text-sm shadow-lg transition hover:-translate-y-0.5 flex items-center gap-2"
-                  style={{ background: GRAD_CTA, minHeight: '52px' }}
-                >
+                  style={{ background: GRAD_CTA, minHeight: '52px' }}>
+                  
                   ابدأ الآن <ArrowLeft className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => setActiveVideo('https://www.youtube.com/embed/Q8wtEIMebaI?autoplay=1')}
                   className="px-6 py-3.5 rounded-xl font-bold text-sm transition hover:bg-white/5 flex items-center gap-2"
-                  style={{ border: '1px solid rgba(196,52,156,0.4)', color: '#fff', minHeight: '52px' }}
-                >
+                  style={{ border: '1px solid rgba(196,52,156,0.4)', color: '#fff', minHeight: '52px' }}>
+                  
                   <Play className="w-4 h-4" style={{ color: C.magenta }} /> شاهد كيف نعمل
                 </button>
               </div>
@@ -221,36 +221,36 @@ export default function Landing() {
             <img
               src="https://media.base44.com/images/public/69f43f4e6504a7a021252c7d/4daf86c3b_ChatGPTImageAug7202602_19_33PM.png"
               alt="مكاتب R SOUQ - فريق العمل"
-              className="w-full h-52 sm:h-64 lg:h-72 object-cover"
-            />
+              className="w-full h-52 sm:h-64 lg:h-72 object-cover" />
+            
           </div>
           <SectionHeading
             light
             eyebrow="لماذا R SOUQ"
             title="لماذا تختار R SOUQ؟"
-            desc="منظومة موثوقة تجمع بين الخبرة التشغيلية والتواجد المحلي لضمان نجاح استثمارك"
-          />
+            desc="منظومة موثوقة تجمع بين الخبرة التشغيلية والتواجد المحلي لضمان نجاح استثمارك" />
+          
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {FEATURES.map((f, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08 }}
-                className="bg-white rounded-2xl p-6 hover:-translate-y-1 transition-all text-center shadow-sm hover:shadow-lg"
-                style={{ border: '1px solid #efe4f1' }}
-              >
+            {FEATURES.map((f, i) =>
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.08 }}
+              className="bg-white rounded-2xl p-6 hover:-translate-y-1 transition-all text-center shadow-sm hover:shadow-lg"
+              style={{ border: '1px solid #efe4f1' }}>
+              
                 <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4"
-                  style={{ background: 'linear-gradient(135deg, rgba(122,40,127,0.12), rgba(196,52,156,0.12))' }}
-                >
+                className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4"
+                style={{ background: 'linear-gradient(135deg, rgba(122,40,127,0.12), rgba(196,52,156,0.12))' }}>
+                
                   <f.icon className="w-7 h-7" style={{ color: C.purple }} />
                 </div>
                 <h3 className="font-extrabold text-slate-800 mb-2 text-base">{f.title}</h3>
                 <p className="text-slate-500 text-sm leading-relaxed">{f.desc}</p>
               </motion.div>
-            ))}
+            )}
           </div>
         </div>
       </section>
@@ -262,35 +262,35 @@ export default function Landing() {
           <SectionHeading
             eyebrow="كيف نعمل"
             title="كيف نعمل؟"
-            desc="أربع خطوات بسيطة تفصلك عن انطلاق متجرك الإلكتروني"
-          />
+            desc="أربع خطوات بسيطة تفصلك عن انطلاق متجرك الإلكتروني" />
+          
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
             <div className="hidden lg:block absolute top-12 right-0 left-0 h-px -z-0" style={{ background: 'linear-gradient(to left, transparent, rgba(196,52,156,0.4), transparent)' }} />
-            {STEPS.map((s, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="relative rounded-2xl p-6 text-center z-10 hover:-translate-y-1 transition-all rsouq-card-glass"
-              >
+            {STEPS.map((s, i) =>
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
+              className="relative rounded-2xl p-6 text-center z-10 hover:-translate-y-1 transition-all rsouq-card-glass">
+              
                 <div
-                  className="absolute -top-5 right-1/2 translate-x-1/2 text-3xl font-extrabold"
-                  style={{ color: 'rgba(196,52,156,0.25)' }}
-                >
+                className="absolute -top-5 right-1/2 translate-x-1/2 text-3xl font-extrabold"
+                style={{ color: 'rgba(196,52,156,0.25)' }}>
+                
                   {s.num}
                 </div>
                 <div
-                  className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 mt-3 text-white font-extrabold shadow-lg"
-                  style={{ background: GRAD_CTA }}
-                >
+                className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 mt-3 text-white font-extrabold shadow-lg"
+                style={{ background: GRAD_CTA }}>
+                
                   {i + 1}
                 </div>
                 <h3 className="font-extrabold text-white mb-2">{s.title}</h3>
                 <p className="text-sm leading-relaxed" style={{ color: C.text2 }}>{s.desc}</p>
               </motion.div>
-            ))}
+            )}
           </div>
         </div>
       </section>
@@ -302,8 +302,8 @@ export default function Landing() {
           <SectionHeading
             eyebrow="منظومة R SOUQ"
             title="أكثر من مجرد موقع — منظومة متكاملة"
-            desc="R SOUQ ليست أداة لإنشاء المتاجر فقط، بل منظومة كاملة تدور حول نجاح متجرك"
-          />
+            desc="R SOUQ ليست أداة لإنشاء المتاجر فقط، بل منظومة كاملة تدور حول نجاح متجرك" />
+          
           <Ecosystem />
         </div>
       </section>
@@ -331,8 +331,8 @@ export default function Landing() {
                 <button
                   onClick={() => setActiveVideo('https://www.youtube.com/embed/2d5MCLMJy48?autoplay=1')}
                   className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm transition hover:bg-white/5"
-                  style={{ border: '1px solid rgba(196,52,156,0.4)', color: '#fff', minHeight: '52px' }}
-                >
+                  style={{ border: '1px solid rgba(196,52,156,0.4)', color: '#fff', minHeight: '52px' }}>
+                  
                   <Play className="w-4 h-4" style={{ color: C.magenta }} /> شاهد كلام المستشار
                 </button>
               </div>
@@ -345,7 +345,7 @@ export default function Landing() {
                 <div className="text-center">
                   <p className="text-xs font-bold mb-1" style={{ color: C.magenta }}>المستشار التدريبي</p>
                   <h3 className="text-lg font-extrabold text-white mb-1">محمد خليل العطية</h3>
-                  <p className="text-sm" style={{ color: C.muted }}>خبير في التجارة الإلكترونية</p>
+                  <p className="text-sm hidden" style={{ color: C.muted }}>خبير في التجارة الإلكترونية</p>
                 </div>
               </div>
             </motion.div>
@@ -360,8 +360,8 @@ export default function Landing() {
             light
             eyebrow="المصداقية"
             title="المصداقية والتواجد المحلي"
-            desc="فريق متواجد داخل المملكة يبني شراكة حقيقية معك"
-          />
+            desc="فريق متواجد داخل المملكة يبني شراكة حقيقية معك" />
+          
           <Testimonials />
 
           <div className="mt-16">
@@ -379,8 +379,8 @@ export default function Landing() {
           <SectionHeading
             eyebrow="الأسئلة الشائعة"
             title="كل ما تحتاج معرفته"
-            desc="إجابات واضحة قبل بدء شراكتك معنا"
-          />
+            desc="إجابات واضحة قبل بدء شراكتك معنا" />
+          
           <FAQ />
         </div>
       </section>
@@ -394,8 +394,8 @@ export default function Landing() {
           <button
             onClick={scrollToForm}
             className="inline-flex items-center gap-2 bg-white font-extrabold px-8 py-3.5 rounded-xl text-sm transition shadow-xl hover:-translate-y-0.5"
-            style={{ color: C.purple }}
-          >
+            style={{ color: C.purple }}>
+            
             سجّل الآن <ArrowLeft className="w-4 h-4" />
           </button>
         </div>
@@ -423,38 +423,38 @@ export default function Landing() {
         <button
           onClick={scrollToForm}
           className="w-full h-12 rounded-xl text-white font-bold text-sm transition shadow-md flex items-center justify-center gap-2"
-          style={{ background: GRAD_CTA }}
-        >
+          style={{ background: GRAD_CTA }}>
+          
           سجّل الآن واطلب استشارتك <ChevronLeft className="w-4 h-4" />
         </button>
       </div>
       <div className="md:hidden h-20" />
 
       {/* ── Video Modal ── */}
-      {activeVideo && (
-        <div
-          className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
-          onClick={() => setActiveVideo(null)}
-        >
+      {activeVideo &&
+      <div
+        className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
+        onClick={() => setActiveVideo(null)}>
+        
           <div className="relative w-full max-w-3xl" onClick={(e) => e.stopPropagation()}>
             <button
-              onClick={() => setActiveVideo(null)}
-              className="absolute -top-10 left-0 text-white hover:opacity-80 transition flex items-center gap-1 text-sm font-semibold"
-            >
+            onClick={() => setActiveVideo(null)}
+            className="absolute -top-10 left-0 text-white hover:opacity-80 transition flex items-center gap-1 text-sm font-semibold">
+            
               إغلاق <span className="text-xl">×</span>
             </button>
             <div className="aspect-video bg-slate-900 rounded-2xl overflow-hidden">
               <iframe
-                src={activeVideo}
-                title="فيديو R SOUQ"
-                className="w-full h-full"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
+              src={activeVideo}
+              title="فيديو R SOUQ"
+              className="w-full h-full"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen />
+            
             </div>
           </div>
         </div>
-      )}
-    </div>
-  );
+      }
+    </div>);
+
 }
