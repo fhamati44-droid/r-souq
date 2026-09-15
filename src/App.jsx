@@ -19,6 +19,7 @@ import Blog from './pages/Blog';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import RefundPolicy from './pages/RefundPolicy';
 import StartYourStore from './pages/StartYourStore';
+import InvestorPitch from './pages/InvestorPitch';
 import Academy from './pages/academy/Academy';
 import AcademyInstructor from './pages/academy/Instructor';
 import AcademyDashboard from './pages/academy/StudentDashboard';
@@ -67,6 +68,7 @@ const AuthenticatedApp = () => {
       {/* Landing page */}
       <Route path="/" element={<ShopHome />} />
       <Route path="/landing" element={<Landing />} />
+      <Route path="/investor-pitch" element={<InvestorPitch />} />
 
       {/* Admin routes */}
       <Route path="/admin/*" element={<AdminDashboard />} />
